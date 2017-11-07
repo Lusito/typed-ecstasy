@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)
 [![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)
-[![License](https://img.shields.io/badge/License-CC0%20Public%20Domain-blue.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Lusito/typed-ecstasy/blob/master/LICENSE)
 
 A tiny entity framework written in TypeScript. It started as a port of the C++ [Entity Component System](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
 [ecstasy](https://github.com/lusito/ecstasy), which is a port of [Ashley](https://github.com/libgdx/ashley/)
