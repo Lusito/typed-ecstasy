@@ -1,0 +1,70 @@
+{
+  "name": "typed-ecstasy",
+  "version": "0.8.0",
+  "description": "An entity component system for TypeScript (and JavaScript), based on ashley",
+  "keywords": [
+    "TypeScript",
+    "Entity Component System",
+    "Game",
+    "Ashley"
+  ],
+  "author": "Santo Pfingsten",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Lusito/typed-ecstasy",
+  "bugs": {
+    "url": "https://github.com/Lusito/typed-ecstasy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lusito/typed-ecstasy.git"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "test/",
+    "tsconfig.json"
+  ],
+  "main": "dist/src/index.js",
+  "types": "src/Index.ts",
+  "scripts": {
+    "pretest": "tsc",
+    "test": "nyc mocha --require source-map-support/register \"./dist/test/**/*.js\"",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "doc": "typedoc --out docs src"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "coverage/**/*",
+      "docs/**/*",
+      "test/**/*",
+      "dist/test/**/*",
+      "dist/src/index.js",
+      "src/index.ts",
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "all": true
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.46",
+    "awesome-typescript-loader": "^3.2.3",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "mocha-typescript": "^1.1.11",
+    "nyc": "^11.2.1",
+    "source-map-loader": "^0.2.2",
+    "source-map-support": "^0.5.0",
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "typed-signals": "^1.0.1"
+  }
+}
