@@ -4,6 +4,10 @@
 [![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Lusito/typed-ecstasy/blob/master/LICENSE)
 
+**Please be aware:**
+
+This port is in an early stage. It still needs to be optimized, especially for memory (no pooling yet).
+
 A tiny entity framework written in TypeScript. It started as a port of the C++ [Entity Component System](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
 [ecstasy](https://github.com/lusito/ecstasy), which is a port of [Ashley](https://github.com/libgdx/ashley/)
 from LibGDX. typed-ecstasy is a high-performance entity framework  without the use of black-magic and thus making the API easy
