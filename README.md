@@ -1,4 +1,4 @@
-![](https://lusito.github.io/ecstasy/ecstasy.png)
+![](https://lusito.github.io/typed-ecstasy/typed_ecstasy.png)
 
 [![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)
 [![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)
