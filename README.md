@@ -1,8 +1,10 @@
 ![](https://lusito.github.io/typed-ecstasy/typed_ecstasy.png)
 
-[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)
-[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Lusito/typed-ecstasy/blob/master/LICENSE)
+
+|Master|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)|
+|---|---|---|
+|Develop|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=develop)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=develop)](https://coveralls.io/github/Lusito/typed-ecstasy)|
 
 **Please be aware:**
 
