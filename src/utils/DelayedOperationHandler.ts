@@ -33,6 +33,8 @@ class DelayedOperation<T> {
 
 /**
  * The callback to actually perform the add/remove/removeAll operations.
+ * 
+ * @typeparam T The entry class
  */
 export interface DelayedOperationHandlerListener<T> {
     /**
@@ -53,6 +55,8 @@ export interface DelayedOperationHandlerListener<T> {
 
 /**
  * A class to help delaying add/remove/removeAll operations during engine updates.
+ * 
+ * @typeparam T The entry class
  */
 export class DelayedOperationHandler<T> {
     private nextOperation: DelayedOperation<T> | null = null;

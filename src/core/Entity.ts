@@ -56,6 +56,7 @@ export class Entity {
 	/**
 	 * Add a component. This will be freed on removal. Prefer add() instead
 	 *
+	 * @typeparam T The component class
 	 * @param component the component to add
 	 * @return The added component
 	 */
@@ -91,6 +92,7 @@ export class Entity {
 	/**
 	 * Retrieve a Component from this Entity by class.
 	 *
+	 * @typeparam T The component class
 	 * @param clazz The Component class
 	 * @return The instance of the specified Component attached to this Entity, or null if no such Component exists.
 	 */

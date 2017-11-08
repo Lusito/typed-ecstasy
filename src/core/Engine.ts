@@ -220,6 +220,7 @@ export class Engine {
 	/**
 	 * Adds the EntitySystem to this Engine.
 	 *
+	 * @typeparam T The entity system class
 	 * @param system The EntitySystem to add
 	 */
 	public addSystem<T extends EntitySystem>(system: T): T {
@@ -285,10 +286,11 @@ export class Engine {
 	/**
 	 * Quick EntitySystem retrieval.
 	 *
+	 * @typeparam T The entity system class
 	 * @param clazz The EntitySystem class
 	 * @return The EntitySystem of the specified class, or null if no such system exists.
 	 */
-	public getSystem<T extends EntitySystem>(clazz: Constructor<EntitySystem>): T | null {
+	public getSystem<T extends EntitySystem>(clazz: Constructor<T>): T | null {
 		let type = UniqueType.getForClass(clazz);
 		let index = type.getIndex();
 		return <T>this.systemsByType[index] || null;

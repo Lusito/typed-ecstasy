@@ -26,6 +26,8 @@ export class Lookup {
     /**
      * Store an instance of a class
      * 
+     * @typeparam T The class used to get the instance later.
+     * @typeparam I The class of the instance.
      * @param clazz The class used to get the instance later.
      * @param instance The instance to store.
      */
@@ -38,6 +40,7 @@ export class Lookup {
     /**
      * Get an instance of a class
      * 
+     * @typeparam T The class the instance was bound to.
      * @param clazz The class the instance was bound to.
      */
     public get<T>(clazz: Constructor<T>): T | null {
@@ -48,6 +51,7 @@ export class Lookup {
     /**
      * Check if an instance of the specified class exists.
      * 
+     * @typeparam T The class the instance was bound to.
      * @param clazz The class the instance was bound to.
      */
     public has<T>(clazz: Constructor<T>): boolean {
@@ -58,6 +62,7 @@ export class Lookup {
     /**
      * Remove an instance of a class
      * 
+     * @typeparam T The class the instance was bound to.
      * @param clazz The class the instance was bound to.
      */
     public remove<T>(clazz: Constructor<T>) {
