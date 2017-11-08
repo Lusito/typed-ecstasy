@@ -42,6 +42,11 @@ const familiesByIndex: Family[] = [];
 /**
  * A builder pattern to create Family objects.
  * Use Family.all(), Family.one() or Family.exclude() to start
+ * 
+ * Example usage:
+ *```typescript
+ *let family = Family.all(ComponentA, ComponentB).one(ComponentC, ComponentD).exclude(ComponentE).get();
+ *```
  */
 export class FamilyBuilder {
 	private m_all = new Bits();
@@ -104,7 +109,6 @@ export class FamilyBuilder {
 }
 
 let builder: FamilyBuilder = new FamilyBuilder();
-
 let familyTypes = 0;
 
 /**
@@ -113,23 +117,25 @@ let familyTypes = 0;
  * This is to avoid duplicate families that describe the same components
  * Start with {@link Family.all}, {@link Family.one} or {@link Family.exclude}.
  */
-export interface Family {
+export abstract class Family {
 	/** The unique identifier of this Family */
-	readonly uniqueType: UniqueType;
+	public readonly uniqueType: UniqueType;
+	
+	public constructor() {
+		this.uniqueType = new UniqueType(familyTypes++, 'Family');
+	}
 
 	/**
 	 * @param entity An entity
 	 * @return Whether the entity matches the family requirements or not
 	 */
-	matches(entity: Entity): boolean;
-}
-
-export namespace Family {
+	public abstract matches(entity: Entity): boolean;
+	
 	/**
 	 * @param clazzes Entities will have to contain all of the specified components.
 	 * @return A builder singleton instance to get a Family
 	 */
-	export function all(...clazzes: Constructor<Component>[]): FamilyBuilder {
+	public static all(...clazzes: Constructor<Component>[]): FamilyBuilder {
 		return builder.reset().all(...clazzes);
 	}
 
@@ -137,7 +143,7 @@ export namespace Family {
 	 * @param clazzes Entities will have to contain at least one of the specified components.
 	 * @return A builder singleton instance to get a Family
 	 */
-	export function one(...clazzes: Constructor<Component>[]): FamilyBuilder {
+	public static one(...clazzes: Constructor<Component>[]): FamilyBuilder {
 		return builder.reset().one(...clazzes);
 	}
 
@@ -145,7 +151,7 @@ export namespace Family {
 	 * @param clazzes Entities cannot contain any of the specified components.
 	 * @return A builder singleton instance to get a Family
 	 */
-	export function exclude(...clazzes: Constructor<Component>[]): FamilyBuilder {
+	public static exclude(...clazzes: Constructor<Component>[]): FamilyBuilder {
 		return builder.reset().exclude(...clazzes);
 	}
 
@@ -155,24 +161,23 @@ export namespace Family {
 	 * @param index the index of the family
 	 * @return The family or null if out of bounds
 	 */
-	export function getByIndex(index: number): Family | null {
+	public static getByIndex(index: number): Family | null {
 		if (index >= 0 && index < familiesByIndex.length)
 			return familiesByIndex[index];
 		return null;
 	}
 }
 
-class FamilyImpl implements Family {
+class FamilyImpl extends Family {
 	private m_all: Bits;
 	private m_one: Bits;
 	private m_exclude: Bits;
-	public readonly uniqueType: UniqueType;
 
 	public constructor(all: Bits, one: Bits, exclude: Bits) {
+		super();
 		this.m_all = all;
 		this.m_one = one;
 		this.m_exclude = exclude;
-		this.uniqueType = new UniqueType(familyTypes++, 'Family');
 	}
 
 	public matches(entity: Entity): boolean {

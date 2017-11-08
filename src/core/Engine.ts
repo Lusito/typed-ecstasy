@@ -42,8 +42,10 @@ interface FriendlyEntity {
 	engine: Engine | null;
 }
 
-/** Entity signals */
-class EntitySignal extends Signal<(entity: Entity) => void> { }
+/**
+ *  A simple entity signal.
+ */
+export class EntitySignal extends Signal<(entity: Entity) => void> { }
 
 /**
  * The heart of the Entity framework. It is responsible for keeping track of Entity and
@@ -51,14 +53,12 @@ class EntitySignal extends Signal<(entity: Entity) => void> { }
  *
  * With the Engine you can:
  *
- * <ul>
- * <li>Create entities using createEntity()</li>
- * <li>Add/Remove Entity objects</li>
- * <li>Add/Remove {@link EntitySystem}s</li>
- * <li>Obtain a list of entities for a specific Family</li>
- * <li>Update the main loop</li>
- * <li>Connect to/Disconnect from EntitySignal</li>
- * </ul>
+ * - Create entities using createEntity()
+ * - Add/Remove Entity objects
+ * - Add/Remove {@link EntitySystem}s
+ * - Obtain a list of entities for a specific Family
+ * - Update the main loop
+ * - Connect to/Disconnect from EntitySignal
  */
 export class Engine {
 	private entities: Entity[] = [];

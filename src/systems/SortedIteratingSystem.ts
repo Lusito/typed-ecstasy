@@ -21,7 +21,12 @@ import { Engine } from "../core/Engine";
 import { SignalConnections } from "typed-signals";
 
 
-type EntityComparator = (a: Entity, b: Entity) => number;
+/**
+ * A comparator for entities.
+ * 
+ * @see Array.sort()
+ */
+export type EntityComparator = (a: Entity, b: Entity) => number;
 
 /**
  * Like IteratingSystem, but sorted using a comparator.

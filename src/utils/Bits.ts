@@ -106,7 +106,7 @@ export class Bits {
 		this.data.fill(0);
 	}
 
-	/** @return The number of bits currently stored, <b>not</b> the highset set bit! */
+	/** @return The number of bits currently stored, **not** the highset set bit! */
 	public numBits(): number {
 		return this.data.length << 5;
 	}
@@ -156,7 +156,7 @@ export class Bits {
 	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index.
 	 *
 	 * @param fromIndex the index to start looking
-	 * @return <tt>>= 0</tt> if a truthy bit was found, <tt>-1</tt> otherwise.
+	 * @return *>= 0* if a truthy bit was found, *-1* otherwise.
 	 */
 	public nextSetBit(fromIndex: number): number {
 		let word = fromIndex >> 5;
@@ -186,7 +186,7 @@ export class Bits {
 	 * Returns the index of the first bit that is set to false that occurs on or after the specified starting index.
 	 *
 	 * @param fromIndex the index to start looking
-	 * @return <tt>>= 0</tt> if a falsy bit was found, <tt>-1</tt> otherwise.
+	 * @return *>= 0* if a falsy bit was found, *-1* otherwise.
 	 */
 	public nextClearBit(fromIndex: number): number {
 		let word = fromIndex >> 5;
@@ -209,7 +209,7 @@ export class Bits {
 	}
 
 	/**
-	 * Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so
+	 * Performs a logical **AND** of this target bit set with the argument bit set. This bit set is modified so
 	 * that each bit in  it has the value true if and only if it both initially had the value true and the
 	 * corresponding bit in the bit set argument also had the value true.
 	 *
@@ -243,7 +243,7 @@ export class Bits {
 	}
 
 	/**
-	 * Performs a logical <b>OR</b> of this instance with the other instance. This instance is modified so that a
+	 * Performs a logical **OR** of this instance with the other instance. This instance is modified so that a
 	 * bit in it has the value true if and only if it either already had the value true or the corresponding bit in
 	 * the other instance has the value true.
 	 *
@@ -266,12 +266,11 @@ export class Bits {
 	}
 
 	/**
-	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that a
+	 * Performs a logical **XOR** of this bit set with the bit set argument. This bit set is modified so that a
 	 * bit in it has the value true if and only if one of the following statements holds:
-	 * <ul>
-	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
-	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
-	 * </ul>
+	 * 
+	 * - The bit initially has the value true, and the corresponding bit in the argument has the value false.
+	 * - The bit initially has the value false, and the corresponding bit in the argument has the value true.
 	 *
 	 * @param other The other instance
 	 * @return this
