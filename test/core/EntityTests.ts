@@ -44,8 +44,8 @@ class ComponentB extends Component { }
 
 		assert.strictEqual(entity.getAll().length, 0);
 		assert.isTrue(entity.getComponentBits().isEmpty());
-		assert.isNull(entity.get<ComponentA>(ComponentA));
-		assert.isNull(entity.get<ComponentB>(ComponentB));
+		assert.isNull(entity.get(ComponentA));
+		assert.isNull(entity.get(ComponentB));
 		assert.isFalse(entity.has(ComponentA));
 		assert.isFalse(entity.has(ComponentB));
 	}
@@ -66,8 +66,8 @@ class ComponentB extends Component { }
 			assert.strictEqual((i == componentAIndex), componentBits.get(i));
 		}
 
-		assert.isNotNull(entity.get<ComponentA>(ComponentA));
-		assert.isNull(entity.get<ComponentB>(ComponentB));
+		assert.isNotNull(entity.get(ComponentA));
+		assert.isNull(entity.get(ComponentB));
 		assert.isTrue(entity.has(ComponentA));
 		assert.isFalse(entity.has(ComponentB));
 
@@ -79,8 +79,8 @@ class ComponentB extends Component { }
 			assert.isFalse(componentBits.get(i));
 		}
 
-		assert.isNull(entity.get<ComponentA>(ComponentA));
-		assert.isNull(entity.get<ComponentB>(ComponentB));
+		assert.isNull(entity.get(ComponentA));
+		assert.isNull(entity.get(ComponentB));
 		assert.isFalse(entity.has(ComponentA));
 		assert.isFalse(entity.has(ComponentB));
 	}
@@ -102,8 +102,8 @@ class ComponentB extends Component { }
 			assert.strictEqual((i == componentAIndex || i == componentBIndex), componentBits.get(i));
 		}
 
-		assert.isNotNull(entity.get<ComponentA>(ComponentA));
-		assert.isNotNull(entity.get<ComponentB>(ComponentB));
+		assert.isNotNull(entity.get(ComponentA));
+		assert.isNotNull(entity.get(ComponentB));
 		assert.isTrue(entity.has(ComponentA));
 		assert.isTrue(entity.has(ComponentB));
 
@@ -115,8 +115,8 @@ class ComponentB extends Component { }
 			assert.isFalse(componentBits.get(i));
 		}
 
-		assert.isNull(entity.get<ComponentA>(ComponentA));
-		assert.isNull(entity.get<ComponentB>(ComponentB));
+		assert.isNull(entity.get(ComponentA));
+		assert.isNull(entity.get(ComponentB));
 		assert.isFalse(entity.has(ComponentA));
 		assert.isFalse(entity.has(ComponentB));
 	}
@@ -131,8 +131,8 @@ class ComponentB extends Component { }
 
 		assert.strictEqual(1, entity.getAll().length);
 		assert.isTrue(entity.has(ComponentA));
-		assert.notStrictEqual(a1, entity.get<ComponentA>(ComponentA));
-		assert.strictEqual(a2, entity.get<ComponentA>(ComponentA));
+		assert.notStrictEqual(a1, entity.get(ComponentA));
+		assert.strictEqual(a2, entity.get(ComponentA));
 	}
 
 	@test getComponentByClass() {
@@ -143,8 +143,8 @@ class ComponentB extends Component { }
 		let compA = entity.add(new ComponentA());
 		let compB = entity.add(new ComponentB());
 
-		let retA = entity.get<ComponentA>(ComponentA);
-		let retB = entity.get<ComponentB>(ComponentB);
+		let retA = entity.get(ComponentA);
+		let retB = entity.get(ComponentB);
 
 		assert.isNotNull(retA);
 		assert.isNotNull(retB);

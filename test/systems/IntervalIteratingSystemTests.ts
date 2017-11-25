@@ -33,7 +33,7 @@ class IntervalIteratingSystemSpy extends IntervalIteratingSystem {
 	}
 
 	protected processEntity(entity: Entity): void {
-		let component = entity.get<IntervalComponentSpy>(IntervalComponentSpy);
+		let component = entity.get(IntervalComponentSpy);
 		assert.isNotNull(component);
 		if (component)
 			component.numUpdates++;
@@ -81,7 +81,7 @@ class IntervalIteratingSystemSpy extends IntervalIteratingSystem {
 			engine.update(deltaTime);
 
 			for (let e of entities) {
-				let component = e.get<IntervalComponentSpy>(IntervalComponentSpy);
+				let component = e.get(IntervalComponentSpy);
 				assert.isNotNull(component);
 				if (component)
 					assert.strictEqual(Math.floor(i / 2), component.numUpdates);

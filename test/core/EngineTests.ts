@@ -110,7 +110,7 @@ class CounterSystem extends EntitySystem {
 		for (let i = 0; i < this.entities.length; ++i) {
 			let e = this.entities[i];
 			if (i % 2 == 0) {
-				let cc = e.get<CounterComponent>(CounterComponent);
+				let cc = e.get(CounterComponent);
 				assert.isNotNull(cc);
 				if (cc)
 					cc.counter++;
@@ -566,7 +566,7 @@ class RemoveEntityTwiceSystem extends EntitySystem {
 		let entities = engine.getEntitiesFor(Family.all(CounterComponent).get());
 
 		for (let e of entities) {
-			let cc = e.get<CounterComponent>(CounterComponent);
+			let cc = e.get(CounterComponent);
 			assert.isNotNull(cc);
 			if (cc)
 				assert.strictEqual(0, cc.counter);
@@ -575,7 +575,7 @@ class RemoveEntityTwiceSystem extends EntitySystem {
 		engine.update(deltaTime);
 
 		for (let e of entities) {
-			let cc = e.get<CounterComponent>(CounterComponent);
+			let cc = e.get(CounterComponent);
 			assert.isNotNull(cc);
 			if (cc)
 				assert.strictEqual(1, cc.counter);
@@ -757,7 +757,7 @@ class RemoveEntityTwiceSystem extends EntitySystem {
 
 		let signal = engine.getEntityRemovedSignal(Family.all(PositionComponent).get());
 		signal.connect((entity) => {
-			assert.isNotNull(entity.get<PositionComponent>(PositionComponent));
+			assert.isNotNull(entity.get(PositionComponent));
 		});
 
 		for (let i = 0; i < 10; i++) {

@@ -197,17 +197,17 @@ function assembleGoodEntity(engine: Engine, overrides?: { [s: string]: { [s: str
 		testFactoryInit(blueprintWithData, engine);
 		let entity = assembleGoodEntity(engine);
 
-		let pos = entity.get<PositionComponent>(PositionComponent);
+		let pos = entity.get(PositionComponent);
 		assert.isNotNull(pos);
 		if (!pos) return;
 		assert.strictEqual(pos.x, 10.1);
 		assert.strictEqual(pos.y, 11.2);
-		let render = entity.get<RenderComponent>(RenderComponent);
+		let render = entity.get(RenderComponent);
 		assert.isNotNull(render);
 		if (!render) return;
 		assert.strictEqual(render.layer, 42);
 		assert.strictEqual(render.color, "FF0000");
-		let label = entity.get<LabelComponent>(LabelComponent);
+		let label = entity.get(LabelComponent);
 		assert.isNotNull(label);
 		if (!label) return;
 		assert.strictEqual(label.message, "a full blown message");
@@ -219,17 +219,17 @@ function assembleGoodEntity(engine: Engine, overrides?: { [s: string]: { [s: str
 		testFactoryInit(blueprintWithoutData, engine);
 		let entity = assembleGoodEntity(engine);
 
-		let pos = entity.get<PositionComponent>(PositionComponent);
+		let pos = entity.get(PositionComponent);
 		assert.isNotNull(pos);
 		if (!pos) return;
 		assert.strictEqual(pos.x, 1);
 		assert.strictEqual(pos.y, 2);
-		let render = entity.get<RenderComponent>(RenderComponent);
+		let render = entity.get(RenderComponent);
 		assert.isNotNull(render);
 		if (!render) return;
 		assert.strictEqual(render.layer, 1);
 		assert.strictEqual(render.color, "FFFFFF");
-		let label = entity.get<LabelComponent>(LabelComponent);
+		let label = entity.get(LabelComponent);
 		assert.isNotNull(label);
 		if (!label) return;
 		assert.strictEqual(label.message, "no message");

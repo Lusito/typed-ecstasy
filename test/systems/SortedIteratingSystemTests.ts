@@ -40,8 +40,8 @@ class IndexComponent extends Component {
 }
 
 function comparator(a: Entity, b: Entity): number {
-	let ac = a.get<OrderComponent>(OrderComponent);
-	let bc = b.get<OrderComponent>(OrderComponent);
+	let ac = a.get(OrderComponent);
+	let bc = b.get(OrderComponent);
 	assert.isNotNull(ac);
 	assert.isNotNull(bc);
 	if (!ac || !bc)
@@ -61,7 +61,7 @@ class SortedIteratingSystemMock extends SortedIteratingSystem {
 	}
 
 	public processEntity(entity: Entity, deltaTime: number): void {
-		let component = entity.get<OrderComponent>(OrderComponent);
+		let component = entity.get(OrderComponent);
 		assert.isNotNull(component);
 		assert.notStrictEqual(0, this.expectedNames.length);
 		if (component)
@@ -76,9 +76,9 @@ class IteratingComponentRemovalSystem extends SortedIteratingSystem {
 		super(Family.all(SpyComponent, OrderComponent, IndexComponent).get(), comparator);
 	}
 
-	public processEntity(entity: Entity, deltaTime: number): void {
-		let indexComponent = entity.get<IndexComponent>(IndexComponent);
-		let spyComponent = entity.get<SpyComponent>(SpyComponent);
+	protected processEntity(entity: Entity, deltaTime: number): void {
+		let indexComponent = entity.get(IndexComponent);
+		let spyComponent = entity.get(SpyComponent);
 		assert.isNotNull(indexComponent);
 		assert.isNotNull(spyComponent);
 		if (!indexComponent || !spyComponent)
@@ -100,8 +100,8 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
 	}
 
 	protected processEntity(entity: Entity, deltaTime: number): void {
-		let indexComponent = entity.get<IndexComponent>(IndexComponent);
-		let spyComponent = entity.get<SpyComponent>(SpyComponent);
+		let indexComponent = entity.get(IndexComponent);
+		let spyComponent = entity.get(SpyComponent);
 		assert.isNotNull(indexComponent);
 		assert.isNotNull(spyComponent);
 		if (!indexComponent || !spyComponent)
@@ -233,7 +233,7 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
 		assert.strictEqual((numEntities / 2), entities.length);
 
 		for (let e of entities) {
-			let spyComponent = e.get<SpyComponent>(SpyComponent);
+			let spyComponent = e.get(SpyComponent);
 			assert.isNotNull(spyComponent);
 			if (spyComponent)
 				assert.strictEqual(1, spyComponent.updates);
@@ -262,7 +262,7 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
 		assert.strictEqual((numEntities / 2), entities.length);
 
 		for (let e of entities) {
-			let spyComponent = e.get<SpyComponent>(SpyComponent);
+			let spyComponent = e.get(SpyComponent);
 			assert.isNotNull(spyComponent);
 			if (spyComponent)
 				assert.strictEqual(1, spyComponent.updates);
@@ -301,10 +301,10 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
 		system.expectedNames.push("C");
 		engine.update(0);
 
-		let ac = a.get<OrderComponent>(OrderComponent);
-		let bc = b.get<OrderComponent>(OrderComponent);
-		let cc = c.get<OrderComponent>(OrderComponent);
-		let dc = d.get<OrderComponent>(OrderComponent);
+		let ac = a.get(OrderComponent);
+		let bc = b.get(OrderComponent);
+		let cc = c.get(OrderComponent);
+		let dc = d.get(OrderComponent);
 		assert.isNotNull(ac);
 		assert.isNotNull(bc);
 		assert.isNotNull(cc);

@@ -34,7 +34,7 @@ class IteratingSystemMock extends IteratingSystem {
 		super(family);
 	}
 
-	public processEntity(entity: Entity, deltaTime: number): void {
+	protected processEntity(entity: Entity, deltaTime: number): void {
 		++this.numUpdates;
 	}
 }
@@ -54,8 +54,8 @@ class IteratingComponentRemovalSystem extends IteratingSystem {
 	}
 
 	protected processEntity(entity: Entity, deltaTime: number): void {
-		let indexComponent = entity.get<IndexComponent>(IndexComponent);
-		let spyComponent = entity.get<SpyComponent>(SpyComponent);
+		let indexComponent = entity.get(IndexComponent);
+		let spyComponent = entity.get(SpyComponent);
 		assert.isNotNull(indexComponent);
 		assert.isNotNull(spyComponent);
 		if (!indexComponent || !spyComponent)
@@ -82,8 +82,8 @@ class IteratingRemovalSystem extends IteratingSystem {
 	}
 
 	protected processEntity(entity: Entity, deltaTime: number): void {
-		let indexComponent = entity.get<IndexComponent>(IndexComponent);
-		let spyComponent = entity.get<SpyComponent>(SpyComponent);
+		let indexComponent = entity.get(IndexComponent);
+		let spyComponent = entity.get(SpyComponent);
 		assert.isNotNull(indexComponent);
 		assert.isNotNull(spyComponent);
 		if (!indexComponent || !spyComponent)
@@ -181,7 +181,7 @@ class IteratingRemovalSystem extends IteratingSystem {
 		assert.strictEqual((numEntities / 2), entities.length);
 
 		for (let e of entities) {
-			let spyComponent = e.get<SpyComponent>(SpyComponent);
+			let spyComponent = e.get(SpyComponent);
 			assert.isNotNull(spyComponent);
 			if (spyComponent)
 				assert.strictEqual(1, spyComponent.updates);
@@ -209,7 +209,7 @@ class IteratingRemovalSystem extends IteratingSystem {
 		assert.strictEqual((numEntities / 2), entities.length);
 
 		for (let e of entities) {
-			let spyComponent = e.get<SpyComponent>(SpyComponent);
+			let spyComponent = e.get(SpyComponent);
 			assert.isNotNull(spyComponent);
 			if (spyComponent)
 				assert.strictEqual(1, spyComponent.updates);
