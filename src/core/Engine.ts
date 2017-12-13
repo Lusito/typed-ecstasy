@@ -89,12 +89,12 @@ export class Engine {
 	 * Creates a new Engine.
 	 */
 	public constructor() {
-		this.entityOperationHandler = new DelayedOperationHandler({
+		this.entityOperationHandler = new DelayedOperationHandler<Entity>({
 			onAdd: this.addEntityInternal.bind(this),
 			onRemove: this.removeEntityInternal.bind(this),
 			onRemoveAll: this.removeAllEntitiesInternal.bind(this)
 		});
-		// this.systemOperationHandler = new DelayedOperationHandler({
+		// this.systemOperationHandler = new DelayedOperationHandler<EntitySystem>({
 		// 	onAdd: this.addSystemInternal.bind(this),
 		// 	onRemove: this.removeSystemInternal.bind(this),
 		// 	onRemoveAll: this.removeAllSystemsInternal.bind(this)
