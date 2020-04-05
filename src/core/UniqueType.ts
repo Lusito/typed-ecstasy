@@ -1,23 +1,7 @@
-/*******************************************************************************
- * Copyright 2014 See AUTHORS file.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
-
 import { Bits } from "../utils/Bits";
-import { Constructor } from "../utils/Constructor";
+import { Constructor, getConstructorFor, getClassLevel, getParentClass } from "../utils/Constructor";
 
-let classCounters: { [s: string]: number } = {};
+const classCounters = [0];
 
 /**
  * Uniquely identifies a sub-class. It assigns them an index which is used internally for fast comparison and
@@ -26,80 +10,89 @@ let classCounters: { [s: string]: number } = {};
  * return the same instance of UniqueType.
  */
 export class UniqueType {
-	private readonly group: string;
-	private readonly index: number;
+    private readonly baseIndex: number;
 
-	public constructor(index: number, group: string) {
-		this.index = index;
-		this.group = group;
-	}
+    private readonly index: number;
 
-	/** @return This UniqueType's group */
-	public getGroup(): string {
-		return this.group;
-	}
+    private readonly level: number;
 
-	/** @return This UniqueType's unique index */
-	public getIndex(): number {
-		return this.index;
-	}
+    public constructor(index: number, baseIndex: number, level: number) {
+        this.index = index;
+        this.baseIndex = baseIndex;
+        this.level = level;
+    }
 
-	/**
-	 * @param clazz The class constructor
-	 * @return A UniqueType matching the Class
-	 */
-	public static getForInstance(inst: {}): UniqueType {
-		return UniqueType.getForClass(Constructor.getFor(inst));
-	}
+    /** @return This UniqueType's base class index (-1 if no base-class) */
+    public getBaseIndex() {
+        return this.baseIndex;
+    }
 
-	/**
-	 * @param clazz The class constructor
-	 * @return A UniqueType matching the Class
-	 */
-	private static generateFor(clazz: Constructor<{}>): UniqueType {
-		let baseClassName = Constructor.getBaseClass(clazz).name;
-		if (!baseClassName)
-			throw "Could not get base class for " + clazz.toString();
-		if (!classCounters.hasOwnProperty(baseClassName))
-			classCounters[baseClassName] = 0;
-		let index = classCounters[baseClassName]++;
-		return clazz.__uniqueType = new UniqueType(index, baseClassName);
-	}
+    /** @return This UniqueType's unique index */
+    public getIndex() {
+        return this.index;
+    }
 
-	/**
-	 * @param clazz The class constructor
-	 * @return A UniqueType matching the Class
-	 */
-	public static getForClass(clazz: Constructor<{}>): UniqueType {
-		return clazz && (clazz.__uniqueType || UniqueType.generateFor(clazz));
-	}
+    /**
+     * @param clazz The class constructor
+     * @return A UniqueType matching the Class
+     */
+    public static getForInstance(inst: {}) {
+        return UniqueType.getForClass(getConstructorFor(inst));
+    }
 
-	/**
-	 * @param clazzes list of class constructors
-	 * @return Bits representing the collection of classes for quick comparison and matching.
-	 */
-	public static getBitsForClasses(destination: Bits, ...clazzes: Constructor<{}>[]): Bits {
-		for (let clazz of clazzes) {
-			destination.set(UniqueType.getForClass(clazz).getIndex());
-		}
+    /**
+     * @param clazz The class constructor
+     * @return A UniqueType matching the Class
+     */
+    public static getForClass(clazz: Constructor<{}>): UniqueType {
+        // eslint-disable-next-line no-underscore-dangle
+        let type = clazz.__uniqueType;
+        const level = getClassLevel(clazz);
+        if (!type || type.level !== level) {
+            if (!type && level === 0) {
+                // Already top-most class
+                const index = classCounters.length;
+                classCounters.push(0);
+                type = new UniqueType(index, -1, level);
+            } else {
+                const base = getParentClass(clazz, level);
+                const baseType = UniqueType.getForClass(base);
+                const baseIndex = baseType.getIndex();
+                const index = classCounters[baseIndex]++;
+                type = new UniqueType(index, baseIndex, level);
+            }
+            // eslint-disable-next-line no-underscore-dangle
+            clazz.__uniqueType = type;
+        }
+        return type;
+    }
 
-		return destination;
-	}
+    /**
+     * @param clazzes list of class constructors
+     * @return Bits representing the collection of classes for quick comparison and matching.
+     */
+    public static getBitsForClasses(destination: Bits, ...clazzes: Array<Constructor<{}>>) {
+        for (const clazz of clazzes) {
+            destination.set(UniqueType.getForClass(clazz).getIndex());
+        }
 
-	/** @return a hashcode to identify this type */
-	public hashCode(): string {
-		return this.group + this.index;
-	}
+        return destination;
+    }
 
-	/**
-	 * Compare with another type.
-	 * 
-	 * @param other the other type
-	 * @return true if the types are equal.
-	 */
-	public equals(other: UniqueType): boolean {
-		if (this === other) return true;
-		if (this.group !== other.group) return false;
-		return this.index === other.index;
-	}
+    /** @return a hashcode to identify this type */
+    public hashCode() {
+        return `${this.baseIndex}/${this.index}`;
+    }
+
+    /**
+     * Compare with another type.
+     *
+     * @param other the other type
+     * @return true if the types are equal.
+     */
+    public equals(other: UniqueType) {
+        if (this === other) return true;
+        if (this.baseIndex !== other.baseIndex) return false;
+        return this.index === other.index;
+    }
 }

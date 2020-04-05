@@ -1,90 +1,78 @@
-/*******************************************************************************
- * Copyright 2015 See AUTHORS file.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
-import { Engine } from "./Engine";
+import type { Engine } from "./Engine";
 
 /**
  * Base class for all systems. An EntitySystem is intended to process entities.
  */
 export abstract class EntitySystem {
-	private processing = true;
-	private engine: Engine | null = null;
-	private priority: number;
+    private processing = true;
 
-	/**
-	 * @param priority The priority to execute this system with (lower means higher priority).
-	 */
-	protected constructor(priority: number = 0) {
-		this.priority = priority;
-	}
+    private engine: Engine | null = null;
 
-	/**
-	 * The update method called every tick.
-	 *
-	 * @param deltaTime The time passed since last frame in seconds.
-	 */
-	public abstract update(deltaTime: number): void;
+    private priority: number;
 
-	/** @return Whether or not the system should be processed. */
-	public checkProcessing(): boolean {
-		return this.processing;
-	}
+    /**
+     * @param priority The priority to execute this system with (lower means higher priority).
+     */
+    public constructor(priority = 0) {
+        this.priority = priority;
+    }
 
-	/**
-	 * Sets whether or not the system should be processed by the Engine.
-	 *
-	 * @param processing true to enable, false to disable processing
-	 */
-	public setProcessing(processing: boolean): void {
-		this.processing = processing;
-	}
+    /**
+     * The update method called every tick.
+     *
+     * @param deltaTime The time passed since last frame in seconds.
+     */
+    public abstract update(deltaTime: number): void;
 
-	/** @return The priority of the system */
-	public getPriority(): number {
-		return this.priority;
-	}
+    /** @return Whether or not the system should be processed. */
+    public checkProcessing() {
+        return this.processing;
+    }
 
-	/**
-	 * Use this to set the priority of the system. Lower means it'll get executed first.
-	 *
-	 * @param priority the new priority
-	 */
-	public setPriority(priority: number): void {
-		this.priority = priority;
-		if (this.engine)
-			this.engine.sortSystems();
-	}
+    /**
+     * Sets whether or not the system should be processed by the Engine.
+     *
+     * @param processing true to enable, false to disable processing
+     */
+    public setProcessing(processing: boolean) {
+        this.processing = processing;
+    }
 
-	/** @return The engine */
-	public getEngine() { return this.engine; }
+    /** @return The priority of the system */
+    public getPriority() {
+        return this.priority;
+    }
 
-	/**
-	 * Called when this EntitySystem is added to an Engine.
-	 *
-	 * @param engine The Engine this system was added to.
-	 */
-	protected addedToEngine(engine: Engine): void {
-		this.engine = engine;
-	}
+    /**
+     * Use this to set the priority of the system. Lower means it'll get executed first.
+     *
+     * @param priority the new priority
+     */
+    public setPriority(priority: number) {
+        this.priority = priority;
+        if (this.engine) this.engine.sortSystems();
+    }
 
-	/**
-	 * Called when this EntitySystem is removed from an Engine.
-	 *
-	 * @param engine The Engine the system was removed from.
-	 */
-	protected removedFromEngine(engine: Engine): void {
-		this.engine = null;
-	}
+    /** @return The engine */
+    public getEngine() {
+        return this.engine;
+    }
+
+    /**
+     * Called when this EntitySystem is added to an Engine.
+     *
+     * @param engine The Engine this system was added to.
+     */
+    protected addedToEngine(engine: Engine) {
+        this.engine = engine;
+    }
+
+    /**
+     * Called when this EntitySystem is removed from an Engine.
+     *
+     * @param _engine The Engine the system was removed from.
+     */
+    protected removedFromEngine(_engine: Engine) {
+        this.engine = null;
+    }
 }

@@ -1,14 +1,14 @@
 ![](https://lusito.github.io/typed-ecstasy/typed_ecstasy.png)
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Lusito/typed-ecstasy/blob/master/LICENSE)
+[![Minified + gzipped size](https://badgen.net/bundlephobia/minzip/typed-ecstasy)](https://www.npmjs.com/package/typed-ecstasy)
+[![NPM version](https://badgen.net/npm/v/typed-ecstasy)](https://www.npmjs.com/package/typed-ecstasy)
+[![License](https://badgen.net/github/license/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy/blob/master/LICENSE)
+[![Stars](https://badgen.net/github/stars/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy)
+[![Watchers](https://badgen.net/github/watchers/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy)
 
 |Master|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)|
 |---|---|---|
 |Develop|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=develop)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=develop)](https://coveralls.io/github/Lusito/typed-ecstasy)|
-
-**Please be aware:**
-
-This port is in an early stage. It still needs to be optimized, especially for memory (no pooling yet).
 
 A tiny entity framework written in TypeScript. It started as a port of the C++ [Entity Component System](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
 [ecstasy](https://github.com/lusito/ecstasy), which is a port of [Ashley](https://github.com/libgdx/ashley/)
@@ -16,6 +16,11 @@ from LibGDX. typed-ecstasy is a high-performance entity framework  without the u
 and transparent to use.
 
 Automated unit tests are running on [Travis-CI](https://travis-ci.org/)
+
+#### Fair Warning
+With version 1, the target is now es2015, so if you want to support older browser, you'll have to ensure that this module is being transpiled to an older es version during your build-process.
+
+There is still room for improvements, like object pooling, but the API is stable.
 
 ### Get started
 
