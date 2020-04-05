@@ -83,7 +83,7 @@ export class Engine {
         this.entityOperationHandler = new DelayedOperationHandler<Entity>({
             onAdd: this.addEntityInternal,
             onRemove: this.removeEntityInternal,
-            onRemoveAll: this.removeAllEntitiesInternal
+            onRemoveAll: this.removeAllEntitiesInternal,
         });
         // this.systemOperationHandler = new DelayedOperationHandler<EntitySystem>({
         // 	onAdd: this.addSystemInternal.bind(this),

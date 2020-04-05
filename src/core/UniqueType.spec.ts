@@ -41,9 +41,15 @@ describe("ComponentType", () => {
     });
 
     test("correctGroup", () => {
-        expect(UniqueType.getForClass(ComponentA).getBaseIndex()).toBe(UniqueType.getForClass(Component as any).getIndex());
-        expect(UniqueType.getForClass(ComponentB).getBaseIndex()).toBe(UniqueType.getForClass(Component as any).getIndex());
-        expect(UniqueType.getForClass(DummySystem).getBaseIndex()).toBe(UniqueType.getForClass(EntitySystem as any).getIndex());
+        expect(UniqueType.getForClass(ComponentA).getBaseIndex()).toBe(
+            UniqueType.getForClass(Component as any).getIndex()
+        );
+        expect(UniqueType.getForClass(ComponentB).getBaseIndex()).toBe(
+            UniqueType.getForClass(Component as any).getIndex()
+        );
+        expect(UniqueType.getForClass(DummySystem).getBaseIndex()).toBe(
+            UniqueType.getForClass(EntitySystem as any).getIndex()
+        );
     });
 
     test("equals", () => {

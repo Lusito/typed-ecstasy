@@ -16,12 +16,12 @@ export interface Constructor<T> {
 
 /**
  * Get the level of a class, i.e. how many parent classes it has.
- * 
+ *
  * @param clazz The class to inspect
  */
 export function getClassLevel(clazz: Constructor<{}>) {
     let count = 0;
-    while(clazz) {
+    while (clazz) {
         clazz = Object.getPrototypeOf(clazz);
         count++;
     }

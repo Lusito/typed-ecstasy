@@ -59,7 +59,7 @@ export abstract class SortedIteratingSystem extends EntitySystem {
     private entityAdded = (entity: Entity) => {
         this.sortedEntities.push(entity);
         this.shouldSort = true;
-    }
+    };
 
     private entityRemoved = (entity: Entity) => {
         const index = this.sortedEntities.indexOf(entity);
@@ -67,7 +67,7 @@ export abstract class SortedIteratingSystem extends EntitySystem {
             this.sortedEntities.splice(index, 1);
             this.shouldSort = true;
         }
-    }
+    };
 
     protected addedToEngine(engine: Engine) {
         super.addedToEngine(engine);

@@ -17,12 +17,12 @@ class EntityListenerMock {
     public entityAdded = (entity: Entity) => {
         ++this.addedCount;
         expect(entity).not.toBe(null);
-    }
+    };
 
     public entityRemoved = (entity: Entity) => {
         ++this.removedCount;
         expect(entity).not.toBe(null);
-    }
+    };
 }
 
 abstract class EntitySystemMockBase extends EntitySystem {
