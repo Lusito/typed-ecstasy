@@ -1,4 +1,4 @@
 typed-ecstasy
 Copyright 2017 Santo Pfingsten
 
-This software is a TypeScript port of ecastasy (https://github.com/lusito/ecstasy), which is in turn a C++ port of Ashley (https://github.com/libgdx/ashley).
+This software is a TypeScript port of ecstasy (https://github.com/lusito/ecstasy), which is in turn a C++ port of Ashley (https://github.com/libgdx/ashley).
