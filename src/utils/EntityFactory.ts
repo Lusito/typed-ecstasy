@@ -43,7 +43,7 @@ export class EntityFactory {
             for (const componentBlueprint of blueprint.components) {
                 const factory = this.componentFactories[componentBlueprint.name];
                 componentBlueprint.setOverrides(overrides?.[componentBlueprint.name]);
-                if (!factory || !factory.assemble(entity, componentBlueprint)) {
+                if (!factory || !factory(entity, componentBlueprint)) {
                     success = false;
                     console.error(`Could not assemble component ${componentBlueprint.name}`);
                 }

@@ -27,7 +27,7 @@ There is still room for improvements, like object pooling, but the API is stable
 * [Find out how an ECS works](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
 * [Read the wiki](https://github.com/Lusito/typed-ecstasy/wiki)
 * [Refer to the TypeDoc documentation](https://lusito.github.io/typed-ecstasy/index.html)
-* [Read the examples](https://github.com/Lusito/typed-ecstasy/tree/master/test)
+* Take a look at the test files (`src/**/*.spec.ts`)
 
 ### Report isssues
 

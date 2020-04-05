@@ -1,10 +1,9 @@
 import { Component } from "../core/Component";
 import { Entity } from "../core/Entity";
 import { Engine } from "../core/Engine";
-import { ComponentFactory } from "./ComponentFactory";
+import { simpleComponentFactory } from "./ComponentFactory";
 import { EntityFactory } from "./EntityFactory";
 import { ComponentBlueprint } from "./ComponentBlueprint";
-import { SimpleComponentFactory } from "./SimpleComponentFactory";
 import { EntityBlueprint } from "./EntityBlueprint";
 
 interface PositionDef {
@@ -74,37 +73,33 @@ class MarkerComponent extends Component {
     message = "";
 }
 
-class PositionComponentFactory extends ComponentFactory {
-    public assemble(entity: Entity, blueprint: ComponentBlueprint): boolean {
-        const comp = entity.add(new PositionComponent());
-        comp.x = blueprint.getNumber("x", 1);
-        comp.y = blueprint.getNumber("y", 2);
-        return true;
-    }
+function positionComponentFactory(entity: Entity, blueprint: ComponentBlueprint) {
+    const comp = entity.add(new PositionComponent());
+    comp.x = blueprint.getNumber("x", 1);
+    comp.y = blueprint.getNumber("y", 2);
+    return true;
 }
-class RenderComponentFactory extends ComponentFactory {
-    public assemble(entity: Entity, blueprint: ComponentBlueprint): boolean {
-        const comp = entity.add(new RenderComponent());
-        comp.layer = blueprint.getNumber("layer", 1);
-        comp.color = blueprint.getString("color", "FFFFFF");
-        return true;
-    }
+
+function renderComponentFactory(entity: Entity, blueprint: ComponentBlueprint): boolean {
+    const comp = entity.add(new RenderComponent());
+    comp.layer = blueprint.getNumber("layer", 1);
+    comp.color = blueprint.getString("color", "FFFFFF");
+    return true;
 }
-class LabelComponentFactory extends ComponentFactory {
-    public assemble(entity: Entity, blueprint: ComponentBlueprint): boolean {
-        const comp = entity.add(new LabelComponent());
-        comp.message = blueprint.getString("message", "no message");
-        return true;
-    }
+
+function labelComponentFactory(entity: Entity, blueprint: ComponentBlueprint): boolean {
+    const comp = entity.add(new LabelComponent());
+    comp.message = blueprint.getString("message", "no message");
+    return true;
 }
 
 function testFactoryInit(componentDefs: PossibleComponentDefs[], engine: Engine): EntityFactory {
     const factory = new EntityFactory();
     // Setup component factories
-    factory.addComponentFactory("Position", new PositionComponentFactory());
-    factory.addComponentFactory("Render", new RenderComponentFactory());
-    factory.addComponentFactory("Label", new LabelComponentFactory());
-    factory.addComponentFactory("Marker", new SimpleComponentFactory(MarkerComponent));
+    factory.addComponentFactory("Position", positionComponentFactory);
+    factory.addComponentFactory("Render", renderComponentFactory);
+    factory.addComponentFactory("Label", labelComponentFactory);
+    factory.addComponentFactory("Marker", simpleComponentFactory(MarkerComponent));
 
     const entityBlueprint = new EntityBlueprint();
 
