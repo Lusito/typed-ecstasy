@@ -46,7 +46,6 @@
     "@lusito/prettier-config": "^1.0.0",
     "@lusito/stylelint-config": "^1.0.0",
     "@types/jest": "^25.1.5",
-    "babel-jest": "^25.2.6",
     "copyfiles": "^2.2.0",
     "coveralls": "^3.0.11",
     "jest": "^25.2.6",
