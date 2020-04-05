@@ -13,7 +13,6 @@ export * from "./utils/Bits";
 export * from "./utils/ComponentBlueprint";
 export * from "./utils/EntityBlueprint";
 export * from "./utils/ComponentFactory";
-export * from "./utils/SimpleComponentFactory";
 export * from "./utils/Constructor";
 export * from "./utils/EntityFactory";
 export * from "./utils/Lookup";
