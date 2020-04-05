@@ -19,12 +19,9 @@
   "license": "Apache-2.0",
   "author": "Santo Pfingsten",
   "main": "dist/index.js",
-  "types": "src/Index.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist/",
-    "src/",
-    "test/",
-    "tsconfig.json"
+    "dist/"
   ],
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig-build.json",
