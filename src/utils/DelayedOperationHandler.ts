@@ -48,13 +48,13 @@ export class DelayedOperationHandler<T> {
         while (this.nextOperation) {
             const operation = this.nextOperation;
             switch (operation.type) {
-                case DelayedOperationType.Add:
+                case DelayedOperationType.ADD:
                     if (operation.entry) this.listener.onAdd(operation.entry);
                     break;
-                case DelayedOperationType.Remove:
+                case DelayedOperationType.REMOVE:
                     if (operation.entry) this.listener.onRemove(operation.entry);
                     break;
-                case DelayedOperationType.RemoveAll:
+                case DelayedOperationType.REMOVE_ALL:
                     this.listener.onRemoveAll();
                     break;
                 default:
@@ -80,7 +80,7 @@ export class DelayedOperationHandler<T> {
      * @param entry the entry to add
      */
     public add(entry: T) {
-        this.schedule(DelayedOperationType.Add, entry);
+        this.schedule(DelayedOperationType.ADD, entry);
     }
 
     /**
@@ -89,13 +89,13 @@ export class DelayedOperationHandler<T> {
      * @param entry the entry to remove
      */
     public remove(entry: T) {
-        this.schedule(DelayedOperationType.Remove, entry);
+        this.schedule(DelayedOperationType.REMOVE, entry);
     }
 
     /**
      * Schedule a removeAll operation
      */
     public removeAll() {
-        this.schedule(DelayedOperationType.RemoveAll, null);
+        this.schedule(DelayedOperationType.REMOVE_ALL, null);
     }
 }

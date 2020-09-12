@@ -19,7 +19,7 @@ export interface Constructor<T> {
  *
  * @param clazz The class to inspect
  */
-export function getClassLevel(clazz: Constructor<{}>) {
+export function getClassLevel(clazz: Constructor<unknown>) {
     let count = 0;
     while (clazz) {
         clazz = Object.getPrototypeOf(clazz);
@@ -35,7 +35,7 @@ export function getClassLevel(clazz: Constructor<{}>) {
  * @param level The number of levels to go down.
  * @return The nth-level parent class
  */
-export function getParentClass(clazz: Constructor<{}>, level: number): Constructor<{}> {
+export function getParentClass(clazz: Constructor<unknown>, level: number): Constructor<unknown> {
     while (level > 0) {
         clazz = Object.getPrototypeOf(clazz);
         level--;
@@ -49,6 +49,6 @@ export function getParentClass(clazz: Constructor<{}>, level: number): Construct
  * @param inst the instance to get the constructor for
  * @return the constructor.
  */
-export function getConstructorFor(inst: {}): Constructor<{}> {
+export function getConstructorFor(inst: unknown): Constructor<unknown> {
     return Object.getPrototypeOf(inst).constructor;
 }

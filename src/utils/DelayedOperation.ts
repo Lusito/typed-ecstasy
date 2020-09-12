@@ -1,7 +1,7 @@
 export enum DelayedOperationType {
-    Add,
-    Remove,
-    RemoveAll,
+    ADD,
+    REMOVE,
+    REMOVE_ALL,
 }
 
 export class DelayedOperation<T> {

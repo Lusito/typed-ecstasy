@@ -33,10 +33,10 @@ export class UniqueType {
     }
 
     /**
-     * @param clazz The class constructor
+     * @param inst A class instance
      * @return A UniqueType matching the Class
      */
-    public static getForInstance(inst: {}) {
+    public static getForInstance(inst: unknown) {
         return UniqueType.getForClass(getConstructorFor(inst));
     }
 
@@ -44,7 +44,7 @@ export class UniqueType {
      * @param clazz The class constructor
      * @return A UniqueType matching the Class
      */
-    public static getForClass(clazz: Constructor<{}>): UniqueType {
+    public static getForClass(clazz: Constructor<unknown>): UniqueType {
         // eslint-disable-next-line no-underscore-dangle
         let type = clazz.__uniqueType;
         const level = getClassLevel(clazz);
@@ -71,7 +71,7 @@ export class UniqueType {
      * @param clazzes list of class constructors
      * @return Bits representing the collection of classes for quick comparison and matching.
      */
-    public static getBitsForClasses(destination: Bits, ...clazzes: Array<Constructor<{}>>) {
+    public static getBitsForClasses(destination: Bits, ...clazzes: Array<Constructor<unknown>>) {
         for (const clazz of clazzes) {
             destination.set(UniqueType.getForClass(clazz).getIndex());
         }
