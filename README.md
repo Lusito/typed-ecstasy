@@ -5,10 +5,8 @@
 [![License](https://badgen.net/github/license/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy/blob/master/LICENSE)
 [![Stars](https://badgen.net/github/stars/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy)
 [![Watchers](https://badgen.net/github/watchers/lusito/typed-ecstasy)](https://github.com/lusito/typed-ecstasy)
-
-|Master|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)|
-|---|---|---|
-|Develop|[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=develop)](https://travis-ci.org/Lusito/typed-ecstasy)|[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=develop)](https://coveralls.io/github/Lusito/typed-ecstasy)|
+[![Build Status](https://travis-ci.org/Lusito/typed-ecstasy.svg?branch=master)](https://travis-ci.org/Lusito/typed-ecstasy)
+[![Code Coverage](https://coveralls.io/repos/github/Lusito/typed-ecstasy/badge.svg?branch=master)](https://coveralls.io/github/Lusito/typed-ecstasy)
 
 A tiny entity framework written in TypeScript. It started as a port of the C++ [Entity Component System](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
 [ecstasy](https://github.com/lusito/ecstasy), which is a port of [Ashley](https://github.com/libgdx/ashley/)
@@ -29,7 +27,7 @@ There is still room for improvements, like object pooling, but the API is stable
 * [Refer to the TypeDoc documentation](https://lusito.github.io/typed-ecstasy/index.html)
 * Take a look at the test files (`src/**/*.spec.ts`)
 
-### Report isssues
+### Report issues
 
 Something not working quite as expected? Do you need a feature that has not been implemented yet? Check the [issue tracker](https://github.com/Lusito/typed-ecstasy/issues) and add a new one if your problem is not already listed. Please try to provide a detailed description of your problem, including the steps to reproduce it.
 
