@@ -1,0 +1,722 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SortedIteratingSystem | typed-ecstasy</title>
+	<meta name="description" content="Documentation for typed-ecstasy">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">typed-ecstasy</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">typed-ecstasy</a>
+				</li>
+				<li>
+					<a href="../modules/systems_sortediteratingsystem.html">systems/SortedIteratingSystem</a>
+				</li>
+				<li>
+					<a href="systems_sortediteratingsystem.sortediteratingsystem.html">SortedIteratingSystem</a>
+				</li>
+			</ul>
+			<h1>Class SortedIteratingSystem</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Like IteratingSystem, but sorted using a comparator.
+							It processes each Entity of a given Family in the order specified by a comparator and
+							calls processEntity() for each Entity every time the EntitySystem is updated. This is really just a convenience
+							class as rendering systems tend to iterate over a list of entities in a sorted manner. Adding entities will cause
+						the entity list to be resorted. Call forceSort() if you changed your sorting criteria.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="core_entitysystem.entitysystem.html" class="tsd-signature-type" data-tsd-kind="Class">EntitySystem</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">SortedIteratingSystem</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#comparator" class="tsd-kind-icon">comparator</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#connections" class="tsd-kind-icon">connections</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#family" class="tsd-kind-icon">family</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#shouldsort" class="tsd-kind-icon">should<wbr>Sort</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#sortedentities" class="tsd-kind-icon">sorted<wbr>Entities</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#addedtoengine" class="tsd-kind-icon">added<wbr>ToEngine</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#checkprocessing" class="tsd-kind-icon">check<wbr>Processing</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#entityadded" class="tsd-kind-icon">entity<wbr>Added</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#entityremoved" class="tsd-kind-icon">entity<wbr>Removed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#forcesort" class="tsd-kind-icon">force<wbr>Sort</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#getengine" class="tsd-kind-icon">get<wbr>Engine</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#getfamily" class="tsd-kind-icon">get<wbr>Family</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#getpriority" class="tsd-kind-icon">get<wbr>Priority</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#processentity" class="tsd-kind-icon">process<wbr>Entity</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#removedfromengine" class="tsd-kind-icon">removed<wbr>From<wbr>Engine</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#setpriority" class="tsd-kind-icon">set<wbr>Priority</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#setprocessing" class="tsd-kind-icon">set<wbr>Processing</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#sort" class="tsd-kind-icon">sort</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="systems_sortediteratingsystem.sortediteratingsystem.html#update" class="tsd-kind-icon">update</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Sorted<wbr>Iterating<wbr>System<span class="tsd-signature-symbol">(</span>family<span class="tsd-signature-symbol">: </span><a href="core_family.family.html" class="tsd-signature-type" data-tsd-kind="Class">Family</a>, comparator<span class="tsd-signature-symbol">: </span><a href="../modules/systems_sortediteratingsystem.html#entitycomparator" class="tsd-signature-type" data-tsd-kind="Type alias">EntityComparator</a>, priority<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="systems_sortediteratingsystem.sortediteratingsystem.html" class="tsd-signature-type" data-tsd-kind="Class">SortedIteratingSystem</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L31">src/systems/SortedIteratingSystem.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>family: <a href="core_family.family.html" class="tsd-signature-type" data-tsd-kind="Class">Family</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The family of entities iterated over in this System</p>
+									</div>
+								</li>
+								<li>
+									<h5>comparator: <a href="../modules/systems_sortediteratingsystem.html#entitycomparator" class="tsd-signature-type" data-tsd-kind="Type alias">EntityComparator</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The comparator to sort the entities</p>
+									</div>
+								</li>
+								<li>
+									<h5>priority: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The priority to execute this system with (lower means higher priority).</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="systems_sortediteratingsystem.sortediteratingsystem.html" class="tsd-signature-type" data-tsd-kind="Class">SortedIteratingSystem</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="comparator" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> comparator</h3>
+					<div class="tsd-signature tsd-kind-icon">comparator<span class="tsd-signature-symbol">:</span> <a href="../modules/systems_sortediteratingsystem.html#entitycomparator" class="tsd-signature-type" data-tsd-kind="Type alias">EntityComparator</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L29">src/systems/SortedIteratingSystem.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="connections" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> connections</h3>
+					<div class="tsd-signature tsd-kind-icon">connections<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SignalConnections</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L31">src/systems/SortedIteratingSystem.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="family" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> family</h3>
+					<div class="tsd-signature tsd-kind-icon">family<span class="tsd-signature-symbol">:</span> <a href="core_family.family.html" class="tsd-signature-type" data-tsd-kind="Class">Family</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L23">src/systems/SortedIteratingSystem.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="shouldsort" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> should<wbr>Sort</h3>
+					<div class="tsd-signature tsd-kind-icon">should<wbr>Sort<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L27">src/systems/SortedIteratingSystem.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="sortedentities" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> sorted<wbr>Entities</h3>
+					<div class="tsd-signature tsd-kind-icon">sorted<wbr>Entities<span class="tsd-signature-symbol">:</span> <a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L25">src/systems/SortedIteratingSystem.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="addedtoengine" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> added<wbr>ToEngine</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">added<wbr>ToEngine<span class="tsd-signature-symbol">(</span>engine<span class="tsd-signature-symbol">: </span><a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#addedtoengine">addedToEngine</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L72">src/systems/SortedIteratingSystem.ts:72</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>engine: <a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="checkprocessing" class="tsd-anchor"></a>
+					<h3>check<wbr>Processing</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">check<wbr>Processing<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#checkprocessing">checkProcessing</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/core/EntitySystem.ts#L28">src/core/EntitySystem.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>Whether or not the system should be processed.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="entityadded" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> entity<wbr>Added</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">entity<wbr>Added<span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L59">src/systems/SortedIteratingSystem.ts:59</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>entity: <a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="entityremoved" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> entity<wbr>Removed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">entity<wbr>Removed<span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L64">src/systems/SortedIteratingSystem.ts:64</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>entity: <a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="forcesort" class="tsd-anchor"></a>
+					<h3>force<wbr>Sort</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">force<wbr>Sort<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L48">src/systems/SortedIteratingSystem.ts:48</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Call this if the sorting criteria have changed.
+									The actual sorting will be delayed until the entities are processed.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="getengine" class="tsd-anchor"></a>
+					<h3>get<wbr>Engine</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Engine<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#getengine">getEngine</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/core/EntitySystem.ts#L57">src/core/EntitySystem.ts:57</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a></h4>
+							<p>The engine</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getentities" class="tsd-anchor"></a>
+					<h3>get<wbr>Entities</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Entities<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L104">src/systems/SortedIteratingSystem.ts:104</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>The set of entities processed by the system</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getfamily" class="tsd-anchor"></a>
+					<h3>get<wbr>Family</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Family<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="core_family.family.html" class="tsd-signature-type" data-tsd-kind="Class">Family</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L110">src/systems/SortedIteratingSystem.ts:110</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="core_family.family.html" class="tsd-signature-type" data-tsd-kind="Class">Family</a></h4>
+							<p>The Family used when the system was created</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="getpriority" class="tsd-anchor"></a>
+					<h3>get<wbr>Priority</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Priority<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#getpriority">getPriority</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/core/EntitySystem.ts#L42">src/core/EntitySystem.ts:42</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The priority of the system</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="processentity" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> process<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">process<wbr>Entity<span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a>, deltaTime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L121">src/systems/SortedIteratingSystem.ts:121</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This method is called on every entity on every update call of the EntitySystem.
+									Override this to implement your system&#39;s specific processing.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>entity: <a href="core_entity.entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The current Entity being processed</p>
+									</div>
+								</li>
+								<li>
+									<h5>deltaTime: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The delta time between the last and current frame</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="removedfromengine" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> removed<wbr>From<wbr>Engine</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">removed<wbr>From<wbr>Engine<span class="tsd-signature-symbol">(</span>engine<span class="tsd-signature-symbol">: </span><a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#removedfromengine">removedFromEngine</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L87">src/systems/SortedIteratingSystem.ts:87</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>engine: <a href="core_engine.engine.html" class="tsd-signature-type" data-tsd-kind="Class">Engine</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="setpriority" class="tsd-anchor"></a>
+					<h3>set<wbr>Priority</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Priority<span class="tsd-signature-symbol">(</span>priority<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#setpriority">setPriority</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/core/EntitySystem.ts#L51">src/core/EntitySystem.ts:51</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Use this to set the priority of the system. Lower means it&#39;ll get executed first.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>priority: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the new priority</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="setprocessing" class="tsd-anchor"></a>
+					<h3>set<wbr>Processing</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Processing<span class="tsd-signature-symbol">(</span>processing<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#setprocessing">setProcessing</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/core/EntitySystem.ts#L37">src/core/EntitySystem.ts:37</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets whether or not the system should be processed by the Engine.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>processing: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>true to enable, false to disable processing</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="sort" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> sort</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L52">src/systems/SortedIteratingSystem.ts:52</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>deltaTime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="core_entitysystem.entitysystem.html">EntitySystem</a>.<a href="core_entitysystem.entitysystem.html#update">update</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Lusito/typed-ecstasy/blob/b36e088/src/systems/SortedIteratingSystem.ts#L94">src/systems/SortedIteratingSystem.ts:94</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>deltaTime: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/systems_sortediteratingsystem.html">systems/<wbr>Sorted<wbr>Iterating<wbr>System</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="systems_sortediteratingsystem.sortediteratingsystem.html" class="tsd-kind-icon">Sorted<wbr>Iterating<wbr>System</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#comparator" class="tsd-kind-icon">comparator</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#connections" class="tsd-kind-icon">connections</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#family" class="tsd-kind-icon">family</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#shouldsort" class="tsd-kind-icon">should<wbr>Sort</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#sortedentities" class="tsd-kind-icon">sorted<wbr>Entities</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#addedtoengine" class="tsd-kind-icon">added<wbr>ToEngine</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#checkprocessing" class="tsd-kind-icon">check<wbr>Processing</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#entityadded" class="tsd-kind-icon">entity<wbr>Added</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#entityremoved" class="tsd-kind-icon">entity<wbr>Removed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#forcesort" class="tsd-kind-icon">force<wbr>Sort</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#getengine" class="tsd-kind-icon">get<wbr>Engine</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#getfamily" class="tsd-kind-icon">get<wbr>Family</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#getpriority" class="tsd-kind-icon">get<wbr>Priority</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#processentity" class="tsd-kind-icon">process<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#removedfromengine" class="tsd-kind-icon">removed<wbr>From<wbr>Engine</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#setpriority" class="tsd-kind-icon">set<wbr>Priority</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#setprocessing" class="tsd-kind-icon">set<wbr>Processing</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#sort" class="tsd-kind-icon">sort</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="systems_sortediteratingsystem.sortediteratingsystem.html#update" class="tsd-kind-icon">update</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/systems_sortediteratingsystem.html#entitycomparator" class="tsd-kind-icon">Entity<wbr>Comparator</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
