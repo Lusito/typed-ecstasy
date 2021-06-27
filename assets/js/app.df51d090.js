@@ -1111,14 +1111,14 @@ __webpack_require__.r(__webpack_exports__);
   "v-4e62f04e": function v4e62f04e() {
     return __webpack_require__.e(/*! import() */ 21).then(__webpack_require__.bind(null, /*! ./docs/guide/data-driven/types.md */ "./docs/guide/data-driven/types.md"));
   },
+  "v-7b20e0d9": function v7b20e0d9() {
+    return __webpack_require__.e(/*! import() */ 22).then(__webpack_require__.bind(null, /*! ./docs/guide/data-driven/usage.md */ "./docs/guide/data-driven/usage.md"));
+  },
   "v-5026c2f9": function v5026c2f9() {
     return __webpack_require__.e(/*! import() */ 23).then(__webpack_require__.bind(null, /*! ./docs/guide/migration.md */ "./docs/guide/migration.md"));
   },
   "v-18783384": function v18783384() {
     return __webpack_require__.e(/*! import() */ 24).then(__webpack_require__.bind(null, /*! ./docs/guide/systems/README.md */ "./docs/guide/systems/README.md"));
-  },
-  "v-7b20e0d9": function v7b20e0d9() {
-    return __webpack_require__.e(/*! import() */ 22).then(__webpack_require__.bind(null, /*! ./docs/guide/data-driven/usage.md */ "./docs/guide/data-driven/usage.md"));
   },
   "v-00e1f18e": function v00e1f18e() {
     return __webpack_require__.e(/*! import() */ 25).then(__webpack_require__.bind(null, /*! ./docs/guide/systems/intervaliteratingsystem.md */ "./docs/guide/systems/intervaliteratingsystem.md"));
@@ -1316,6 +1316,13 @@ var routes = [{
     Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-4e62f04e").then(next);
   }
 }, {
+  name: "v-7b20e0d9",
+  path: "/guide/data-driven/usage.html",
+  component: _home_runner_work_typed_ecstasy_typed_ecstasy_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+  beforeEnter: function beforeEnter(to, from, next) {
+    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-7b20e0d9").then(next);
+  }
+}, {
   name: "v-5026c2f9",
   path: "/guide/migration.html",
   component: _home_runner_work_typed_ecstasy_typed_ecstasy_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -1332,13 +1339,6 @@ var routes = [{
 }, {
   path: "/guide/systems/index.html",
   redirect: "/guide/systems/"
-}, {
-  name: "v-7b20e0d9",
-  path: "/guide/data-driven/usage.html",
-  component: _home_runner_work_typed_ecstasy_typed_ecstasy_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-  beforeEnter: function beforeEnter(to, from, next) {
-    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-7b20e0d9").then(next);
-  }
 }, {
   name: "v-00e1f18e",
   path: "/guide/systems/intervaliteratingsystem.html",
@@ -1939,6 +1939,24 @@ var siteData = {
     "normalizedContent": "# entityconfig and context\n\nas you saw in the componentfactory.ts, we need to define two types: sampleentityconfig and samplecontext,\n\nhere's an example of how they might look like:\n\n\n# src/types.ts\n\nimport type { positionconfig } from \"./components/positioncomponent\";\nimport type { spriteconfig } from \"./components/spritecomponent\";\nimport type { pickupconfig } from \"./components/pickupcomponent\";\nimport type { camerafocusconfig } from \"./components/camerafocuscomponent\";\n\n/**\n * we need a type to define the possible composition of an entity.\n * in other words, what components an entity might have and what values should be used for the component configurations.\n */\nexport type sampleentityconfig = {\n    // the keys here will be used when setting up the component factories.\n    position?: positionconfig;\n    sprite?: spriteconfig;\n    pickup?: pickupconfig;\n    camerafocus?: camerafocusconfig;\n};\n\n/**\n * context is a custom object that can be passed to the component factories (as a second parameter).\n * this could, for example, be (or contain) an asset manager.\n * for the sake of this simple demo, one simple property will suffice.\n */\nexport type samplecontext = {\n    defaultcamerafocusweight: number;\n};\n\n\nyou can pass anything you'd like to component factories. just make sure you have a type for it.",
     "charsets": {}
   }, {
+    "title": "Using the Entity Factory",
+    "frontmatter": {},
+    "regularPath": "/guide/data-driven/usage.html",
+    "relativePath": "guide/data-driven/usage.md",
+    "key": "v-7b20e0d9",
+    "path": "/guide/data-driven/usage.html",
+    "headers": [{
+      "level": 2,
+      "title": "src/entrypoint.ts",
+      "slug": "src-entrypoint-ts",
+      "normalizedTitle": "src/entrypoint.ts",
+      "charIndex": 66
+    }],
+    "headersStr": "src/entrypoint.ts",
+    "content": "# Using the Entity Factory\n\nNow we can assembly our entities:\n\n\n# src/entrypoint.ts\n\nimport { Engine } from \"typed-ecstasy\";\n\nimport { setupEntityFactory } from \"./entityFactory\";\n\n// This is a simplified example of how you would use an entity factory to assemble entities\nconst engine = new Engine();\nconst factory = setupEntityFactory();\n\n// Create an entity in a simple fashion:\nconst simple = factory.assemble(\"stone\");\n// Then add it to the engine:\nengine.entities.add(simple);\n\n// Or override settings by component:\nconst modified = factory.assemble(\"stone\", {\n    Position: {\n        x: 1337,\n        y: 1337,\n    },\n});\n// Don't forget to add it to the engine:\nengine.entities.add(modified);\n",
+    "normalizedContent": "# using the entity factory\n\nnow we can assembly our entities:\n\n\n# src/entrypoint.ts\n\nimport { engine } from \"typed-ecstasy\";\n\nimport { setupentityfactory } from \"./entityfactory\";\n\n// this is a simplified example of how you would use an entity factory to assemble entities\nconst engine = new engine();\nconst factory = setupentityfactory();\n\n// create an entity in a simple fashion:\nconst simple = factory.assemble(\"stone\");\n// then add it to the engine:\nengine.entities.add(simple);\n\n// or override settings by component:\nconst modified = factory.assemble(\"stone\", {\n    position: {\n        x: 1337,\n        y: 1337,\n    },\n});\n// don't forget to add it to the engine:\nengine.entities.add(modified);\n",
+    "charsets": {}
+  }, {
     "title": "Migration Guide",
     "frontmatter": {},
     "regularPath": "/guide/migration.html",
@@ -1990,24 +2008,6 @@ var siteData = {
     "headersStr": null,
     "content": "# Overview\n\ntyped-ecstasy comes with a few Entity Systems that will spare you from typing boilerplate code.\n\nMake sure to check out the page about Dependency Injection. All built-in EntitySystems require constructor arguments, so you'll need to create constructors, which call the super-constructor.\n\n * IteratingSystem: Iterate over a Family of entities\n * IntervalSystem: Run code at a constant interval\n * IntervalIteratingSystem: Iterate over a Family of entities at a constant interval\n * SortedIteratingSystem: Iterate over a sorted Family of entities\n * SortedSubIteratingSystem: Imagine a SortedIteratingSystem that you can add SubSystems to",
     "normalizedContent": "# overview\n\ntyped-ecstasy comes with a few entity systems that will spare you from typing boilerplate code.\n\nmake sure to check out the page about dependency injection. all built-in entitysystems require constructor arguments, so you'll need to create constructors, which call the super-constructor.\n\n * iteratingsystem: iterate over a family of entities\n * intervalsystem: run code at a constant interval\n * intervaliteratingsystem: iterate over a family of entities at a constant interval\n * sortediteratingsystem: iterate over a sorted family of entities\n * sortedsubiteratingsystem: imagine a sortediteratingsystem that you can add subsystems to",
-    "charsets": {}
-  }, {
-    "title": "Using the Entity Factory",
-    "frontmatter": {},
-    "regularPath": "/guide/data-driven/usage.html",
-    "relativePath": "guide/data-driven/usage.md",
-    "key": "v-7b20e0d9",
-    "path": "/guide/data-driven/usage.html",
-    "headers": [{
-      "level": 2,
-      "title": "src/entrypoint.ts",
-      "slug": "src-entrypoint-ts",
-      "normalizedTitle": "src/entrypoint.ts",
-      "charIndex": 66
-    }],
-    "headersStr": "src/entrypoint.ts",
-    "content": "# Using the Entity Factory\n\nNow we can assembly our entities:\n\n\n# src/entrypoint.ts\n\nimport { Engine } from \"typed-ecstasy\";\n\nimport { setupEntityFactory } from \"./entityFactory\";\n\n// This is a simplified example of how you would use an entity factory to assemble entities\nconst engine = new Engine();\nconst factory = setupEntityFactory();\n\n// Create an entity in a simple fashion:\nconst simple = factory.assemble(\"stone\");\n// Then add it to the engine:\nengine.entities.add(simple);\n\n// Or override settings by component:\nconst modified = factory.assemble(\"stone\", {\n    Position: {\n        x: 1337,\n        y: 1337,\n    },\n});\n// Don't forget to add it to the engine:\nengine.entities.add(modified);\n",
-    "normalizedContent": "# using the entity factory\n\nnow we can assembly our entities:\n\n\n# src/entrypoint.ts\n\nimport { engine } from \"typed-ecstasy\";\n\nimport { setupentityfactory } from \"./entityfactory\";\n\n// this is a simplified example of how you would use an entity factory to assemble entities\nconst engine = new engine();\nconst factory = setupentityfactory();\n\n// create an entity in a simple fashion:\nconst simple = factory.assemble(\"stone\");\n// then add it to the engine:\nengine.entities.add(simple);\n\n// or override settings by component:\nconst modified = factory.assemble(\"stone\", {\n    position: {\n        x: 1337,\n        y: 1337,\n    },\n});\n// don't forget to add it to the engine:\nengine.entities.add(modified);\n",
     "charsets": {}
   }, {
     "title": "IntervalIteratingSystem",
@@ -2569,7 +2569,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.__VUEPRESS__ = {
   version: "1.8.2",
-  hash: "20595f2"
+  hash: "209c14e"
 };
 Object(_app__WEBPACK_IMPORTED_MODULE_4__["createApp"])(false
 /* isServer */
@@ -28049,4 +28049,4 @@ module.exports = __webpack_require__(/*! /home/runner/work/typed-ecstasy/typed-e
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.5e5f5fb4.js.map
+//# sourceMappingURL=app.df51d090.js.map
