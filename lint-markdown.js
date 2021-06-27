@@ -14,7 +14,7 @@ const statusLabels = {
 
 const options = {
     // ignorePatterns: [{ pattern: "^http(s)://" }],
-    retryOn429: false,
+    retryOn429: true,
     retryCount: 2,
     fallbackRetryDelay: "30s",
     aliveStatusCodes: [200, 206],

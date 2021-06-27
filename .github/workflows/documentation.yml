@@ -11,7 +11,7 @@ jobs:
     - name: Install
       run: npm ci
     - name: Build
-      run: npm run docs:build -- --debug
+      run: npm run docs:build
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
