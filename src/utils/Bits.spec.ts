@@ -1,4 +1,4 @@
-import { Bits } from "./Bits";
+import { Bits } from "typed-ecstasy";
 
 describe("Bits", () => {
     test("test_get_out_of_bounds", () => {

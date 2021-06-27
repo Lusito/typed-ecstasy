@@ -16,16 +16,13 @@ and transparent to use.
 Automated unit tests are running on [Travis-CI](https://travis-ci.org/)
 
 #### Fair Warning
-With version 1, the target is now es2015, so if you want to support older browser, you'll have to ensure that this module is being transpiled to an older es version during your build-process.
-
-There is still room for improvements, like object pooling, but the API is stable.
+Since version 1, the target is now es2015, so if you want to support older browser, you'll have to ensure that this module is being transpiled to an older es version during your build-process.
 
 ### Get started
 
-* [Find out how an ECS works](https://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013)
-* [Read the wiki](https://github.com/Lusito/typed-ecstasy/wiki)
-* [Refer to the TypeDoc documentation](https://lusito.github.io/typed-ecstasy/index.html)
-* Take a look at the test files (`src/**/*.spec.ts`)
+* [Read the documentation](https://lusito.github.io/typed-ecstasy/)
+* Look at the test files (`src/**/*.spec.ts`) might answer some questions if the documentation doesn't cover it yet.
+* Ask questions if the above doesn't clarify something good enough.
 
 ### Report issues
 

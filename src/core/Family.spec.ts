@@ -1,7 +1,5 @@
-import { Component } from "./Component";
-import { Engine } from "./Engine";
-import { Family } from "./Family";
-import { IteratingSystem } from "../systems/IteratingSystem";
+import { Service } from "typedi";
+import { Component, Engine, Family, IteratingSystem, Entity } from "typed-ecstasy";
 
 class ComponentA extends Component {}
 class ComponentB extends Component {}
@@ -10,20 +8,16 @@ class ComponentD extends Component {}
 class ComponentE extends Component {}
 class ComponentF extends Component {}
 
+@Service()
 class TestSystemA extends IteratingSystem {
-    constructor() {
+    public constructor() {
         super(Family.all(ComponentA).get());
     }
 
-    protected processEntity(): void {}
+    protected override processEntity(): void {}
 }
 
 describe("Family", () => {
-    test("familyIndexOutOfBounds", () => {
-        expect(Family.getByIndex(-1)).toBe(null);
-        expect(Family.getByIndex(99999)).toBe(null);
-    });
-
     test("staticBuilders", () => {
         const a = Family.all(ComponentA, ComponentB).one(ComponentC, ComponentD).exclude(ComponentE, ComponentE).get();
         const b = Family.one(ComponentC, ComponentD).all(ComponentA, ComponentB).exclude(ComponentE, ComponentE).get();
@@ -145,8 +139,8 @@ describe("Family", () => {
         const family = Family.all(ComponentA, ComponentB).get();
 
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         entity.add(new ComponentA());
         entity.add(new ComponentB());
 
@@ -161,8 +155,8 @@ describe("Family", () => {
         const family = Family.all(ComponentA, ComponentC).get();
 
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         entity.add(new ComponentA());
         entity.add(new ComponentB());
 
@@ -177,8 +171,8 @@ describe("Family", () => {
         const family = Family.all(ComponentA, ComponentB).get();
 
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         entity.add(new ComponentA());
         entity.add(new ComponentB());
 
@@ -193,8 +187,8 @@ describe("Family", () => {
         const family = Family.all(ComponentA, ComponentB).get();
 
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         entity.add(new ComponentA());
         entity.add(new ComponentC());
 
@@ -208,8 +202,8 @@ describe("Family", () => {
     test("testEmptyFamily", () => {
         const family = Family.all().get();
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         expect(family.matches(entity)).toBe(true);
     });
 
@@ -225,8 +219,8 @@ describe("Family", () => {
             .get();
 
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
 
         expect(family1.matches(entity)).toBe(false);
         expect(family2.matches(entity)).toBe(false);
@@ -265,13 +259,12 @@ describe("Family", () => {
 
     test("matchWithEngine", () => {
         const engine = new Engine();
-        engine.addSystem(new TestSystemA());
-        engine.addSystem(new TestSystemA());
+        engine.systems.add(TestSystemA);
 
-        const e = engine.createEntity();
+        const e = new Entity();
         e.add(new ComponentB());
         e.add(new ComponentA());
-        engine.addEntity(e);
+        engine.entities.add(e);
 
         const f = Family.all(ComponentB).exclude(ComponentA).get();
 
@@ -281,13 +274,12 @@ describe("Family", () => {
     test("matchWithEngineInverse", () => {
         const engine = new Engine();
 
-        engine.addSystem(new TestSystemA());
-        engine.addSystem(new TestSystemA());
+        engine.systems.add(TestSystemA);
 
-        const e = engine.createEntity();
+        const e = new Entity();
         e.add(new ComponentB());
         e.add(new ComponentA());
-        engine.addEntity(e);
+        engine.entities.add(e);
 
         const f = Family.all(ComponentA).exclude(ComponentB).get();
 
@@ -297,10 +289,10 @@ describe("Family", () => {
     test("matchWithoutSystems", () => {
         const engine = new Engine();
 
-        const e = engine.createEntity();
+        const e = new Entity();
         e.add(new ComponentB());
         e.add(new ComponentA());
-        engine.addEntity(e);
+        engine.entities.add(e);
 
         const f = Family.all(ComponentB).exclude(ComponentA).get();
 
@@ -310,8 +302,8 @@ describe("Family", () => {
     test("matchWithComplexBuilding", () => {
         const family = Family.all(ComponentB).one(ComponentA).exclude(ComponentC).get();
         const engine = new Engine();
-        const entity = engine.createEntity();
-        engine.addEntity(entity);
+        const entity = new Entity();
+        engine.entities.add(entity);
         entity.add(new ComponentA());
         expect(family.matches(entity)).toBe(false);
         entity.add(new ComponentB());

@@ -9,7 +9,13 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node"
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitOverride": true,
+    "moduleResolution": "node",
+    "paths": {
+      "typed-ecstasy": ["./src/index.ts"]
+    }
   },
   "exclude": ["dist"]
 }

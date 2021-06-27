@@ -1,0 +1,56 @@
+title: typed-ecstasy
+description: A high-performance entity framework  without the use of black-magic and
+  thus making the API easy and transparent to use.
+base: "/typed-ecstasy/"
+themeConfig:
+  sidebarDepth: 0
+  nav:
+  - link: "/guide/"
+    text: Guide
+  - link: "/api/"
+    text: API
+  - link: https://github.com/lusito/typed-ecstasy
+    text: Github
+  - link: https://www.npmjs.com/package/typed-ecstasy
+    text: NPM
+  sidebar:
+    "/guide/":
+    - title: Getting Started
+      children:
+      - ''
+      - migration
+      - what-is-an-ecs
+    - title: Core Concepts
+      children:
+      - core/
+      - core/dependency-injection
+      - core/engine
+      - core/entity
+      - core/component
+      - core/family
+      - core/entitysystem
+      - core/signal
+      - core/pooling
+      - core/special-considerations
+    - title: Built-In Systems
+      children:
+      - systems/
+      - systems/iteratingsystem
+      - systems/intervalsystem
+      - systems/intervaliteratingsystem
+      - systems/sortediteratingsystem
+      - systems/sortedsubiteratingsystem
+    - title: Data Driven Approach
+      children:
+      - data-driven/
+      - data-driven/components
+      - data-driven/types
+      - data-driven/blueprints
+      - data-driven/entityfactory
+      - data-driven/usage
+  displayAllHeaders: true
+  logo: "/logo.png"
+  logoAlt: Logo Alt
+plugins:
+- fulltext-search
+- typedoc

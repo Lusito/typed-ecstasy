@@ -1,4 +1,4 @@
-import { Component } from "./Component";
+import { Component } from "typed-ecstasy";
 
 class ComponentA extends Component {}
 class ComponentB extends Component {}

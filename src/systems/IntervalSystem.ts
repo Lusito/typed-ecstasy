@@ -1,29 +1,39 @@
 import { EntitySystem } from "../core/EntitySystem";
 
 /**
- * A simple EntitySystem that does not run its update logic every call to update(float), but after a
- * given interval. The actual logic should be placed in updateInterval().
+ * A simple EntitySystem that does not run its update logic every call to {@link update}, but after a
+ * given interval. The actual logic should be placed in {@link updateInterval}.
  */
 export abstract class IntervalSystem extends EntitySystem {
-    private readonly interval: number;
+    private interval: number;
 
     private accumulator = 0;
 
     /**
-     * @param interval time in seconds between calls to updateInterval().
-     * @param priority The priority to execute this system with (lower means higher priority).
+     * @param interval The time in seconds between calls to {@link updateInterval}.
      */
-    public constructor(interval: number, priority = 0) {
-        super(priority);
+    public constructor(interval: number) {
+        super();
         this.interval = interval;
     }
 
-    /** @return time in seconds between calls to updateInterval(). */
+    /**
+     * Update the interval.
+     *
+     * @param interval The time in seconds between calls to {@link updateInterval}.
+     */
+    public setInterval(interval: number) {
+        this.interval = interval;
+    }
+
+    /**
+     * @returns The time in seconds between calls to {@link updateInterval}.
+     */
     public getInterval() {
         return this.interval;
     }
 
-    public update(deltaTime: number) {
+    public override update(deltaTime: number) {
         this.accumulator += deltaTime;
 
         while (this.accumulator >= this.interval) {
@@ -34,6 +44,7 @@ export abstract class IntervalSystem extends EntitySystem {
 
     /**
      * The processing logic of the system should be placed here.
+     * Will be called once every defined interval.
      */
     protected abstract updateInterval(): void;
 }

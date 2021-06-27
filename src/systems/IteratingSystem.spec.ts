@@ -1,8 +1,5 @@
-import { Component } from "../core/Component";
-import { Entity } from "../core/Entity";
-import { Engine } from "../core/Engine";
-import { Family } from "../core/Family";
-import { IteratingSystem } from "./IteratingSystem";
+import { Service } from "typedi";
+import { Component, Entity, Engine, Family, IteratingSystem } from "typed-ecstasy";
 
 const deltaTime = 0.16;
 
@@ -10,35 +7,41 @@ class ComponentA extends Component {}
 class ComponentB extends Component {}
 class ComponentC extends Component {}
 
+@Service()
 class IteratingSystemMock extends IteratingSystem {
     public numUpdates = 0;
 
-    protected processEntity(): void {
+    public constructor() {
+        super(Family.all(ComponentA, ComponentB).get());
+    }
+
+    protected override processEntity(): void {
         ++this.numUpdates;
     }
 }
 
 class SpyComponent extends Component {
-    updates = 0;
+    public updates = 0;
 }
 
 class IndexComponent extends Component {
-    index = 0;
+    public index = 0;
 
-    constructor(index = 0) {
+    public constructor(index = 0) {
         super();
         this.index = index;
     }
 }
 
+@Service()
 class IteratingComponentRemovalSystem extends IteratingSystem {
     public constructor() {
         super(Family.all(SpyComponent, IndexComponent).get());
     }
 
-    protected processEntity(entity: Entity): void {
-        const indexComponent = entity.get(IndexComponent)!;
-        const spyComponent = entity.get(SpyComponent)!;
+    protected override processEntity(entity: Entity): void {
+        const indexComponent = entity.require(IndexComponent);
+        const spyComponent = entity.require(SpyComponent);
         const { index } = indexComponent;
         if (index % 2 === 0) {
             entity.remove(SpyComponent);
@@ -49,22 +52,18 @@ class IteratingComponentRemovalSystem extends IteratingSystem {
     }
 }
 
+@Service()
 class IteratingRemovalSystem extends IteratingSystem {
-    public constructor(priority?: number) {
-        super(Family.all(SpyComponent, IndexComponent).get(), priority);
+    public constructor() {
+        super(Family.all(SpyComponent, IndexComponent).get());
     }
 
-    protected addedToEngine(engine: Engine): void {
-        super.addedToEngine(engine);
-    }
-
-    protected processEntity(entity: Entity): void {
-        const indexComponent = entity.get(IndexComponent)!;
-        const spyComponent = entity.get(SpyComponent)!;
+    protected override processEntity(entity: Entity): void {
+        const indexComponent = entity.require(IndexComponent);
+        const spyComponent = entity.require(SpyComponent);
         const { index } = indexComponent;
         if (index % 2 === 0) {
-            const engine = this.getEngine();
-            if (engine) engine.removeEntity(entity);
+            this.engine.entities.remove(entity);
         } else {
             spyComponent.updates++;
         }
@@ -72,34 +71,24 @@ class IteratingRemovalSystem extends IteratingSystem {
 }
 
 describe("IteratingSystem", () => {
-    test("priority", () => {
-        let system = new IteratingRemovalSystem();
-        expect(system.getPriority()).toBe(0);
-        system = new IteratingRemovalSystem(10);
-        expect(system.getPriority()).toBe(10);
-        system.setPriority(13);
-        expect(system.getPriority()).toBe(13);
-    });
-
     test("sameEntitiesAndFamily", () => {
         const engine = new Engine();
         const family = Family.all(SpyComponent, IndexComponent).get();
-        const entities = engine.getEntitiesFor(family);
+        const entities = engine.entities.forFamily(family);
 
-        const system = engine.addSystem(new IteratingRemovalSystem());
+        const system = engine.systems.add(IteratingRemovalSystem);
         const systemEntities = system.getEntities();
 
         expect(entities).toHaveSameOrderedMembers(systemEntities);
-        expect(system.getFamily()).toBe(family);
+        expect(system.family).toBe(family);
     });
 
     test("shouldIterateEntitiesWithCorrectFamily", () => {
         const engine = new Engine();
 
-        const family = Family.all(ComponentA, ComponentB).get();
-        const system = engine.addSystem(new IteratingSystemMock(family));
-        const e = engine.createEntity();
-        engine.addEntity(e);
+        const system = engine.systems.add(IteratingSystemMock);
+        const e = new Entity();
+        engine.entities.add(e);
 
         // When entity has ComponentA
         e.add(new ComponentA());
@@ -127,23 +116,22 @@ describe("IteratingSystem", () => {
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(0);
-        engine.destroy();
     });
 
     test("entityRemovalWhileIterating", () => {
         const engine = new Engine();
-        const entities = engine.getEntitiesFor(Family.all(SpyComponent, IndexComponent).get());
+        const entities = engine.entities.forFamily(Family.all(SpyComponent, IndexComponent).get());
 
-        engine.addSystem(new IteratingRemovalSystem());
+        engine.systems.add(IteratingRemovalSystem);
 
         const numEntities = 10;
 
         for (let i = 0; i < numEntities; ++i) {
-            const e = engine.createEntity();
+            const e = new Entity();
             e.add(new SpyComponent());
             e.add(new IndexComponent(i + 1));
 
-            engine.addEntity(e);
+            engine.entities.add(e);
         }
 
         engine.update(deltaTime);
@@ -151,26 +139,25 @@ describe("IteratingSystem", () => {
         expect(entities).toHaveLength(numEntities / 2);
 
         for (const e of entities) {
-            const spyComponent = e.get(SpyComponent);
-            expect(spyComponent).not.toBe(null);
-            if (spyComponent) expect(spyComponent.updates).toBe(1);
+            const spyComponent = e.require(SpyComponent);
+            expect(spyComponent.updates).toBe(1);
         }
     });
 
     test("componentRemovalWhileIterating", () => {
         const engine = new Engine();
-        const entities = engine.getEntitiesFor(Family.all(SpyComponent, IndexComponent).get());
+        const entities = engine.entities.forFamily(Family.all(SpyComponent, IndexComponent).get());
 
-        engine.addSystem(new IteratingComponentRemovalSystem());
+        engine.systems.add(IteratingComponentRemovalSystem);
 
         const numEntities = 10;
 
         for (let i = 0; i < numEntities; ++i) {
-            const e = engine.createEntity();
+            const e = new Entity();
             e.add(new SpyComponent());
             e.add(new IndexComponent(i + 1));
 
-            engine.addEntity(e);
+            engine.entities.add(e);
         }
 
         engine.update(deltaTime);
@@ -178,9 +165,8 @@ describe("IteratingSystem", () => {
         expect(entities).toHaveLength(numEntities / 2);
 
         for (const e of entities) {
-            const spyComponent = e.get(SpyComponent);
-            expect(spyComponent).not.toBe(null);
-            if (spyComponent) expect(spyComponent.updates).toBe(1);
+            const spyComponent = e.require(SpyComponent);
+            expect(spyComponent.updates).toBe(1);
         }
     });
 });

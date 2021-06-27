@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
+import "@abraham/reflection";
 import { stringify } from "jest-matcher-utils";
 
 const failExpectation = (message: () => string) => ({ pass: false, message });
