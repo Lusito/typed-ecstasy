@@ -1,4 +1,4 @@
-![](https://lusito.github.io/typed-ecstasy/typed_ecstasy.png)
+![typed-ecstasy](https://lusito.github.io/typed-ecstasy/logo.png)
 
 [![Minified + gzipped size](https://badgen.net/bundlephobia/minzip/typed-ecstasy)](https://www.npmjs.com/package/typed-ecstasy)
 [![NPM version](https://badgen.net/npm/v/typed-ecstasy)](https://www.npmjs.com/package/typed-ecstasy)
