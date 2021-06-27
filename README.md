@@ -15,6 +15,8 @@ and transparent to use.
 
 Automated unit tests are running on [Travis-CI](https://travis-ci.org/)
 
+For a real project using this, check out [my asteroids clone](https://github.com/Lusito/typed-asteroids).
+
 #### Fair Warning
 Since version 1, the target is now es2015, so if you want to support older browser, you'll have to ensure that this module is being transpiled to an older es version during your build-process.
 
