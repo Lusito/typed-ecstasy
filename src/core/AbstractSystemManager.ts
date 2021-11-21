@@ -94,7 +94,6 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
             if (index === -1) throw new Error("Found system instance by class, but not in list!");
             this.instances.splice(index, 1);
             this.instancesByClass.delete(clazz);
-            this.container.remove(clazz);
             if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;
         }
@@ -111,7 +110,6 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
         this.instancesByClass.forEach((system, clazz) => {
             if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;
-            this.container.remove(clazz);
         });
         this.instances.length = 0;
         this.instancesByClass.clear();

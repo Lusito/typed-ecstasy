@@ -35,18 +35,18 @@ describe("EntitySystemManager", () => {
     it("should allow removing all systems", () => {
         const engine = new Engine();
 
-        const systemA = engine.systems.add(SystemMockA);
-        const systemB = engine.systems.add(SystemMockB);
+        engine.systems.add(SystemMockA);
+        engine.systems.add(SystemMockB);
         engine.systems.removeAll();
-        expect(engine.systems.add(SystemMockA)).not.toBe(systemA);
-        expect(engine.systems.add(SystemMockB)).not.toBe(systemB);
+        expect(engine.systems.get(SystemMockA)).toBeUndefined();
+        expect(engine.systems.get(SystemMockB)).toBeUndefined();
     });
 
     it("should allow removing one system", () => {
         const engine = new Engine();
 
-        const systemA = engine.systems.add(SystemMockA);
+        engine.systems.add(SystemMockA);
         engine.systems.remove(SystemMockA);
-        expect(engine.systems.add(SystemMockA)).not.toBe(systemA);
+        expect(engine.systems.get(SystemMockA)).toBeUndefined();
     });
 });
