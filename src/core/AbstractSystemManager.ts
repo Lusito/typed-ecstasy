@@ -66,7 +66,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
         this.instancesByClass.set(Object.getPrototypeOf(system).constructor, system);
         system["priority"] = priority;
         system["manager"] = this;
-        system["onEnable"]();
+        if (system.isEnabled()) system["onEnable"]();
     }
 
     private determineIndex(priority: number) {
@@ -95,7 +95,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
             this.instances.splice(index, 1);
             this.instancesByClass.delete(clazz);
             this.container.remove(clazz);
-            system["onDisable"]();
+            if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;
         }
     }
@@ -109,7 +109,8 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
 
     private removeAllInternal() {
         this.instancesByClass.forEach((system, clazz) => {
-            system["onDisable"]();
+            if (system.isEnabled()) system["onDisable"]();
+            system["manager"] = null;
             this.container.remove(clazz);
         });
         this.instances.length = 0;

@@ -20,13 +20,17 @@ export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
     private priority = 0;
 
     /**
-     * Called when this system is added to the manager or re-enabled after being disabled.
+     * Called in two situations:
+     * - When the system is enabled **and** currently being added to the manager
+     * - When the system is already added to the manager **and** is currently being enabled.
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     protected onEnable() {}
 
     /**
-     * Called when this system is removed from the manager or being disabled.
+     * Called in two situations:
+     * - When the system is enabled **and** currently being removed from the manager
+     * - When the system is already added to the manager **and** is currently being disabled.
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     protected onDisable() {}
@@ -37,7 +41,14 @@ export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
      * @param enabled The new state.
      */
     public setEnabled(enabled: boolean) {
-        this.enabled = enabled;
+        if (this.enabled !== enabled) {
+            this.enabled = enabled;
+
+            if (this.manager) {
+                if (enabled) this.onEnable();
+                else this.onDisable();
+            }
+        }
     }
 
     /**
