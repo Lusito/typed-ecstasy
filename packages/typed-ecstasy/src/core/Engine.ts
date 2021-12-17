@@ -1,20 +1,36 @@
 /* eslint-disable dot-notation */
-import { Container, ContainerInstance } from "typedi";
-
-import { Allocator } from "./Allocator";
-import { EntityManager } from "./EntityManager";
+import { Container, setHotSwapListener } from "../di";
 import { EntitySystemManager } from "./EntitySystemManager";
+import { AbstractSystem } from "./AbstractSystem";
+import { EntityManager } from "./EntityManager";
+import { Allocator } from "./Allocator";
 
-let engineCounter = 0;
+setHotSwapListener<boolean>({
+    beforeHotSwap(target) {
+        if (target instanceof AbstractSystem) {
+            const enabled = target.isEnabled();
+            target.setEnabled(false);
+            return enabled;
+        }
+        return false;
+    },
+    afterHotSwap(target, enabled) {
+        if (target instanceof AbstractSystem) {
+            target.setEnabled(enabled);
+        }
+    },
+});
 
 /**
  * The heart of the Entity framework. It is responsible for keeping track of entities and systems.
  * The engine should be updated every tick via the {@link update} method.
  */
 export class Engine {
-    private container = Container.of(`ecstasy-engine-${engineCounter++}`);
+    public readonly allocator: Allocator;
 
-    public readonly systems = new EntitySystemManager(this.container);
+    public readonly container = Container.create();
+
+    public readonly systems: EntitySystemManager;
 
     public readonly entities: EntityManager;
 
@@ -26,10 +42,12 @@ export class Engine {
      * @param allocator The optional allocator to use for creating entities & components.
      */
     public constructor(allocator: Allocator = new Allocator()) {
-        this.entities = new EntityManager(this, allocator);
+        this.allocator = allocator;
+        this.entities = new EntityManager(allocator);
         this.container.set(Engine, this);
-        this.container.set(ContainerInstance, this.container);
+        this.container.set(Container, this.container);
         this.container.set(Allocator, allocator);
+        this.systems = this.container.get(EntitySystemManager);
     }
 
     /**
@@ -59,12 +77,5 @@ export class Engine {
             this.systems["delayOperations"] = false;
         }
         this.updating = false;
-    }
-
-    /**
-     * @returns The IOC Container (currently using typedi).
-     */
-    public getContainer() {
-        return this.container;
     }
 }

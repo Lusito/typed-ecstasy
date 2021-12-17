@@ -1,3 +1,4 @@
+import { Engine } from "../core/Engine";
 import { Entity } from "../core/Entity";
 import { Family } from "../core/Family";
 import { IntervalSystem } from "./IntervalSystem";
@@ -13,11 +14,12 @@ export abstract class IntervalIteratingSystem extends IntervalSystem {
     private entities: Entity[] = [];
 
     /**
+     * @param engine The engine to use.
      * @param family Represents the collection of family the system should process.
      * @param interval The time in seconds between calls to {@link updateInterval}.
      */
-    public constructor(family: Family, interval: number) {
-        super(interval);
+    public constructor(engine: Engine, family: Family, interval: number) {
+        super(engine, interval);
         this.family = family;
     }
 

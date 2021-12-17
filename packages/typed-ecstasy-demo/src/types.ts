@@ -1,25 +1,20 @@
-import type { PositionConfig } from "./components/PositionComponent";
-import type { SpriteConfig } from "./components/SpriteComponent";
-import type { PickupConfig } from "./components/PickupComponent";
-import type { CameraFocusConfig } from "./components/CameraFocusComponent";
+import { InjectSymbol } from "typed-ecstasy";
 
 /**
- * We need a type to define the possible composition of an entity.
- * In other words, what components an entity might have and what values should be used for the component configurations.
- */
-export type SampleEntityConfig = {
-    // The keys here will be used when setting up the component factories.
-    Position?: PositionConfig;
-    Sprite?: SpriteConfig;
-    Pickup?: PickupConfig;
-    CameraFocus?: CameraFocusConfig;
-};
-
-/**
- * Context is a custom object that can be passed to the component factories (as a second parameter).
+ * GameConfig is just an example for a custom manual dependency.
  * This could, for example, be (or contain) an asset manager.
  * For the sake of this simple demo, one simple property will suffice.
  */
-export type SampleContext = {
+export type GameConfig = {
     defaultCameraFocusWeight: number;
 };
+
+// Notice how we also create and export a value here.
+// This is required, so that it can be used in the dependency injection.
+// If you have a class, this hack is not needed, since classes already have a type and a value.
+export const GameConfig = InjectSymbol<GameConfig>("GameConfig");
+
+// Same procedure for other types we want to be injectable:
+export type GameContext2D = CanvasRenderingContext2D;
+export const GameContext2D = InjectSymbol<GameContext2D>("GameContext2D");
+console.log(GameContext2D);

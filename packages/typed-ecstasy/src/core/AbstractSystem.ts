@@ -1,7 +1,6 @@
-import { Inject } from "typedi";
-
-import { Engine } from "./Engine";
+import type { Engine } from "./Engine";
 import { AbstractSystemManager } from "./AbstractSystemManager";
+import { retainable } from "../di";
 
 /**
  * Base class for all systems.
@@ -9,15 +8,22 @@ import { AbstractSystemManager } from "./AbstractSystemManager";
  * @template TSystem The base system class (EntitySystem or SubSystem).
  */
 export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
-    /** The engine of this system. */
-    @Inject()
-    public readonly engine!: Engine;
+    public readonly engine: Engine;
 
+    @retainable
     private manager: AbstractSystemManager<TSystem> | null = null;
 
-    private enabled = true;
+    private enabled = false; // will be set to true during systems.add
 
+    @retainable
     private priority = 0;
+
+    /**
+     * @param engine The engine to use.
+     */
+    public constructor(engine: Engine) {
+        this.engine = engine;
+    }
 
     /**
      * Called in two situations:
@@ -75,16 +81,4 @@ export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
     public getPriority() {
         return this.priority;
     }
-}
-
-/**
- * An interface for a constructor of a system.
- *
- * @template TSystem The system class the constructor creates.
- */
-export interface SystemConstructor<TSystem extends AbstractSystem<any>> {
-    /** The name of the constructor. */
-    name?: string;
-    /** The constructor function. */
-    new (...p: any[]): TSystem;
 }

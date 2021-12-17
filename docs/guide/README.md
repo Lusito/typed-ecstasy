@@ -3,18 +3,18 @@
 ## Install With NPM
 
 ```bash
-npm i typed-ecstasy typed-signals typedi
+npm i typed-ecstasy typed-signals
 ```
 
 ## Install With Yarn
 
 ```bash
-yarn add typed-ecstasy typed-signals typedi
+yarn add typed-ecstasy typed-signals
 ```
 
 ## Enable Annotations and Reflection
 
-Since typed-ecstasy uses typedi, we'll need some extra work if you don't have this set up yet:
+Since typed-ecstasy uses dependency injection, we'll need some extra work if you don't have this set up yet:
 
 Your tsconfig will need these two options:
 ```json

@@ -1,10 +1,10 @@
 interface Node {
-    fn: (...args: any[]) => void;
-    args: any[];
+    fn: (...args: unknown[]) => void;
+    args: unknown[];
     next: Node | null;
 }
 
-class DelayedOperationsImpl<T extends Record<string, (...args: any[]) => void>> {
+class DelayedOperationsImpl<T extends Record<string, (...args: unknown[]) => void>> {
     private next: Node | null = null;
 
     private last: Node | null = null;
@@ -17,7 +17,7 @@ class DelayedOperationsImpl<T extends Record<string, (...args: any[]) => void>> 
     public constructor(operations: T) {
         for (const key of Object.keys(operations)) {
             const fn = operations[key];
-            const wrappedFn = (...args: any[]) => {
+            const wrappedFn = (...args: unknown[]) => {
                 if (this.#shouldDelay) {
                     const operation = { args, fn, next: null };
                     if (this.last) this.last.next = operation;
@@ -70,7 +70,7 @@ export type DelayedOperations<T extends Record<string, (...args: any[]) => void>
 };
 
 /**
- * A helper for delaying operations during engine updates.
+ * A helper for delaying operations during updates.
  *
  * @param operations An object containing methods to be delayed.
  * @returns A new DelayedOperations instance.

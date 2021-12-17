@@ -43,7 +43,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["packages/typed-ecstasy-demo/**/*.ts"],
+            files: ["packages/typed-ecstasy-demo/**/*.*"],
             rules: {
                 "jsdoc/require-jsdoc": "off",
             },

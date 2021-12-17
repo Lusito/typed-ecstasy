@@ -1,8 +1,10 @@
 # Dependency Injection
 
-typed-ecstasy uses [typedi](https://docs.typestack.community/typedi/v/develop/01-getting-started) for dependency injection.
+typed-ecstasy uses a custom implementation for dependency injection, since there is currently no other dependency injection framework supporting hot module replacement.
 
-If you know typedi, you can already know most of this. It might be a good idea to quickly look over this though.
+If you have worked with dependency injection, you can already know most of this. There are some differences though to consider.
+
+FIXME: rewrite this from typedi to custom dependency injection
 
 Imports are obviously coming from typedi:
 ```typescript

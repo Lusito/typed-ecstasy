@@ -1,7 +1,30 @@
 /* eslint-disable dot-notation */
-import { ObtainComponent, ComponentFactoryRegistry } from "./ComponentFactory";
 import { ComponentBlueprint } from "./ComponentBlueprint";
+import { Engine } from "../core/Engine";
+import {
+    addComponentMetaListener,
+    ComponentConfigGetter,
+    ComponentBuilder,
+    ComponentBuilderWithConfig,
+    ComponentData,
+    ComponentType,
+    ComponentTypeWithConfig,
+    getComponentMeta,
+} from "../core/Component";
 import { Allocator } from "../core/Allocator";
+import { Container, service } from "../di";
+
+export type UnknownComponentConfig = Record<string, unknown>;
+export type UnknownEntityConfig = Record<string, UnknownComponentConfig>;
+
+type InferComponentConfigMap<T> = T extends ComponentTypeWithConfig<infer TName, any, infer TConfig>
+    ? Record<TName, TConfig>
+    : never;
+export type InferEntityConfig<T> = (T extends any ? (x: InferComponentConfigMap<T>) => any : never) extends (
+    x: infer R
+) => any
+    ? Partial<R>
+    : never;
 
 /**
  * An object with overrides for each component.
@@ -12,47 +35,41 @@ export type EntityConfigOverrides<T> = {
     [P in keyof T]?: Partial<T[P]>;
 };
 
+const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
+
 /**
  * A factory to assemble {@link Entity entities} from blueprints.
  *
  * @template TEntityConfig The entity configuration type.
- * @template TContext The context type.
  */
-export class EntityFactory<TEntityConfig, TContext> {
-    private readonly componentFactories: ComponentFactoryRegistry<any, any>;
-
-    private readonly context: TContext;
-
-    private readonly entities: Record<string, ComponentBlueprint[]> = {};
-
+@service("typed-ecstasy/EntityFactory")
+export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
+    private readonly entityBlueprints: Record<string, Array<ComponentBlueprint<string, unknown, unknown>>> = {};
     private readonly allocator: Allocator;
-
-    private readonly obtainComponent: ObtainComponent;
+    private readonly container: Container;
+    private readonly factories: Array<ComponentBuilder<unknown> | ComponentBuilderWithConfig<unknown, unknown>> = [];
 
     /**
      * Creates a new EntityFactory.
      *
-     * @param componentFactories The component factory registry to use.
-     * @param context The context to pass to component factories.
-     * @param allocator The entity/component allocator to use.
+     * @param engine The engine to use.
      */
-    public constructor(
-        componentFactories: ComponentFactoryRegistry<any, any>,
-        context: TContext,
-        allocator: Allocator
-    ) {
-        this.componentFactories = componentFactories;
-        this.allocator = allocator;
-        this.context = context;
-        this.obtainComponent = allocator.obtainComponent.bind(allocator);
+    public constructor(engine: Engine) {
+        this.allocator = engine.allocator;
+        this.container = engine.container;
+
+        // When the meta changes, just delete the factory and wait for it to be recreated on demand
+        addComponentMetaListener((type) => {
+            delete this.factories[type.id];
+        });
     }
 
     /**
      * @param name The name used to identify the entity blueprint.
      * @param blueprint The list of component blueprints for this entity.
      */
-    public addEntityBlueprint(name: string, blueprint: ComponentBlueprint[]) {
-        this.entities[name] = blueprint;
+    public addEntityBlueprint(name: string, blueprint: Array<ComponentBlueprint<string, unknown, unknown>>) {
+        this.entityBlueprints[name] = blueprint;
     }
 
     /**
@@ -66,16 +83,19 @@ export class EntityFactory<TEntityConfig, TContext> {
     public assemble(blueprintName: string, overrides?: EntityConfigOverrides<TEntityConfig>) {
         const entity = this.allocator.obtainEntity();
         try {
-            const blueprint = this.entities[blueprintName];
+            const blueprint = this.entityBlueprints[blueprintName];
             if (!blueprint) throw new Error(`Could not find entity blueprint for '${blueprintName}'`);
 
             for (const componentBlueprint of blueprint) {
-                const factory = this.componentFactories.get(componentBlueprint.name);
-                if (!factory) throw new Error(`Could not find component factory for '${componentBlueprint.name}'`);
+                // eslint-disable-next-line prefer-destructuring
+                const { type } = componentBlueprint;
+                // Skip blueprints, where the component is not used in code
+                if (!type) continue;
+
                 componentBlueprint["setOverrides"](
-                    overrides?.[componentBlueprint.name as keyof EntityConfigOverrides<TEntityConfig>]
+                    overrides?.[type.name as keyof EntityConfigOverrides<TEntityConfig>]
                 );
-                const component = factory(this.obtainComponent, componentBlueprint, this.context);
+                const component = this.createComponent(type, componentBlueprint.get);
                 if (component) entity.add(component);
                 componentBlueprint["setOverrides"]();
             }
@@ -84,5 +104,33 @@ export class EntityFactory<TEntityConfig, TContext> {
             entity.removeAll();
             throw e;
         }
+    }
+
+    public createComponent<TData>(type: ComponentType<string, TData>): ComponentData<TData> | undefined;
+    public createComponent<TData, TConfig>(
+        type: ComponentTypeWithConfig<string, TData, TConfig>,
+        config: ComponentConfigGetter<TConfig>
+    ): ComponentData<TData> | undefined;
+    public createComponent<TData, TConfig>(
+        type: ComponentType<string, TData> | ComponentTypeWithConfig<string, TData, TConfig>,
+        config?: ComponentConfigGetter<TConfig>
+    ) {
+        let factory = this.factories[type.id];
+        if (!factory) {
+            factory = this.createComponentFactory(type.name);
+            this.factories[type.id] = factory;
+        }
+        const comp = this.allocator.obtainComponent(type, factory);
+        if (factory.build && factory.build(comp, config || noopConfig) === false) return undefined;
+        return comp;
+    }
+
+    private createComponentFactory(name: string) {
+        const meta = getComponentMeta(name);
+        if (!meta) throw new Error(`Could not find component factory for "${name}"`);
+        if (typeof meta.factory === "function") {
+            return meta.factory(this.container);
+        }
+        return meta.factory;
     }
 }

@@ -1,10 +1,10 @@
 /* eslint-disable dot-notation */
-import { Bits, ReadonlyBits } from "../utils/Bits";
-import { Component, ComponentConstructor } from "./Component";
+import type { ComponentData, ComponentType } from "./Component";
 import type { EntityManager } from "./EntityManager";
+import type { Family } from "./Family";
 
 /**
- * Simple containers of {@link Component Components}, which give an entity data.
+ * Simple containers of components, which give an entity data.
  */
 export class Entity {
     /** A flag that can be used to bit mask this entity. Up to the user to manage. */
@@ -14,13 +14,9 @@ export class Entity {
 
     protected scheduledForRemoval = false;
 
-    private readonly componentsByClass = new Map<ComponentConstructor, Component>();
+    private readonly componentsById: Array<ComponentData<unknown> | undefined> = [];
 
-    private readonly components: Component[] = [];
-
-    private readonly componentBits = new Bits();
-
-    private readonly familyBits = new Bits();
+    private readonly families = new Set<Family>();
 
     protected manager: EntityManager | null = null;
 
@@ -34,7 +30,7 @@ export class Entity {
         return this.scheduledForRemoval;
     }
 
-    /** Remove this entity from its engine. */
+    /** Remove this entity from its manager. */
     public destroy() {
         this.manager?.remove(this);
     }
@@ -46,7 +42,7 @@ export class Entity {
      * @param component The component to add.
      * @returns The added component.
      */
-    public add<T extends Component>(component: T) {
+    public add<T extends ComponentData<unknown>>(component: T) {
         if (this.manager) this.manager["delayedOperations"].addComponent(this, component);
         else this.addInternal(component);
         return component;
@@ -56,11 +52,11 @@ export class Entity {
      * Removes the Component of the specified type. Since there is only ever one Component of one type, we don't
      * need an instance reference.
      *
-     * @param clazz The Component class.
+     * @param type The Component type.
      */
-    public remove(clazz: ComponentConstructor) {
-        if (this.manager) this.manager["delayedOperations"].removeComponent(this, clazz);
-        else this.removeInternal(clazz);
+    public remove(type: ComponentType) {
+        if (this.manager) this.manager["delayedOperations"].removeComponent(this, type);
+        else this.removeInternal(type.id);
     }
 
     /** Removes all the {@link Component Components} from the Entity. */
@@ -69,90 +65,73 @@ export class Entity {
         else this.removeAllInternal();
     }
 
-    /** @returns A list with all the {@link Component Components} of this Entity. */
+    /** @returns A list with all the {@link Component Components} of this Entity. Each component sits at its own index, so some slots may be empty. */
     public getAll() {
-        return this.components;
+        return this.componentsById;
     }
 
     /**
      * Retrieve a Component from this Entity by class.
      *
-     * @template T The component class.
-     * @param clazz The Component class.
+     * @template T The component data type. Do not specify manually.
+     * @param type The Component type.
      * @returns The instance of the specified Component attached to this Entity, or undefined if no such Component exists.
      */
-    public get<T extends Component>(clazz: ComponentConstructor<T>) {
-        return this.componentsByClass.get(clazz) as T | undefined;
+    public get<T>(type: ComponentType<string, T>) {
+        return this.componentsById[type.id] as ComponentData<T> | undefined;
     }
 
     /**
      * Require a Component from this Entity by class.
      *
-     * @template T The component class.
-     * @param clazz The Component class.
+     * @template T The component data type. Do not specify manually.
+     * @param type The Component type.
      * @returns The instance of the specified Component attached to this Entity.
      * @throws If the component doesn't exist on this entity.
      */
-    public require<T extends Component>(clazz: ComponentConstructor<T>) {
-        const component = this.componentsByClass.get(clazz);
-        if (!component) throw new Error(`Component ${clazz.name} does not exist on entity ${this.uuid}`);
-        return component as T;
+    public require<T>(type: ComponentType<string, T>) {
+        const component = this.componentsById[type.id];
+        if (!component) throw new Error(`Component ${type.name} does not exist on entity ${this.uuid}`);
+        return component as ComponentData<T>;
     }
 
     /**
-     * @param clazz The Component class.
+     * @param type The Component type.
      * @returns Whether or not the Entity has a Component for the specified class.
      */
-    public has(clazz: ComponentConstructor) {
-        return this.componentBits.get(clazz.getComponentBit());
+    public has(type: ComponentType) {
+        return !!this.componentsById[type.id];
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
-    protected addInternal(component: Component) {
-        const clazz = component.getComponentClass();
-        const oldComponent = this.componentsByClass.get(clazz);
+    protected addInternal(component: ComponentData<unknown>) {
+        const id = component.componentId;
+        const oldComponent = this.componentsById[id];
         if (component === oldComponent) return false;
 
-        if (oldComponent) this.removeInternal(clazz);
+        if (oldComponent) this.removeInternal(id);
 
-        this.componentsByClass.set(clazz, component);
-        this.components.push(component);
-
-        this.componentBits.set(clazz.getComponentBit());
+        this.componentsById[id] = component;
         return true;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
-    protected removeInternal(clazz: ComponentConstructor) {
-        const component = this.componentsByClass.get(clazz);
+    protected removeInternal(id: number) {
+        const component = this.componentsById[id];
         if (component) {
-            this.componentsByClass.delete(clazz);
-
-            const index2 = this.components.indexOf(component);
-            this.components.splice(index2, 1);
-            this.componentBits.clear(clazz.getComponentBit());
+            delete this.componentsById[id];
         }
         return component;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     protected removeAllInternal() {
-        if (this.components.length) {
-            this.componentsByClass.clear();
-            this.components.length = 0;
-            this.componentBits.clearAll();
+        if (this.componentsById.length) {
+            this.componentsById.length = 0;
             return true;
         }
         return false;
     }
 
-    /** @returns This Entity's Component bits, describing all the {@link Component Components} it contains. */
-    public getComponentBits(): ReadonlyBits {
-        return this.componentBits;
-    }
-
-    /** @returns This Entity's Family bits, describing all the {@link Family Families} it belongs to. */
-    public getFamilyBits(): ReadonlyBits {
-        return this.familyBits;
+    /** @returns All {@link Family Families}, this entity belongs to (only updated when added to a manager). */
+    public getFamilies(): ReadonlySet<Family> {
+        return this.families;
     }
 }

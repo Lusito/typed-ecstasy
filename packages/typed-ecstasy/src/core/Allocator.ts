@@ -1,6 +1,7 @@
-import { Component, NoArgsComponentConstructor } from "./Component";
+import { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "./Component";
 import { Entity } from "./Entity";
 
+// fixme: utils?
 /**
  * An allocator can be used for obtaining new or reused entities/components.
  * This allocator just creates new instances every time and does not support pooling.
@@ -23,20 +24,31 @@ export class Allocator {
     }
 
     /**
-     * @template T The component class to obtain, do not specify manually!
-     * @param Class The component constructor to use.
-     * @returns A new or reused component of the specified class.
+     * @template T The component data type, do not specify manually!
+     * @param type The component type to get.
+     * @param factory The factory to use.
+     * @returns A new or reused component of the specified type.
      */
-    public obtainComponent<T extends Component>(Class: NoArgsComponentConstructor<T>) {
-        return new Class();
+    public obtainComponent<T>(
+        type: ComponentType<string, T>,
+        factory: ComponentBuilder<T> | ComponentBuilderWithConfig<T, unknown>
+    ): ComponentData<T> {
+        const comp = {
+            componentId: type.id,
+            componentName: type.name,
+            componentFactory: factory,
+        } as ComponentData<T>;
+        factory.reset?.(comp);
+        return comp;
     }
 
     /**
      * Free a component (possibly marking it for reuse).
      *
-     * @param _component The component to free.
+     * @param component The component data to free.
      */
-    public freeComponent(_component: Component) {
+    public freeComponent<T>(component: ComponentData<T>) {
+        component.componentFactory.reset?.(component);
         // override this
     }
 }

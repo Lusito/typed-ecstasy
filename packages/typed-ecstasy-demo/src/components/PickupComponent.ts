@@ -1,22 +1,20 @@
-import { Component } from "typed-ecstasy";
+import { declareComponent } from "typed-ecstasy";
 
-import { componentFactories } from "./componentFactories";
-
-// Check out CameraFocusComponent for a more detailed explanation of components, configs and factories
-
-export class PickupComponent extends Component {
-    public material: "stone" | "wood" = "wood";
-    public amount = 1;
-}
+// Check out CameraFocusComponent for a more detailed explanation of how to declare components
+export type PickupData = {
+    componentType: "Pickup";
+    material: "stone" | "wood";
+    amount: number;
+};
 
 export type PickupConfig = {
     material: "stone" | "wood";
     amount: number;
 };
 
-componentFactories.add("Pickup", (obtain, blueprint) => {
-    const comp = obtain(PickupComponent);
-    comp.material = blueprint.get("material", "wood");
-    comp.amount = blueprint.get("amount", 1);
-    return comp;
+export const PickupComponent = declareComponent("Pickup").withConfig<PickupData, PickupConfig>({
+    build(comp, config) {
+        comp.material = config("material", "wood");
+        comp.amount = config("amount", 1);
+    },
 });

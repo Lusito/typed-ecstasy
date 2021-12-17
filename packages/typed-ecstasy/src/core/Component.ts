@@ -1,71 +1,96 @@
-let nextComponentBit = 0;
+import { Container } from "../di";
 
-/**
- * An interface for a constructor of a component.
- *
- * @template T The class the constructor creates.
- */
-export interface ComponentConstructor<T extends Component = Component> {
-    /** The constructor function. */
-    new (...p: any[]): T;
+export type ComponentConfigGetter<T> = <TKey extends Extract<keyof T, string>>(
+    key: TKey,
+    fallback: Exclude<T[TKey], undefined>
+) => Exclude<T[TKey], undefined>;
 
-    /** @returns The component bit. */
-    getComponentBit(): number;
+export type ComponentBuilder<TData> = {
+    reset?(comp: TData): void;
+    build?(comp: TData): void | boolean;
+};
+
+export type ComponentBuilderWithConfig<TData, TConfig> = {
+    reset?(comp: TData): void;
+    build(comp: TData, config: ComponentConfigGetter<TConfig>): void | boolean;
+};
+
+export type ComponentFactory<TData> = ComponentBuilder<TData> | ((container: Container) => ComponentBuilder<TData>);
+
+export type ComponentFactoryWithConfig<TData, TConfig> =
+    | ComponentBuilderWithConfig<TData, TConfig>
+    | ((container: Container) => ComponentBuilderWithConfig<TData, TConfig>);
+
+export type ComponentType<TName extends string = string, TData = unknown> = {
+    name: TName;
+    id: number;
+    _unusedData?: TData;
+};
+export type ComponentTypeWithConfig<TName extends string, TData, TConfig> = ComponentType<TName, TData> & {
+    _unusedConfig?: TConfig;
+};
+
+export type ComponentData<T> = T & {
+    readonly componentId: number;
+    readonly componentName: string;
+    /** @internal */
+    readonly componentFactory: Readonly<ComponentBuilder<T>> | Readonly<ComponentBuilderWithConfig<T, unknown>>;
+};
+
+export type ComponentMeta =
+    | {
+          type: ComponentType;
+          withConfig: false;
+          factory: ComponentFactory<unknown>;
+      }
+    | {
+          type: ComponentType;
+          withConfig: true;
+          factory: ComponentFactoryWithConfig<unknown, unknown>;
+      };
+
+let nextId = 1;
+const componentMetaMap: Record<string, ComponentMeta> = {};
+
+export function getComponentMeta(name: string): Readonly<ComponentMeta> | undefined {
+    return componentMetaMap[name];
 }
 
-/**
- * An interface for a constructor of a component that doesn't need parameters.
- *
- * @template T The class the constructor creates.
- */
-export interface NoArgsComponentConstructor<T extends Component = Component> {
-    /** The constructor function. */
-    new (): T;
-
-    /** @returns The component bit. */
-    getComponentBit(): number;
+const listeners = new Set<(type: ComponentType) => void>();
+export function addComponentMetaListener(listener: (type: ComponentType) => void) {
+    listeners.add(listener);
 }
 
-/**
- * Base class for all components. A Component is intended as a data holder
- * and provides data to be processed in an {@link EntitySystem}.
- */
-export abstract class Component {
-    /**
-     * @returns The class of this component.
-     */
-    public getComponentClass() {
-        return Object.getPrototypeOf(this).constructor;
+export function declareComponent<TName extends string>(name: TName) {
+    let meta = componentMetaMap[name];
+    if (!meta) {
+        meta = {
+            type: {
+                name,
+                id: nextId++,
+            },
+        } as unknown as ComponentMeta;
+        componentMetaMap[name] = meta;
     }
+    return {
+        withConfig<TData, TConfig>(factory: ComponentFactoryWithConfig<TData, TConfig>) {
+            meta.withConfig = true;
+            meta.factory = factory as ComponentFactoryWithConfig<TData, unknown>;
+            listeners.forEach((listener) => listener(meta.type));
+            return meta.type as ComponentTypeWithConfig<TName, TData, TConfig>;
+        },
+        withoutConfig<TData>(factory: ComponentFactory<TData>) {
+            meta.withConfig = false;
+            meta.factory = factory;
+            listeners.forEach((listener) => listener(meta.type));
+            return meta.type as ComponentType<TName, TData>;
+        },
+    };
+}
 
-    /**
-     * @returns The bit of this component.
-     */
-    public getComponentBit() {
-        return this.getComponentClass().getComponentBit();
-    }
-
-    /**
-     * @returns The bit of this component class.
-     * @throws When called on Component itself rather than on a subclass.
-     */
-    public static getComponentBit() {
-        if (this === Component)
-            throw new Error("getComponentBit is not to be called on Component, only subclasses of Component!");
-        const bit = nextComponentBit++;
-        const getBit = () => bit;
-        this.prototype.getComponentBit = getBit;
-        this.getComponentBit = getBit;
-        return bit;
-    }
-
-    /**
-     * Check if this component matches the specified class.
-     *
-     * @param clazz The class to compare with.
-     * @returns True if it matches.
-     */
-    public is(clazz: ComponentConstructor) {
-        return this.getComponentBit() === clazz.getComponentBit();
-    }
+export function isComponent<T>(
+    instance: ComponentData<unknown>,
+    declaredComponent: ComponentType<any, any>
+): instance is ComponentData<T> {
+    return instance.componentId === declaredComponent.id;
 }

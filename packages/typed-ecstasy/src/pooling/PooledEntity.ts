@@ -1,7 +1,5 @@
 import { Allocator } from "../core/Allocator";
-import { ComponentConstructor } from "../core/Component";
 import { Entity } from "../core/Entity";
-import { Poolable } from "./Pool";
 
 /**
  * An entity, which can be pooled. Do not use manually!
@@ -9,7 +7,7 @@ import { Poolable } from "./Pool";
  * @see {@link PoolAllocator}
  * @internal
  */
-export class PooledEntity extends Entity implements Poolable {
+export class PooledEntity extends Entity {
     private readonly allocator: Allocator;
 
     /** @param allocator The allocator to use when freeing components. */
@@ -18,8 +16,8 @@ export class PooledEntity extends Entity implements Poolable {
         this.allocator = allocator;
     }
 
-    protected override removeInternal(clazz: ComponentConstructor) {
-        const removed = super.removeInternal(clazz);
+    protected override removeInternal(id: number) {
+        const removed = super.removeInternal(id);
         if (removed) this.allocator.freeComponent(removed);
 
         return removed;
@@ -27,13 +25,12 @@ export class PooledEntity extends Entity implements Poolable {
 
     protected override removeAllInternal() {
         for (const component of this.getAll()) {
-            this.allocator.freeComponent(component);
+            if (component) this.allocator.freeComponent(component);
         }
 
         return super.removeAllInternal();
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     public reset() {
         this.removeAllInternal();
         this.manager = null;

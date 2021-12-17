@@ -37,11 +37,9 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.7",
     "typed-signals": "^2.3.0",
-    "typedi": "^0.10.0",
     "typescript": "4.4.3"
   },
   "peerDependencies": {
-    "typed-signals": "^2.3.0",
-    "typedi": "^0.10.0"
+    "typed-signals": "^2.3.0"
   }
 }

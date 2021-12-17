@@ -3,9 +3,8 @@ import { Entity } from "./Entity";
 import { Family } from "./Family";
 import { createDelayedOperations } from "../utils/DelayedOperations";
 import { EntitySignal } from "./EntitySignal";
-import type { Engine } from "./Engine";
-import { Component, ComponentConstructor } from "./Component";
 import { Allocator } from "./Allocator";
+import { ComponentData, ComponentType } from "./Component";
 
 interface FamilyMeta {
     family: Family;
@@ -15,11 +14,9 @@ interface FamilyMeta {
 }
 
 /**
- * A manager for all entities in an engine. It is responsible for keeping track of Entities.
+ * A manager for all entities. It is responsible for keeping track of Entities.
  */
 export class EntityManager {
-    private readonly engine: Engine;
-
     private readonly allocator: Allocator;
 
     private readonly entities: Entity[] = [];
@@ -42,12 +39,12 @@ export class EntityManager {
         remove: (e: Entity) => this.removeInternal(e),
         removeAll: () => this.removeAllInternal(),
         updateFamily: (e: Entity) => this.updateFamilyInternal(e),
-        addComponent: <T extends Component>(e: Entity, component: T) => {
+        addComponent: <T extends ComponentData<unknown>>(e: Entity, component: T) => {
             e["addInternal"](component);
             this.updateFamily(e);
         },
-        removeComponent: (e: Entity, clazz: ComponentConstructor) => {
-            e["removeInternal"](clazz);
+        removeComponent: (e: Entity, type: ComponentType) => {
+            e["removeInternal"](type.id);
             this.updateFamily(e);
         },
         removeAllComponents: (e: Entity) => {
@@ -65,21 +62,17 @@ export class EntityManager {
     /**
      * Creates a new EntityManager.
      *
-     * @param engine The engine of this manager.
      * @param allocator The allocator to use for freeing entities.
      */
-    public constructor(engine: Engine, allocator: Allocator) {
-        this.engine = engine;
+    public constructor(allocator: Allocator) {
         this.allocator = allocator;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     protected set delayOperations(shouldDelay: boolean) {
         this.#delayOperations = shouldDelay;
         this.delayedOperations.shouldDelay = this.#delayOperations || this.#notifying;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     protected set notifying(notifying: boolean) {
         this.#notifying = notifying;
         this.delayedOperations.shouldDelay = this.#delayOperations || this.#notifying;
@@ -94,7 +87,7 @@ export class EntityManager {
     public add(entity: Entity) {
         if (entity["uuid"] !== 0) throw new Error("Entity already added to an entity manager");
         entity["uuid"] = this.nextEntityId++;
-        entity["manager"] = this.engine.entities;
+        entity["manager"] = this;
         this.delayedOperations.add(entity);
     }
 
@@ -160,7 +153,7 @@ export class EntityManager {
     }
 
     /**
-     * Request the update of an entities family bits. For internal use.
+     * Request the update of an entities families. For internal use.
      *
      * @internal
      * @param entity The entity to update.
@@ -172,16 +165,14 @@ export class EntityManager {
     private updateFamilyInternal(entity: Entity) {
         if (entity["scheduledForRemoval"]) return;
 
-        // eslint-disable-next-line prefer-destructuring
-        const familyBits = entity["familyBits"];
-        for (const key of Object.keys(this.familyMeta)) {
-            const { family, entities } = this.familyMeta[+key];
-            const belongsToFamily = familyBits.get(family.index);
+        const families = entity.getFamilies() as Set<Family>;
+        for (const { family, entities } of this.familyMeta) {
+            const belongsToFamily = families.has(family);
             const matches = family.matches(entity);
 
             if (!belongsToFamily && matches) {
                 entities.push(entity);
-                familyBits.set(family.index);
+                families.add(family);
 
                 this.notifyFamilyListenersAdd(family, entity);
             } else if (belongsToFamily && !matches) {
@@ -189,32 +180,29 @@ export class EntityManager {
                 const index = familyEntities.indexOf(entity);
                 /* istanbul ignore else: this will never happen */
                 if (index !== -1) familyEntities.splice(index, 1);
-                familyBits.clear(family.index);
+                families.delete(family);
 
                 this.notifyFamilyListenersRemove(family, entity);
             }
         }
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     protected removeInternal(entity: Entity) {
         if (entity["manager"]) {
             const index = this.entities.indexOf(entity);
-            if (index === -1) throw new Error("Entity does not belong to this engine");
+            if (index === -1) throw new Error("Entity does not belong to this manager");
             this.entities.splice(index, 1);
             this.entitiesById.delete(entity.getId());
 
-            // eslint-disable-next-line prefer-destructuring
-            const familyBits = entity["familyBits"];
-            if (!familyBits.isEmpty()) {
-                for (const key of Object.keys(this.familyMeta)) {
-                    const { family, entities } = this.familyMeta[+key];
+            const families = entity.getFamilies() as Set<Family>;
+            if (!families.size) {
+                for (const { family, entities } of this.familyMeta) {
                     if (family.matches(entity)) {
                         const index2 = entities.indexOf(entity);
                         /* istanbul ignore else: this will never happen */
                         if (index2 !== -1) entities.splice(index2, 1);
 
-                        familyBits.clear(family.index);
+                        families.delete(family);
                         this.notifyFamilyListenersRemove(family, entity);
                     }
                 }
@@ -247,8 +235,8 @@ export class EntityManager {
     }
 
     private notifyFamilyListenersAdd(family: Family, entity: Entity) {
-        const meta = this.familyMeta[family.index];
-        if (meta.onAdd) {
+        const meta = this.familyMeta.find((m) => m.family === family);
+        if (meta?.onAdd) {
             this.notifying = true;
             meta.onAdd.emit(entity);
             this.notifying = false;
@@ -256,8 +244,8 @@ export class EntityManager {
     }
 
     private notifyFamilyListenersRemove(family: Family, entity: Entity) {
-        const meta = this.familyMeta[family.index];
-        if (meta.onRemove) {
+        const meta = this.familyMeta.find((m) => m.family === family);
+        if (meta?.onRemove) {
             this.notifying = true;
             meta.onRemove.emit(entity);
             this.notifying = false;
@@ -265,17 +253,17 @@ export class EntityManager {
     }
 
     private registerFamily(family: Family) {
-        let meta = this.familyMeta[family.index];
+        let meta = this.familyMeta.find((m) => m.family === family);
         if (!meta) {
             const entities: Entity[] = [];
             for (const e of this.entities) {
                 if (family.matches(e)) {
                     entities.push(e);
-                    e["familyBits"].set(family.index);
+                    e["families"].add(family);
                 }
             }
             meta = { family, entities };
-            this.familyMeta[family.index] = meta;
+            this.familyMeta.push(meta);
         }
         return meta;
     }

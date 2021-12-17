@@ -1,8 +1,10 @@
 import { SignalConnections } from "typed-signals";
 
 import { EntitySystem } from "../core/EntitySystem";
-import { Family } from "../core/Family";
+import { Engine } from "../core/Engine";
+import { retainable } from "../di";
 import { Entity } from "../core/Entity";
+import { Family } from "../core/Family";
 
 /**
  * A comparator for entities.
@@ -26,16 +28,18 @@ export abstract class SortedIteratingSystem extends EntitySystem {
 
     private shouldSort = false;
 
+    @retainable
     private comparator: EntityComparator;
 
     private readonly connections = new SignalConnections();
 
     /**
+     * @param engine The engine to use.
      * @param family The family of entities iterated over in this system.
      * @param comparator The comparator to sort the entities.
      */
-    public constructor(family: Family, comparator: EntityComparator) {
-        super();
+    public constructor(engine: Engine, family: Family, comparator: EntityComparator) {
+        super(engine);
         this.family = family;
         this.comparator = comparator;
     }

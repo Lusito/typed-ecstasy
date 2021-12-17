@@ -1,25 +1,12 @@
 /* eslint-disable dot-notation */
-/* eslint-disable max-classes-per-file */
-import { ComponentConstructor } from "./Component";
 import { Entity } from "./Entity";
-import { Bits, ReadonlyBits } from "../utils/Bits";
+import { ComponentType } from "./Component";
 
-function addBitsString(ss: string[], prefix: string, bits: ReadonlyBits) {
-    ss.push(prefix);
-    ss.push(bits.getStringId());
-    ss.push(";");
-}
-
-function getFamilyHash(all: ReadonlyBits, one: ReadonlyBits, exclude: ReadonlyBits) {
-    const ss: string[] = [];
-    if (!all.isEmpty()) addBitsString(ss, "a:", all);
-    if (!one.isEmpty()) addBitsString(ss, "o:", one);
-    if (!exclude.isEmpty()) addBitsString(ss, "e:", exclude);
-    return ss.join("");
+function getFamilyHash(all: readonly number[], one: readonly number[], exclude: readonly number[]) {
+    return `${all.join(",")};${one.join(",")};${exclude.join(",")}`;
 }
 
 const families: Record<string, Family> = {};
-const familiesByIndex: Family[] = [];
 
 /**
  * A builder pattern to create Family objects.
@@ -30,100 +17,90 @@ const familiesByIndex: Family[] = [];
  *let family = Family.all(ComponentA, ComponentB).one(ComponentC, ComponentD).exclude(ComponentE).get();
  *```
  */
-export class FamilyBuilder {
-    private static readonly instance = new FamilyBuilder();
-
-    private m_all = new Bits();
-
-    private m_one = new Bits();
-
-    private m_exclude = new Bits();
-
-    // eslint-disable-next-line
-    private constructor() {}
-
-    /**
-     * Resets the builder instance.
-     *
-     * @internal
-     * @returns This for chaining.
-     */
-    protected reset() {
-        this.m_all.clearAll();
-        this.m_one.clearAll();
-        this.m_exclude.clearAll();
-        return this;
-    }
-
-    private setBitsForClasses(destination: Bits, ...classes: ComponentConstructor[]) {
-        for (const clazz of classes) {
-            destination.set(clazz.getComponentBit());
-        }
-
-        return this;
-    }
-
+export interface FamilyBuilder {
     /**
      * Entities of the family will have to contain all of the specified components.
      *
-     * @param classes All of these classes must be on an entity for it to belong to this family.
+     * @param types All of these component types must be on an entity for it to belong to this family.
      * @returns This for chaining.
      */
-    public all(...classes: ComponentConstructor[]) {
-        return this.setBitsForClasses(this.m_all, ...classes);
-    }
+    all: (...types: ComponentType[]) => FamilyBuilder;
 
     /**
      * Entities of the family will have to contain at least one of the specified components.
      *
-     * @param classes One of these classes must be on an entity for it to belong to this family.
+     * @param types One of these component types must be on an entity for it to belong to this family.
      * @returns This for chaining.
      */
-    public one(...classes: ComponentConstructor[]) {
-        return this.setBitsForClasses(this.m_one, ...classes);
-    }
+    one: (...types: ComponentType[]) => FamilyBuilder;
 
     /**
      * Entities of the family cannot contain any of the specified components.
      *
-     * @param classes If any one of these classes is on an entity, it will not belong to this family.
+     * @param types If any one of these component types is on an entity, it will not belong to this family.
      * @returns This for chaining.
      */
-    public exclude(...classes: ComponentConstructor[]) {
-        return this.setBitsForClasses(this.m_exclude, ...classes);
-    }
+    exclude: (...types: ComponentType[]) => FamilyBuilder;
 
     /** @returns A Family for the configured component types. */
-    public get() {
-        const hash = getFamilyHash(this.m_all, this.m_one, this.m_exclude);
-        let family = families[hash];
-        if (!family) {
-            family = new Family(this.m_all, this.m_one, this.m_exclude);
-            familiesByIndex.push(family);
-            families[hash] = family;
-            this.m_all = new Bits();
-            this.m_one = new Bits();
-            this.m_exclude = new Bits();
-        }
-        return family;
+    get: () => Family;
+}
+
+function addIdsForTypes(destination: number[], ...types: ComponentType[]) {
+    for (const { id } of types) {
+        if (!destination.includes(id)) destination.push(id);
     }
 }
 
-const builder = FamilyBuilder["instance"];
+function createBuilder() {
+    const all: number[] = [];
+    const one: number[] = [];
+    const exclude: number[] = [];
+
+    const builder: FamilyBuilder = {
+        all(...types) {
+            addIdsForTypes(all, ...types);
+            return builder;
+        },
+        one(...types) {
+            addIdsForTypes(one, ...types);
+            return builder;
+        },
+        exclude(...types) {
+            addIdsForTypes(exclude, ...types);
+            return builder;
+        },
+        get() {
+            // Sorted, so we get the same hash every time
+            all.sort();
+            one.sort();
+            exclude.sort();
+            const hash = getFamilyHash(all, one, exclude);
+            let family = families[hash];
+            if (!family) {
+                family = new Family(all, one, exclude);
+                families[hash] = family;
+            }
+            return family;
+        },
+    };
+    return builder;
+}
+
 let nextFamilyIndex = 0;
 
 /**
- * Represents a group of {@link Component Components}. It is used to describe what Entity objects an EntitySystem should
+ * Represents a group of components. It is used to describe what Entity objects a System should
  * process. Families can't be instantiated directly but must be accessed via a builder.
  * This is to avoid duplicate families that describe the same components
  * Start with {@link Family.all}, {@link Family.one} or {@link Family.exclude}.
  */
 export class Family {
-    private m_all: ReadonlyBits;
+    private all: readonly number[];
 
-    private m_one: ReadonlyBits;
+    private one: readonly number[];
 
-    private m_exclude: ReadonlyBits;
+    private exclude: readonly number[];
 
     /** The unique identifier of this Family. */
     public readonly index: number;
@@ -131,16 +108,16 @@ export class Family {
     /**
      * Use {@link Family.all}, {@link Family.one} or {@link Family.exclude} instead!
      *
-     * @param all The all bits to use.
-     * @param one The one bits to use.
-     * @param exclude The exclude bits to use.
+     * @param all The all ids to use.
+     * @param one The one ids to use.
+     * @param exclude The exclude ids to use.
      * @internal
      */
-    public constructor(all: ReadonlyBits, one: ReadonlyBits, exclude: ReadonlyBits) {
+    public constructor(all: readonly number[], one: readonly number[], exclude: readonly number[]) {
         this.index = nextFamilyIndex++;
-        this.m_all = all;
-        this.m_one = one;
-        this.m_exclude = exclude;
+        this.all = all;
+        this.one = one;
+        this.exclude = exclude;
     }
 
     /**
@@ -148,13 +125,21 @@ export class Family {
      * @returns Whether the entity matches the family requirements or not.
      */
     public matches(entity: Entity) {
-        const entityComponentBits = entity.getComponentBits();
+        const byId = entity["componentsById"];
+        for (const id of this.all) {
+            if (!byId[id]) return false;
+        }
 
-        if (!entityComponentBits.containsAll(this.m_all)) return false;
+        for (const id of this.exclude) {
+            if (byId[id]) return false;
+        }
 
-        if (!this.m_one.isEmpty() && !this.m_one.intersects(entityComponentBits)) return false;
-
-        if (!this.m_exclude.isEmpty() && this.m_exclude.intersects(entityComponentBits)) return false;
+        if (this.one.length) {
+            for (const id of this.one) {
+                if (byId[id]) return true;
+            }
+            return false;
+        }
 
         return true;
     }
@@ -162,30 +147,30 @@ export class Family {
     /**
      * Entities of the family will have to contain all of the specified components.
      *
-     * @param classes All of these classes must be on an entity for it to belong to this family.
+     * @param types All of these component types must be on an entity for it to belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static all(...classes: ComponentConstructor[]) {
-        return builder["reset"]().all(...classes);
+    public static all(...types: ComponentType[]) {
+        return createBuilder().all(...types);
     }
 
     /**
      * Entities of the family will have to contain at least one of the specified components.
      *
-     * @param classes One of these classes must be on an entity for it to belong to this family.
+     * @param types One of these component types must be on an entity for it to belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static one(...classes: ComponentConstructor[]) {
-        return builder["reset"]().one(...classes);
+    public static one(...types: ComponentType[]) {
+        return createBuilder().one(...types);
     }
 
     /**
      * Entities of the family cannot contain any of the specified components.
      *
-     * @param classes If any one of these classes is on an entity, it will not belong to this family.
+     * @param types If any one of these component types is on an entity, it will not belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static exclude(...classes: ComponentConstructor[]) {
-        return builder["reset"]().exclude(...classes);
+    public static exclude(...types: ComponentType[]) {
+        return createBuilder().exclude(...types);
     }
 }

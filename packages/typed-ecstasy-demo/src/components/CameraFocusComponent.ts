@@ -1,19 +1,11 @@
-import { Component } from "typed-ecstasy";
+import { declareComponent, Container } from "typed-ecstasy";
 
-import { componentFactories } from "./componentFactories";
+import { GameConfig } from "../types";
 
-// First of all, we need the component itself. This is what you will interact with in your entity systems.
-export class CameraFocusComponent extends Component {
-    public weight = 1;
-
-    // Optional: You can implement a reset method, which will be called if pooling is in place.
-    // It will be called when the component gets removed and the pool didn't reach its maximum size yet.
-    // But: This is rarely necessary, since you will mostly reset the values in the factory below.
-    // It might be a valid use-case if the component keeps references that might prevent garbage collection.
-    // public reset() {
-    //     this.weight = 1;
-    // }
-}
+// First of all, we need the component data type. This is what you will interact with in your entity systems.
+export type CameraFocusData = {
+    weight: number;
+};
 
 // Then we need a configuration type, i.e. the data that is needed to assemble your entity correctly
 // To be able to configure the above component using a data-driven approach,
@@ -23,26 +15,34 @@ export type CameraFocusConfig = {
     weight?: number;
 };
 
-// Finally, we need to register a factory, which reads values from the blueprint and assigns it to the new component.
-componentFactories.add(
-    // The first parameter must be a key from SampleEntityConfig.
-    "CameraFocus",
-    // The second parameter is a factory function to assemble the component.
-    (obtain, blueprint, context) => {
-        // Use obtain() to create a component rather than creating one using `new`. This allows us to use object pooling.
-        const comp = obtain(CameraFocusComponent);
-        // Use blueprint.get to receive configuration properties
-        // It will automatically know the property names and types as specified in the config type above.
-        comp.weight = blueprint.get(
-            // blueprint.get() has autocompletion for the properties you defined in the config type above!
-            "weight",
-            // The second parameter is a fallback value, which gets used when the blueprint does not have a value for the specified key.
-            // Its type is matched against the type in your config type above.
-            // Check out ../types.ts to find out what a context is!
-            context.defaultCameraFocusWeight
-        );
+export const CameraFocusComponent = declareComponent("CameraFocus").withConfig<CameraFocusData, CameraFocusConfig>(
+    (container: Container) => {
+        // In this place, you can store some context information supplied by your game
+        const { defaultCameraFocusWeight } = container.get(GameConfig);
+        return {
+            // Optional: You can implement a reset method, which will be called to set initial values of a new component or when the component is reset.
+            // Since we set the only property in the "build" method, the following is not needed:
+            // reset(comp) {
+            //     comp.weight = 1;
+            // },
+            // Finally, the build method is used to set up the component data, which reads values from the blueprint and assigns it to the new component.
+            build(comp, config) {
+                // Use blueprint.get to receive configuration properties
+                // It will automatically know the property names and types as specified in the config type above.
+                comp.weight = config(
+                    // blueprint.get() has autocompletion for the properties you defined in the config type above!
+                    "weight",
+                    // The second parameter is a fallback value, which gets used when the blueprint does not have a value for the specified key.
+                    // Its type is matched against the type in your config type above.
+                    // Check out ../types.ts to find out what a context is!
+                    defaultCameraFocusWeight
+                );
 
-        // A component factory must return a fully initialized component or null if you want to skip adding this component for some reason.
-        return comp;
+                // Return false if you want to prevent the component from actually being added to the entity.
+                // return false;
+            },
+        };
     }
 );
+
+// You can declare a component without using a config. See FIXME

@@ -1,6 +1,7 @@
+import { Engine } from "../core/Engine";
+import { Entity } from "../core/Entity";
 import { EntitySystem } from "../core/EntitySystem";
 import { Family } from "../core/Family";
-import { Entity } from "../core/Entity";
 
 /**
  * A simple EntitySystem that iterates over each entity and calls {@link processEntity} for each entity every time the
@@ -13,10 +14,11 @@ export abstract class IteratingSystem extends EntitySystem {
     private entities: Entity[] = [];
 
     /**
+     * @param engine The engine to use.
      * @param family The family of entities iterated over in this System.
      */
-    public constructor(family: Family) {
-        super();
+    public constructor(engine: Engine, family: Family) {
+        super(engine);
         this.family = family;
     }
 

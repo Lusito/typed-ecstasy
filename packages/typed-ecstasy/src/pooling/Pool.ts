@@ -1,20 +1,10 @@
 /**
- * Objects implementing this interface will have {@link reset} called when passed to {@link Pool.free}.
- */
-export interface Poolable {
-    /** Resets the object for reuse. Object references should be nulled/undefined and fields may be set to default values. */
-    reset?: () => void;
-}
-
-/**
  * A pool of objects that can be reused to avoid allocation.
  *
  * @template T The type of objects to pool.
  * @author Nathan Sweet
  */
-export class Pool<T extends Poolable> {
-    private readonly create: () => T;
-
+export class Pool<T> {
     private readonly max: number;
 
     private readonly freeObjects: T[] = [];
@@ -22,19 +12,17 @@ export class Pool<T extends Poolable> {
     /**
      * Creates a pool with an initial capacity and a maximum.
      *
-     * @param create A function to create a new object.
      * @param max The maximum number of free objects to store in this pool.
      */
-    public constructor(create: () => T, max = Number.MAX_SAFE_INTEGER) {
-        this.create = create;
+    public constructor(max = Number.MAX_SAFE_INTEGER) {
         this.max = max;
     }
 
     /**
-     * @returns An object from this pool. The object may be new or reused (previously {@link free freed}).
+     * @returns An object from this pool or undefined if no more objects are in this pool.
      */
-    public obtain(): T {
-        return this.freeObjects.pop() ?? this.create();
+    public obtain() {
+        return this.freeObjects.pop();
     }
 
     /**
@@ -47,7 +35,6 @@ export class Pool<T extends Poolable> {
     public free(object: T) {
         if (this.freeObjects.length < this.max) {
             this.freeObjects.push(object);
-            object.reset?.();
         }
     }
 }

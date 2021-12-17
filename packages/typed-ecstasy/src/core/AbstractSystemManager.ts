@@ -1,8 +1,7 @@
 /* eslint-disable dot-notation */
-import { ContainerInstance } from "typedi";
-
+import { Constructor, Container } from "../di";
 import { createDelayedOperations } from "../utils/DelayedOperations";
-import type { AbstractSystem, SystemConstructor } from "./AbstractSystem";
+import type { AbstractSystem } from "./AbstractSystem";
 
 const systemEnabled = (system: AbstractSystem<any>) => system.isEnabled();
 
@@ -16,24 +15,23 @@ const compareSystems = (a: AbstractSystem<any>, b: AbstractSystem<any>) => a["pr
 export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>> {
     private readonly instances: TSystem[] = [];
 
-    private readonly instancesByClass = new Map<SystemConstructor<TSystem>, TSystem>();
+    private readonly instancesByClass = new Map<Constructor<TSystem>, TSystem>();
 
-    private readonly container: ContainerInstance;
+    private readonly container: Container;
 
     // Mechanism to delay operations to avoid affecting system processing
     private delayedOperations = createDelayedOperations({
         add: <T extends TSystem>(system: T, priority: number) => this.addInternal(system, priority),
-        remove: <T extends TSystem>(constructor: SystemConstructor<T>) => this.removeInternal(constructor),
+        remove: <T extends TSystem>(constructor: Constructor<T>) => this.removeInternal(constructor),
         removeAll: () => this.removeAllInternal(),
         sort: () => this.instances.sort(compareSystems),
     });
 
     /** @param container The container instance to use. */
-    public constructor(container: ContainerInstance) {
+    public constructor(container: Container) {
         this.container = container;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     protected set delayOperations(shouldDelay: boolean) {
         this.delayedOperations.shouldDelay = shouldDelay;
     }
@@ -51,7 +49,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
      * @param priority The priority to execute this system with (lower means higher priority).
      * @returns The newly created system.
      */
-    public add<T extends TSystem>(constructor: SystemConstructor<T>, priority = 0) {
+    public add<T extends TSystem>(constructor: Constructor<T>, priority = 0) {
         this.remove(constructor);
 
         const system = this.container.get(constructor);
@@ -66,7 +64,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
         this.instancesByClass.set(Object.getPrototypeOf(system).constructor, system);
         system["priority"] = priority;
         system["manager"] = this;
-        if (system.isEnabled()) system["onEnable"]();
+        system.setEnabled(true);
     }
 
     private determineIndex(priority: number) {
@@ -81,11 +79,11 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
      *
      * @param clazz The System class to remove.
      */
-    public remove(clazz: SystemConstructor<TSystem>) {
+    public remove(clazz: Constructor<TSystem>) {
         this.delayedOperations.remove(clazz);
     }
 
-    private removeInternal(clazz: SystemConstructor<TSystem>) {
+    private removeInternal(clazz: Constructor<TSystem>) {
         const system = this.instancesByClass.get(clazz);
         /* istanbul ignore else: this will never happen */
         if (system) {
@@ -94,7 +92,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
             if (index === -1) throw new Error("Found system instance by class, but not in list!");
             this.instances.splice(index, 1);
             this.instancesByClass.delete(clazz);
-            if (system.isEnabled()) system["onDisable"]();
+            system.setEnabled(false);
             system["manager"] = null;
         }
     }
@@ -122,7 +120,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
      * @param clazz The constructor for T.
      * @returns The T of the specified class, or undefined if no such system exists.
      */
-    public get<T extends TSystem>(clazz: SystemConstructor<T>) {
+    public get<T extends TSystem>(clazz: Constructor<T>) {
         return this.instancesByClass.get(clazz) as T | undefined;
     }
 

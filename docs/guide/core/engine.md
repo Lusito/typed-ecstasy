@@ -15,6 +15,6 @@ You will learn more about the operations you can do with [Engine](../../api/clas
 
 ## Dependency Injection Container
 
-You can use [engine.getContainer()](../../api/classes/engine.md#getcontainer) to get the instance of the dependency injection container for this engine. Currently [typedi](https://docs.typestack.community/typedi/v/develop/01-getting-started) is being used.
+You can use [engine.container](../../api/classes/engine.md#container) to get the instance of the dependency injection container for this engine.
 
 **Make sure** to check out the page about [Dependency Injection](../core/dependency-injection.md).

@@ -1,3 +1,5 @@
+import { retainable } from "../di";
+import { Engine } from "../core/Engine";
 import { EntitySystem } from "../core/EntitySystem";
 
 /**
@@ -5,15 +7,18 @@ import { EntitySystem } from "../core/EntitySystem";
  * given interval. The actual logic should be placed in {@link updateInterval}.
  */
 export abstract class IntervalSystem extends EntitySystem {
+    @retainable
     private interval: number;
 
+    @retainable
     private accumulator = 0;
 
     /**
+     * @param engine The engine to use.
      * @param interval The time in seconds between calls to {@link updateInterval}.
      */
-    public constructor(interval: number) {
-        super();
+    public constructor(engine: Engine, interval: number) {
+        super(engine);
         this.interval = interval;
     }
 
