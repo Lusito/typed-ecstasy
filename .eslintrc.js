@@ -5,7 +5,8 @@ module.exports = {
         "import/no-unresolved": ["error", { ignore: ["typed-ecstasy"] }],
         "no-bitwise": "off",
         "jest/no-conditional-expect": "off",
-        "lines-between-class-members": ["error", "always", { exceptAfterSingleLine: true }],
+        "lines-between-class-members": "off",
+        "@typescript-eslint/lines-between-class-members": ["error", "always", { exceptAfterSingleLine: true }],
         "@typescript-eslint/explicit-member-accessibility": ["error"],
         "jsdoc/require-param-type": "off",
         "jsdoc/require-returns-type": "off",
@@ -42,7 +43,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["sample/**/*.ts"],
+            files: ["packages/typed-ecstasy-demo/**/*.ts"],
             rules: {
                 "jsdoc/require-jsdoc": "off",
             },
@@ -51,6 +52,7 @@ module.exports = {
             files: ["*.spec.ts", "src/testUtils.ts"],
             rules: {
                 "max-classes-per-file": "off",
+                "import/no-extraneous-dependencies": "off",
             },
         },
     ],

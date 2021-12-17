@@ -1,8 +1,12 @@
+import "@abraham/reflection";
 import { Engine } from "typed-ecstasy";
 
 import { setupEntityFactory } from "./entityFactory";
 import { MovementSystem } from "./systems/MovementSystem";
 import { RenderSystem } from "./systems/RenderSystem";
+
+// Importing these manually, since they will otherwise be lost due to tree-shaking
+import "./components/CameraFocusComponent";
 
 // This is a simplified example of how you would use an entity factory to assemble entities
 const engine = new Engine();
@@ -30,3 +34,4 @@ engine.entities.add(modified);
 // Run updates
 const deltaTime = 1234;
 engine.update(deltaTime);
+console.log("done");

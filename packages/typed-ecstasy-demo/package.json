@@ -1,0 +1,18 @@
+{
+  "name": "typed-ecstasy-demo",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Demo for typed-ecstasy",
+  "license": "Apache-2.0",
+  "author": "Santo Pfingsten",
+  "scripts": {
+    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "@abraham/reflection": "^0.8.0",
+    "parcel": "^2.0.1",
+    "typed-ecstasy": "3.0.0",
+    "typedi": "0.10.0"
+  }
+}

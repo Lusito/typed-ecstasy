@@ -6,7 +6,7 @@ cache:
 node_js:
   - node
 install:
-  - npm ci
+  - yarn
 script:
-- npm run test:ci
-after_success: 'npm run coveralls'
+- yarn workspace typed-ecstasy test:ci
+after_success: 'yarn workspace typed-ecstasy coveralls'

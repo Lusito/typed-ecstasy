@@ -107,7 +107,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>>
     }
 
     private removeAllInternal() {
-        this.instancesByClass.forEach((system, clazz) => {
+        this.instancesByClass.forEach((system) => {
             if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;
         });

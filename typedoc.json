@@ -1,8 +1,8 @@
 {
-  "entryPoints": ["src/index.ts"],
+  "entryPoints": ["packages/typed-ecstasy/src/index.ts"],
   "out": "docs",
   "excludePrivate": true,
   "excludeInternal": true,
   "gitRevision": "master",
-  "exclude": ["**/*.spec.ts", "src/setupTests.ts", "src/global.d.ts"]
+  "exclude": ["**/*.spec.ts", "**/setupTests.ts", "**/global.d.ts"]
 }

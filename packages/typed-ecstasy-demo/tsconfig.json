@@ -3,19 +3,18 @@
     "target": "es2015",
     "module": "CommonJS",
     "declaration": true,
+    "noEmit": true,
     "lib": ["esNext"],
-    "outDir": "./dist",
     "strict": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitOverride": true,
-    "moduleResolution": "node",
-    "paths": {
-      "typed-ecstasy": ["./packages/typed-ecstasy/src/index.ts"]
-    }
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "exclude": ["dist"]
 }

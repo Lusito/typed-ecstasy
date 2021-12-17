@@ -1,70 +1,47 @@
 {
-  "name": "typed-ecstasy",
-  "version": "2.1.1",
-  "description": "An entity component system for TypeScript (and JavaScript), based on ashley",
-  "keywords": [
-    "TypeScript",
-    "Entity Component System",
-    "Game",
-    "Ashley"
-  ],
-  "homepage": "https://lusito.github.io/typed-ecstasy",
-  "bugs": {
-    "url": "https://github.com/Lusito/typed-ecstasy/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Lusito/typed-ecstasy.git"
-  },
-  "license": "Apache-2.0",
-  "author": "Santo Pfingsten",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/"
+  "private": true,
+  "workspaces": [
+    "packages/typed-ecstasy",
+    "packages/typed-ecstasy-demo"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig-build.json",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "build": "yarn workspaces run build",
+    "build:demo": "yarn workspace typed-ecstasy-demo build",
+    "build:lib": "yarn workspace typed-ecstasy build",
     "docs:build": "vuepress build docs",
     "docs:dev": "vuepress dev docs",
-    "lint": "npm run lint:style && npm run lint:es && npm run lint:package && npm run lint:md",
-    "lint:es": "eslint \"{src,sample}/**/*.{ts,tsx}\" --ext \".ts,.tsx\" --ignore-path .prettierignore",
-    "lint:es:fix": "npm run lint:es -- --fix",
-    "lint:fix": "npm run lint:style:fix && npm run lint:es:fix && npm run lint:package:fix && npm run lint:md",
-    "lint:package": "sort-package-json --check",
-    "lint:package:fix": "sort-package-json",
-    "lint:style": "npm run lint:style:base -- --check",
-    "lint:style:base": "prettier \"{src,sample}/**/*.{ts,tsx,js,json}\" \"./*.{ts,tsx,js,json}\"",
-    "lint:style:fix": "npm run lint:style:base -- --write",
+    "lint": "yarn run lint:es && yarn run lint:scss && yarn run lint:package && yarn run lint:style",
+    "lint:es": "eslint \"packages/*/src/**/*.{ts,tsx}\" --ext \".ts,.tsx\" --ignore-path .prettierignore",
+    "lint:es:fix": "yarn run lint:es --fix",
+    "lint:fix": "yarn run lint:es:fix && yarn run lint:scss:fix && yarn run lint:package:fix && yarn run lint:style:fix",
     "lint:md": "node lint-markdown.js",
-    "test": "jest --watch",
-    "test:ci": "jest"
+    "lint:package": "yarn run lint:package:fix --check",
+    "lint:package:fix": "sort-package-json package.json \"packages/*/package.json\"",
+    "lint:scss": "stylelint --ignore-path .prettierignore \"packages/*/src/**/*.scss\"",
+    "lint:scss:fix": "yarn run lint:scss --fix",
+    "lint:style": "yarn run lint:style:base --check",
+    "lint:style:base": "prettier \"packages/*/src/**/*.{ts,tsx,js,json,scss}\" \"packages/*/*.{ts,tsx,js,json,scss}\"",
+    "lint:style:fix": "yarn run lint:style:base --write",
+    "release": "lerna publish",
+    "start": "yarn workspace typed-ecstasy-demo start",
+    "start:fresh": "yarn run build:lib && yarn start"
   },
   "devDependencies": {
-    "@abraham/reflection": "^0.8.0",
     "@lusito/eslint-config": "^1.7.0",
     "@lusito/prettier-config": "^1.7.0",
+    "@lusito/stylelint-config": "^1.6.0",
+    "@parcel/transformer-sass": "^2.0.1",
     "@types/jest": "^27.0.3",
-    "coveralls": "^3.1.1",
+    "all-contributors-cli": "^6.20.0",
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-jsdoc": "^37.0.3",
-    "jest": "^27.3.1",
+    "lerna": "^4.0.0",
     "markdown-link-check": "^3.8.7",
-    "rimraf": "^3.0.2",
     "sort-package-json": "^1.53.1",
-    "ts-jest": "^27.0.7",
-    "typed-signals": "^2.3.0",
-    "typedi": "^0.10.0",
     "typedoc": "^0.22.9",
     "typedoc-plugin-markdown": "^3.11.7",
-    "typescript": "4.4.3",
     "vuepress": "^1.8.2",
     "vuepress-plugin-fulltext-search": "^2.2.1",
     "vuepress-plugin-typedoc": "^0.9.2"
-  },
-  "peerDependencies": {
-    "typed-signals": "^2.3.0",
-    "typedi": "^0.10.0"
   }
 }
