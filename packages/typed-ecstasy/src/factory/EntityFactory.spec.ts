@@ -172,8 +172,12 @@ describe("EntityFactory", () => {
     });
 
     it("ignores components that have not been registered", () => {
+        const warnSpy = jest.spyOn(console, "warn").mockImplementationOnce(() => undefined);
         factory.addEntityBlueprint("missing_component", [new ComponentBlueprint("Missing", {})]);
         expect(() => factory.assemble("missing_component")).not.toThrow();
+        expect(warnSpy).toHaveBeenCalledWith(
+            `Can't find metadata for component "Missing". This component will not be added!`
+        );
     });
 
     it("uses override properties if given", () => {

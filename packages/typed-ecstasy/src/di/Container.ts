@@ -6,7 +6,6 @@ import { createHotSwapProxy, HotSwapProxyConfig, HotSwapType } from "./hotSwapPr
 import { registerHotSwapProxy } from "./hotSwapRegistry";
 import { getName } from "../utils/nameUtil";
 
-// fixme: solve this with no classes, but interface + objects instead?
 // fixme: would it be possible to use proxies for manual dependencies as well?
 // ... That would reduce the possibilities (i.e. no simple types, just objects)
 /**

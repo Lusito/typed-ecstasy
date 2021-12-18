@@ -1,8 +1,10 @@
-import { ComponentBlueprint } from "typed-ecstasy";
+import { ComponentBlueprint, declareMarkerComponent } from "typed-ecstasy";
+
+const ComponentA = declareMarkerComponent("A");
 
 describe("Blueprint", () => {
     it("should return the fallback parameter if no default values are provided", () => {
-        const blueprint = new ComponentBlueprint("test", { undefined: undefined as any, any: undefined as any });
+        const blueprint = new ComponentBlueprint(ComponentA.name, { undefined: undefined as any, any: undefined as any });
         expect(blueprint.get("undefined", false)).toBe(false);
         expect(blueprint.get("undefined", true)).toBe(true);
         expect(blueprint.get("undefined", 42)).toBe(42);
@@ -12,7 +14,7 @@ describe("Blueprint", () => {
     });
 
     it("should ignore the fallback parameter if default values are provided", () => {
-        const blueprint = new ComponentBlueprint("test", {
+        const blueprint = new ComponentBlueprint(ComponentA.name, {
             bool: true,
             int: 12345,
             float: 0.12345,
@@ -27,7 +29,7 @@ describe("Blueprint", () => {
     });
 
     it("should ignore the fallback parameter and default values if overrides are provides", () => {
-        const blueprint = new ComponentBlueprint("test", {
+        const blueprint = new ComponentBlueprint(ComponentA.name, {
             bool: true,
             int: 12345,
             float: 0.12345,
