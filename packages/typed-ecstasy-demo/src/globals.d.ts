@@ -1,4 +1,3 @@
-// fixme: not for now.
 interface ImportHot {
     accept: () => void;
     dispose: (cb: (data: any) => void) => void;

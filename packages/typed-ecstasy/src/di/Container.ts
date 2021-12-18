@@ -102,7 +102,6 @@ export abstract class Container {
      * @returns The newly created value.
      */
     protected create(meta: ServiceMeta<string, HotSwapType>): HotSwapType {
-        // fixme: it should throw an error if the number of parameters do not match!
         const params = meta.params.map(this.get);
         const Class = meta.constructor as { new (...args: any[]): HotSwapType };
         return new Class(...params);

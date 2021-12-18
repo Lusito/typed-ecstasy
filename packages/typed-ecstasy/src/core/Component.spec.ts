@@ -7,7 +7,6 @@ const ComponentA = declareMarkerComponent("A");
 const ComponentB = declareMarkerComponent("B");
 
 describe("Component", () => {
-    // fixme: this is way too difficult to do!
     const engine = new Engine();
     const a = engine.createComponent(ComponentA)!;
     const b = engine.createComponent(ComponentB)!;

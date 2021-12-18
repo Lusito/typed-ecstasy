@@ -10,7 +10,6 @@ export type ServiceMeta<TName extends string, TType extends HotSwapType> = {
     _unusedType?: TType;
     params: Array<Constructor<unknown>>;
     retainableProps: Set<string | symbol>;
-    // fixme: weak ref?
     constructor: Constructor<TType>;
 };
 
