@@ -43,7 +43,6 @@ export class Engine {
         this.entities = new EntityManager(allocator);
         this.container.set(Engine, this);
         this.container.set(Container, this.container);
-        this.container.set(Allocator, allocator);
         this.systems = this.container.get(EntitySystemManager);
 
         // When the meta changes, just delete the factory and wait for it to be recreated on demand
