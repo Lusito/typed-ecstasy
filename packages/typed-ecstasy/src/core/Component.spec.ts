@@ -1,19 +1,31 @@
-import { Component } from "typed-ecstasy";
+import { declareMarkerComponent } from "typed-ecstasy";
 
-class ComponentA extends Component {}
-class ComponentB extends Component {}
+import { isComponent } from "./Component";
+import { Engine } from "./Engine";
+
+const ComponentA = declareMarkerComponent("A");
+const ComponentB = declareMarkerComponent("B");
 
 describe("Component", () => {
-    const a = new ComponentA();
-    const b = new ComponentB();
-    test("#getComponentClass() should return the component class", () => {
-        expect(a.getComponentClass()).toBe(ComponentA);
-        expect(b.getComponentClass()).toBe(ComponentB);
+    // fixme: this is way too difficult to do!
+    const engine = new Engine();
+    const a = engine.createComponent(ComponentA)!;
+    const b = engine.createComponent(ComponentB)!;
+
+    test("#componentName should return the component name", () => {
+        expect(a.componentName).toBe("A");
+        expect(b.componentName).toBe("B");
     });
-    test("#is() should return true for matching component classes", () => {
-        expect(a.is(ComponentA)).toBe(true);
-        expect(a.is(ComponentB)).toBe(false);
-        expect(b.is(ComponentB)).toBe(true);
-        expect(b.is(ComponentA)).toBe(false);
+
+    test("#componentId should return the component id", () => {
+        expect(a.componentId).toBe(ComponentA.id);
+        expect(b.componentId).toBe(ComponentB.id);
+    });
+
+    test("isComponent() should return true for matching component classes", () => {
+        expect(isComponent(a, ComponentA)).toBe(true);
+        expect(isComponent(a, ComponentB)).toBe(false);
+        expect(isComponent(b, ComponentB)).toBe(true);
+        expect(isComponent(b, ComponentA)).toBe(false);
     });
 });

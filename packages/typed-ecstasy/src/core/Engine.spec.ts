@@ -1,10 +1,12 @@
 /* eslint-disable dot-notation */
-import { Service } from "typedi";
-import { Component, Entity, Engine, Family, EntitySystem } from "typed-ecstasy";
+import { Entity, Engine, Family, EntitySystem, service, addMetaData } from "typed-ecstasy";
+
+import { declareComponent, declareMarkerComponent } from "./Component";
 
 const deltaTime = 0.16;
-class ComponentA extends Component {}
+const ComponentA = declareMarkerComponent("Counter");
 
+@addMetaData
 abstract class EntitySystemMockBase extends EntitySystem {
     public updates: number[] | null = [];
 
@@ -12,8 +14,8 @@ abstract class EntitySystemMockBase extends EntitySystem {
 
     public updateSpy: jest.SpyInstance;
 
-    public constructor() {
-        super();
+    public constructor(engine: Engine) {
+        super(engine);
         this.onEnable = jest.fn();
         this.onDisable = jest.fn();
         this.updateSpy = jest.spyOn(this as any, "update");
@@ -24,20 +26,25 @@ abstract class EntitySystemMockBase extends EntitySystem {
     }
 }
 
-@Service()
+@service("EntitySystemMock")
 class EntitySystemMock extends EntitySystemMockBase {}
 
-@Service()
+@service("EntitySystemMockA")
 class EntitySystemMockA extends EntitySystemMockBase {}
 
-@Service()
+@service("EntitySystemMockB")
 class EntitySystemMockB extends EntitySystemMockBase {}
 
-class CounterComponent extends Component {
-    public counter = 0;
-}
+type CounterData = {
+    counter: number;
+};
+const CounterComponent = declareComponent("Counter").withoutConfig<CounterData>({
+    reset(comp) {
+        comp.counter = 0;
+    },
+});
 
-@Service()
+@service("CounterSystem")
 class CounterSystem extends EntitySystem {
     public entities: Entity[] | null = null;
 
@@ -63,11 +70,11 @@ class CounterSystem extends EntitySystem {
     }
 }
 
-@Service()
-class UpdateSystem<T extends (engine: Engine) => any> extends EntitySystem {
-    public result: ReturnType<T> | null = null;
+@service("UpdateSystem")
+class UpdateSystem<T> extends EntitySystem {
+    public result: T | null = null;
 
-    public callback: T = (() => 0) as any as T;
+    public callback = (_engine: Engine) => 0 as any as T;
 
     public override update() {
         this.result = this.callback(this.engine);
@@ -156,7 +163,7 @@ describe("Engine", () => {
 
         for (let i = 0; i < 20; ++i) {
             const entity = new Entity();
-            entity.add(new CounterComponent());
+            entity.add(engine.createComponent(CounterComponent)!);
             engine.entities.add(entity);
         }
 
@@ -182,7 +189,7 @@ describe("Engine", () => {
 
         for (let i = 0; i < 15000; i++) {
             const e = new Entity();
-            e.add(new ComponentA());
+            e.add(engine.createComponent(ComponentA)!);
             engine.entities.add(e);
         }
 

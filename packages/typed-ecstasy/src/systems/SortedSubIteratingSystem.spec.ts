@@ -1,47 +1,62 @@
-import { Service } from "typedi";
-import { Component, Entity, Engine, Family, SortedSubIteratingSystem, SubSystem } from "typed-ecstasy";
+import {
+    service,
+    Entity,
+    Engine,
+    Family,
+    SortedSubIteratingSystem,
+    SubSystem,
+    declareComponent,
+    declareMarkerComponent,
+    SubSystemManager,
+} from "typed-ecstasy";
 
-class ComponentX extends Component {
-    public constructor(public id = 0) {
-        super();
-    }
-}
-class ComponentA extends Component {}
-class ComponentB extends Component {}
+const ComponentX = declareComponent("X").withoutConfig<{ id: number }>({
+    reset(comp) {
+        comp.id = 0;
+    },
+});
+
+const ComponentA = declareMarkerComponent("A");
+const ComponentB = declareMarkerComponent("B");
 
 const processEntity = jest.fn();
 
-@Service()
+@service("SubSystemA")
 class SubSystemA extends SubSystem {
     public processEntity = processEntity;
 
-    public constructor() {
-        super(Family.all(ComponentA).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentA).get());
     }
 }
 
-@Service()
+@service("SubSystemB")
 class SubSystemB extends SubSystem {
     public processEntity = processEntity;
 
-    public constructor() {
-        super(Family.all(ComponentB).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentB).get());
     }
 }
 
-@Service()
+@service("SubSystemC")
 class SubSystemC extends SubSystem {
     public processEntity = processEntity;
 
-    public constructor() {
-        super(Family.all(ComponentA, ComponentB).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentA, ComponentB).get());
     }
 }
 
-@Service()
+@service("TestSystem")
 class TestSystem extends SortedSubIteratingSystem {
-    public constructor() {
-        super(Family.all(ComponentX).get(), (a, b) => a.require(ComponentX).id - b.require(ComponentX).id);
+    public constructor(engine: Engine, subSystems: SubSystemManager) {
+        super(
+            engine,
+            Family.all(ComponentX).get(),
+            (a, b) => a.require(ComponentX).id - b.require(ComponentX).id,
+            subSystems
+        );
     }
 }
 
@@ -57,17 +72,17 @@ describe("SortedSubIteratingSystem", () => {
         const subB = system.subSystems.add(SubSystemB);
         const subC = system.subSystems.add(SubSystemC);
         const a = new Entity();
-        a.add(new ComponentX(10));
-        a.add(new ComponentA());
+        a.add(engine.createComponent(ComponentX)!).id = 10;
+        a.add(engine.createComponent(ComponentA)!);
         engine.entities.add(a);
         const b = new Entity();
-        b.add(new ComponentB());
-        b.add(new ComponentX(9));
+        b.add(engine.createComponent(ComponentB)!);
+        b.add(engine.createComponent(ComponentX)!).id = 9;
         engine.entities.add(b);
         const c = new Entity();
-        c.add(new ComponentX(8));
-        c.add(new ComponentA());
-        c.add(new ComponentB());
+        c.add(engine.createComponent(ComponentX)!).id = 8;
+        c.add(engine.createComponent(ComponentA)!);
+        c.add(engine.createComponent(ComponentB)!);
         engine.entities.add(c);
         engine.update(123);
         const expected = [
@@ -92,17 +107,17 @@ describe("SortedSubIteratingSystem", () => {
         const subB = system.subSystems.add(SubSystemB, 2);
         const subC = system.subSystems.add(SubSystemC, 1);
         const a = new Entity();
-        a.add(new ComponentX(10));
-        a.add(new ComponentA());
+        a.add(engine.createComponent(ComponentX)!).id = 10;
+        a.add(engine.createComponent(ComponentA)!);
         engine.entities.add(a);
         const b = new Entity();
-        b.add(new ComponentB());
-        b.add(new ComponentX(9));
+        b.add(engine.createComponent(ComponentB)!);
+        b.add(engine.createComponent(ComponentX)!).id = 9;
         engine.entities.add(b);
         const c = new Entity();
-        c.add(new ComponentX(8));
-        c.add(new ComponentA());
-        c.add(new ComponentB());
+        c.add(engine.createComponent(ComponentX)!).id = 8;
+        c.add(engine.createComponent(ComponentA)!);
+        c.add(engine.createComponent(ComponentB)!);
         engine.entities.add(c);
         engine.update(123);
         const expected = [

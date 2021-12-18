@@ -1,12 +1,13 @@
-import type { Engine } from "./Engine";
+import { Engine } from "./Engine";
 import { AbstractSystemManager } from "./AbstractSystemManager";
-import { retainable } from "../di";
+import { addMetaData, retainable, setHotSwapListener } from "../di";
 
 /**
  * Base class for all systems.
  *
  * @template TSystem The base system class (EntitySystem or SubSystem).
  */
+@addMetaData
 export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
     public readonly engine: Engine;
 
@@ -82,3 +83,19 @@ export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
         return this.priority;
     }
 }
+
+setHotSwapListener<boolean>({
+    beforeHotSwap(target) {
+        if (target instanceof AbstractSystem) {
+            const enabled = target.isEnabled();
+            target.setEnabled(false);
+            return enabled;
+        }
+        return false;
+    },
+    afterHotSwap(target, enabled) {
+        if (target instanceof AbstractSystem) {
+            target.setEnabled(enabled);
+        }
+    },
+});

@@ -1,14 +1,13 @@
-import { Service } from "typedi";
-import { Engine, IntervalSystem } from "typed-ecstasy";
+import { service, Engine, IntervalSystem } from "typed-ecstasy";
 
 const deltaTime = 0.1;
 
-@Service()
+@service("IntervalSystemSpy")
 class IntervalSystemSpy extends IntervalSystem {
     public numUpdates = 0;
 
-    public constructor() {
-        super(deltaTime * 2.0);
+    public constructor(engine: Engine) {
+        super(engine, deltaTime * 2.0);
     }
 
     protected override updateInterval(): void {

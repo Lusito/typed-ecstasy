@@ -4,6 +4,7 @@ import { metaRegistry, ServiceMeta } from "./metaRegistry";
 import { Constructor } from "./types";
 import { createHotSwapProxy, HotSwapProxyConfig, HotSwapType } from "./hotSwapProxy";
 import { registerHotSwapProxy } from "./hotSwapRegistry";
+import { getName } from "../utils/nameUtil";
 
 // fixme: solve this with no classes, but interface + objects instead?
 // fixme: would it be possible to use proxies for manual dependencies as well?
@@ -69,8 +70,7 @@ export abstract class Container {
 
         const value = this.findByKey(key);
         if (value) return value as T;
-        const name = "name" in key ? key.name : String(key);
-        throw new Error(`Could not find value for symbol "${name}". Did you forget to set it manually?`);
+        throw new Error(`Could not find value for symbol "${getName(key)}". Did you forget to set it manually?`);
     };
 
     /**
@@ -102,6 +102,7 @@ export abstract class Container {
      * @returns The newly created value.
      */
     protected create(meta: ServiceMeta<string, HotSwapType>): HotSwapType {
+        // fixme: it should throw an error if the number of parameters do not match!
         const params = meta.params.map(this.get);
         const Class = meta.constructor as { new (...args: any[]): HotSwapType };
         return new Class(...params);

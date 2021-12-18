@@ -41,6 +41,7 @@ export class PoolAllocator extends Allocator {
         }
     }
 
+    // fixme: make available in engine
     public override obtainEntity(): Entity {
         return this.entityPool.obtain() ?? new PooledEntity(this);
     }

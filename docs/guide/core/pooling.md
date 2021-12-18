@@ -52,6 +52,7 @@ The [data-driven approach](../data-driven/README.md) works with PoolAllocator as
 const allocator = new PoolAllocator();
 const engine = new Engine(allocator);
 const context: SampleContext = { /*...*/ };
+// fixme: adjust
 const factory = new EntityFactory<SampleEntityConfig, SampleContext>(componentFactories, context, allocator);
 ```
 

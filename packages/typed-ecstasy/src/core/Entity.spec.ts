@@ -1,19 +1,22 @@
-import { Component, Engine, Bits, Entity } from "typed-ecstasy";
+import { Engine, Entity } from "typed-ecstasy";
 
-class ComponentA extends Component {}
-class ComponentB extends Component {}
-class ComponentC extends Component {}
+import { declareMarkerComponent } from "./Component";
+
+const ComponentA = declareMarkerComponent("A");
+const ComponentB = declareMarkerComponent("B");
+const ComponentC = declareMarkerComponent("C");
 
 describe("Entity", () => {
     test("uniqueIndex", () => {
         const numEntities = 10000;
-        const ids = new Bits(numEntities + 1);
+        const ids = new Set<number>();
         const engine = new Engine();
 
         for (let i = 0; i < numEntities; ++i) {
             const entity = new Entity();
             engine.entities.add(entity);
-            expect(ids.getAndSet(entity.getId())).toBe(false);
+            expect(ids.has(entity.getId())).toBe(false);
+            ids.add(entity.getId());
         }
     });
 
@@ -23,7 +26,6 @@ describe("Entity", () => {
         engine.entities.add(entity);
 
         expect(entity.getAll()).toHaveLength(0);
-        expect(entity.getComponentBits().isEmpty()).toBe(true);
         expect(entity.get(ComponentA)).toBeUndefined();
         expect(entity.get(ComponentB)).toBeUndefined();
         expect(entity.has(ComponentA)).toBe(false);
@@ -35,15 +37,12 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        entity.add(new ComponentA());
+        entity.add(engine.createComponent(ComponentA)!);
 
-        expect(entity.getAll()).toHaveLength(1);
-
-        const componentBits = entity.getComponentBits();
-        const componentABit = ComponentA.getComponentBit();
-
-        for (let i = 0; i < componentBits.length(); ++i) {
-            expect(componentBits.get(i)).toBe(i === componentABit);
+        const components = entity.getAll();
+        for (let i = 0; i < components.length; ++i) {
+            if (i === ComponentA.id) expect(components[i]).toBeDefined();
+            else expect(components[i]).toBeUndefined();
         }
 
         expect(entity.get(ComponentA)).not.toBeUndefined();
@@ -53,10 +52,8 @@ describe("Entity", () => {
 
         entity.remove(ComponentA);
 
-        expect(entity.getAll()).toHaveLength(0);
-
-        for (let i = 0; i < componentBits.length(); ++i) {
-            expect(componentBits.get(i)).toBe(false);
+        for (const component of components) {
+            expect(component).toBeUndefined();
         }
 
         expect(entity.get(ComponentA)).toBeUndefined();
@@ -69,17 +66,14 @@ describe("Entity", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentB)!);
 
-        expect(entity.getAll()).toHaveLength(2);
+        const components = entity.getAll();
 
-        const componentBits = entity.getComponentBits();
-        const componentAIndex = ComponentA.getComponentBit();
-        const componentBIndex = ComponentB.getComponentBit();
-
-        for (let i = 0; i < componentBits.length(); ++i) {
-            expect(componentBits.get(i)).toBe(i === componentAIndex || i === componentBIndex);
+        for (let i = 0; i < components.length; ++i) {
+            if (i === ComponentA.id || i === ComponentB.id) expect(components[i]).toBeDefined();
+            else expect(components[i]).toBeUndefined();
         }
 
         expect(entity.get(ComponentA)).not.toBeUndefined();
@@ -91,8 +85,8 @@ describe("Entity", () => {
 
         expect(entity.getAll()).toHaveLength(0);
 
-        for (let i = 0; i < componentBits.length(); ++i) {
-            expect(componentBits.get(i)).toBe(false);
+        for (const component of components) {
+            expect(component).toBeUndefined();
         }
 
         expect(entity.get(ComponentA)).toBeUndefined();
@@ -106,10 +100,15 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const a1 = entity.add(new ComponentA());
-        const a2 = entity.add(new ComponentA());
+        const a1 = entity.add(engine.createComponent(ComponentA)!);
+        const a2 = entity.add(engine.createComponent(ComponentA)!);
 
-        expect(entity.getAll()).toHaveLength(1);
+        const components = entity.getAll();
+        for (let i = 0; i < components.length; ++i) {
+            if (i === ComponentA.id) expect(components[i]).toBeDefined();
+            else expect(components[i]).toBeUndefined();
+        }
+
         expect(entity.has(ComponentA)).toBe(true);
         expect(a1 === entity.get(ComponentA)).toBe(false);
         expect(entity.get(ComponentA)).toBe(a2);
@@ -120,8 +119,8 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const compA = entity.add(new ComponentA());
-        const compB = entity.add(new ComponentB());
+        const compA = entity.add(engine.createComponent(ComponentA)!);
+        const compB = entity.add(engine.createComponent(ComponentB)!);
 
         const retA = entity.get(ComponentA);
         const retB = entity.get(ComponentB);
@@ -138,8 +137,8 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const compA = entity.add(new ComponentA());
-        const compB = entity.add(new ComponentB());
+        const compA = entity.add(engine.createComponent(ComponentA)!);
+        const compB = entity.add(engine.createComponent(ComponentB)!);
 
         const retA = entity.require(ComponentA);
         const retB = entity.require(ComponentB);

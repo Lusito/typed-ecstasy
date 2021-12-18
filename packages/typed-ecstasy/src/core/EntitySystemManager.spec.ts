@@ -1,15 +1,14 @@
 /* eslint-disable dot-notation */
-import { Service } from "typedi";
-import { Engine, EntitySystem } from "typed-ecstasy";
+import { Engine, EntitySystem, service } from "typed-ecstasy";
 
 abstract class SystemMockBase extends EntitySystem {
     public update(): void {}
 }
 
-@Service()
+@service("SystemMockA")
 class SystemMockA extends SystemMockBase {}
 
-@Service()
+@service("SystemMockB")
 class SystemMockB extends SystemMockBase {}
 
 describe("EntitySystemManager", () => {

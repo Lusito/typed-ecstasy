@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import { Constructor, Container } from "../di";
+import { addMetaData, Constructor, Container } from "../di";
 import { createDelayedOperations } from "../utils/DelayedOperations";
 import type { AbstractSystem } from "./AbstractSystem";
 
@@ -12,6 +12,7 @@ const compareSystems = (a: AbstractSystem<any>, b: AbstractSystem<any>) => a["pr
  *
  * @template TSystem The base system class (EntitySystem or SubSystem).
  */
+@addMetaData
 export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>> {
     private readonly instances: TSystem[] = [];
 

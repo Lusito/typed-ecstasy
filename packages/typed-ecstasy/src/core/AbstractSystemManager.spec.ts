@@ -1,15 +1,15 @@
 /* eslint-disable dot-notation */
-import { Service } from "typedi";
-import { AbstractSystem, AbstractSystemManager, Engine } from "typed-ecstasy";
+import { AbstractSystem, AbstractSystemManager, Engine, service, addMetaData } from "typed-ecstasy";
 
 class TestSystem extends AbstractSystem<TestSystem> {}
 
-@Service()
+@service("TestSystemManager")
 class TestSystemManager extends AbstractSystemManager<TestSystem> {}
 
+@addMetaData
 abstract class SystemMockBase extends TestSystem {
-    public constructor() {
-        super();
+    public constructor(engine: Engine) {
+        super(engine);
         this.onEnable = jest.fn();
         this.onDisable = jest.fn();
     }
@@ -17,14 +17,14 @@ abstract class SystemMockBase extends TestSystem {
     public update() {}
 }
 
-@Service()
+@service("SystemMockA")
 class SystemMockA extends SystemMockBase {}
 
-@Service()
+@service("SystemMockB")
 class SystemMockB extends SystemMockBase {}
 
 describe("SystemManager", () => {
-    const createSystems = () => new Engine().getContainer().get(TestSystemManager);
+    const createSystems = () => new Engine().container.get(TestSystemManager);
 
     test("addAndRemoveSystem", () => {
         const systems = createSystems();

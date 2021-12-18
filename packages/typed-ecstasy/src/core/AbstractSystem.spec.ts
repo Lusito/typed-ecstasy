@@ -1,10 +1,13 @@
 /* eslint-disable dot-notation */
 import { AbstractSystem } from "typed-ecstasy";
 
+import { Engine } from "./Engine";
+
 class TestSystem extends AbstractSystem<TestSystem> {}
 
 describe("AbstractSystem", () => {
-    const system = new TestSystem();
+    const engine = new Engine();
+    const system = new TestSystem(engine);
     const onEnableSpy = jest.fn();
     const onDisableSpy = jest.fn();
     system["onEnable"] = onEnableSpy;
@@ -24,18 +27,7 @@ describe("AbstractSystem", () => {
             expect(onEnableSpy).not.toHaveBeenCalled();
             expect(onDisableSpy).not.toHaveBeenCalled();
 
-            // Enabled by default, so setting it to true should not do anything
-            system.setEnabled(true);
-            expect(onEnableSpy).not.toHaveBeenCalled();
-            expect(onDisableSpy).not.toHaveBeenCalled();
-
-            // Switch to disabled
-            system.setEnabled(false);
-            expect(onEnableSpy).not.toHaveBeenCalled();
-            expect(onDisableSpy).toHaveBeenCalledWith();
-
-            // Nothing changes here
-            onDisableSpy.mockReset();
+            // Disabled by default, so setting it to true should not do anything
             system.setEnabled(false);
             expect(onEnableSpy).not.toHaveBeenCalled();
             expect(onDisableSpy).not.toHaveBeenCalled();
@@ -44,10 +36,21 @@ describe("AbstractSystem", () => {
             system.setEnabled(true);
             expect(onEnableSpy).toHaveBeenCalledWith();
             expect(onDisableSpy).not.toHaveBeenCalled();
+
+            // Nothing changes here
+            onEnableSpy.mockReset();
+            system.setEnabled(true);
+            expect(onEnableSpy).not.toHaveBeenCalled();
+            expect(onDisableSpy).not.toHaveBeenCalled();
+
+            // Switch to disabled
+            system.setEnabled(false);
+            expect(onEnableSpy).not.toHaveBeenCalled();
+            expect(onDisableSpy).toHaveBeenCalledWith();
         });
 
         test("#setEnabled() should change enabled state", () => {
-            expect(system.isEnabled()).toBe(true);
+            expect(system.isEnabled()).toBe(false);
             system.setEnabled(true);
             expect(system.isEnabled()).toBe(true);
             system.setEnabled(false);

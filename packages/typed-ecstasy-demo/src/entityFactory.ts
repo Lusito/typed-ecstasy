@@ -6,7 +6,7 @@ import type { EntityConfig } from "./EntityConfig";
 // This shows how you could set up an entity factory.
 export function setupEntityFactory(engine: Engine) {
     // Create the entity factory itself
-    const factory = new EntityFactory<EntityConfig>(engine);
+    const factory: EntityFactory<EntityConfig> = engine.container.get(EntityFactory);
 
     // Add all entity blueprints
     for (const name of Object.keys(blueprints)) {

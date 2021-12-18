@@ -16,6 +16,7 @@ export function setupEntityFactory() {
     const context: SampleContext = { defaultCameraFocusWeight: 1 };
 
     // Create the entity factory itself
+    // fixme: adjust
     const factory = new EntityFactory<SampleEntityConfig, SampleContext>(componentFactories, context, new Allocator());
 
     // Add all entity blueprints

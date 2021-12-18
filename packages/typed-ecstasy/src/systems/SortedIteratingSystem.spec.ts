@@ -1,26 +1,37 @@
-import { Service } from "typedi";
-import { Component, Entity, Engine, Family, SortedIteratingSystem } from "typed-ecstasy";
+import {
+    service,
+    Entity,
+    Engine,
+    Family,
+    SortedIteratingSystem,
+    declareComponent,
+    declareMarkerComponent,
+} from "typed-ecstasy";
 
 const deltaTime = 0.16;
 
-class ComponentB extends Component {}
-class ComponentC extends Component {}
+const ComponentB = declareMarkerComponent("B");
+const ComponentC = declareMarkerComponent("C");
 
-class OrderComponent extends Component {
-    public constructor(public name: string, public zLayer: number) {
-        super();
-    }
+interface OrderData {
+    name: string;
+    zLayer: number;
 }
+const OrderComponent = declareComponent("OrderComponent").withoutConfig<OrderData>({});
 
-class SpyComponent extends Component {
-    public updates = 0;
+interface SpyData {
+    updates: number;
 }
+const SpyComponent = declareComponent("SpyComponent").withoutConfig<SpyData>({
+    reset(comp) {
+        comp.updates = 0;
+    },
+});
 
-class IndexComponent extends Component {
-    public constructor(public index: number) {
-        super();
-    }
+interface IndexData {
+    index: number;
 }
+const IndexComponent = declareComponent("IndexComponent").withoutConfig<IndexData>({});
 
 function comparator(a: Entity, b: Entity): number {
     const ac = a.require(OrderComponent);
@@ -28,12 +39,12 @@ function comparator(a: Entity, b: Entity): number {
     return ac.zLayer - bc.zLayer;
 }
 
-@Service()
+@service("SortedIteratingSystemMock")
 class SortedIteratingSystemMock extends SortedIteratingSystem {
     public receivedNames: string[] = [];
 
-    public constructor(family: Family) {
-        super(family, comparator);
+    public constructor(engine: Engine, family: Family) {
+        super(engine, family, comparator);
     }
 
     public processEntity(entity: Entity): void {
@@ -42,24 +53,24 @@ class SortedIteratingSystemMock extends SortedIteratingSystem {
     }
 }
 
-@Service()
+@service("SortedIteratingSystemMockA")
 class SortedIteratingSystemMockA extends SortedIteratingSystemMock {
-    public constructor() {
-        super(Family.all(OrderComponent).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(OrderComponent).get());
     }
 }
 
-@Service()
+@service("SortedIteratingSystemMockB")
 class SortedIteratingSystemMockB extends SortedIteratingSystemMock {
-    public constructor() {
-        super(Family.all(OrderComponent, ComponentB).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(OrderComponent, ComponentB).get());
     }
 }
 
-@Service()
+@service("IteratingComponentRemovalSystem")
 class IteratingComponentRemovalSystem extends SortedIteratingSystem {
-    public constructor() {
-        super(Family.all(SpyComponent, OrderComponent, IndexComponent).get(), comparator);
+    public constructor(engine: Engine) {
+        super(engine, Family.all(SpyComponent, OrderComponent, IndexComponent).get(), comparator);
     }
 
     protected override processEntity(entity: Entity): void {
@@ -75,10 +86,10 @@ class IteratingComponentRemovalSystem extends SortedIteratingSystem {
     }
 }
 
-@Service()
+@service("IteratingRemovalSystem")
 class IteratingRemovalSystem extends SortedIteratingSystem {
-    public constructor() {
-        super(Family.all(SpyComponent, IndexComponent).get(), comparator);
+    public constructor(engine: Engine) {
+        super(engine, Family.all(SpyComponent, IndexComponent).get(), comparator);
     }
 
     protected override processEntity(entity: Entity): void {
@@ -91,6 +102,13 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
             spyComponent.updates++;
         }
     }
+}
+
+function createOrderComponent(engine: Engine, name: string, zLayer: number) {
+    const order = engine.createComponent(OrderComponent)!;
+    order.name = name;
+    order.zLayer = zLayer;
+    return order;
 }
 
 describe("SortedIteratingSystem", () => {
@@ -106,14 +124,14 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new OrderComponent("A", i));
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(createOrderComponent(engine, "A", i));
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
         const e = new Entity();
-        e.add(new SpyComponent());
+        e.add(engine.createComponent(SpyComponent)!);
 
         engine.entities.add(e);
 
@@ -130,15 +148,15 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new OrderComponent("A", numEntities - i));
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(createOrderComponent(engine, "A", numEntities - i));
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
         const e = new Entity();
-        e.add(new SpyComponent());
-        e.add(new OrderComponent("A", 0));
+        e.add(engine.createComponent(SpyComponent)!);
+        e.add(createOrderComponent(engine, "A", 0));
 
         engine.entities.add(e);
 
@@ -156,18 +174,18 @@ describe("SortedIteratingSystem", () => {
         engine.entities.add(e);
 
         // When entity has OrderComponent
-        e.add(new OrderComponent("A", 0));
+        e.add(createOrderComponent(engine, "A", 0));
         engine.update(deltaTime);
         expect(system.receivedNames).toHaveLength(0);
 
         // When entity has OrderComponent and ComponentB
-        e.add(new ComponentB());
+        e.add(engine.createComponent(ComponentB)!);
         engine.update(deltaTime);
         expect(system.receivedNames).toHaveSameOrderedMembers(["A"]);
         system.receivedNames.length = 0;
 
         // When entity has OrderComponent, ComponentB and ComponentC
-        e.add(new ComponentC());
+        e.add(engine.createComponent(ComponentC)!);
         engine.update(deltaTime);
         expect(system.receivedNames).toHaveSameOrderedMembers(["A"]);
         system.receivedNames.length = 0;
@@ -188,9 +206,9 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new OrderComponent(i.toString(), i));
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(createOrderComponent(engine, i.toString(), i));
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
@@ -215,9 +233,9 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new OrderComponent(i.toString(), i));
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(createOrderComponent(engine, i.toString(), i));
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
@@ -232,14 +250,14 @@ describe("SortedIteratingSystem", () => {
         }
     });
 
-    function createOrderEntity(name: string, zLayer: number): Entity {
-        const e = new Entity();
-        e.add(new OrderComponent(name, zLayer));
-        return e;
-    }
-
     test("entityOrder", () => {
         const engine = new Engine();
+
+        function createOrderEntity(name: string, zLayer: number): Entity {
+            const e = new Entity();
+            e.add(createOrderComponent(engine, name, zLayer));
+            return e;
+        }
 
         const system = engine.systems.add(SortedIteratingSystemMockA);
 

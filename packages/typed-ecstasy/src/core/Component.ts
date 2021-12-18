@@ -88,6 +88,8 @@ export function declareComponent<TName extends string>(name: TName) {
     };
 }
 
+export const declareMarkerComponent = <TName extends string>(name: TName) => declareComponent(name).withoutConfig<unknown>({});
+
 export function isComponent<T>(
     instance: ComponentData<unknown>,
     declaredComponent: ComponentType<any, any>

@@ -1,16 +1,20 @@
-import { Service } from "typedi";
-import { Component, Entity, Engine, Family, IntervalIteratingSystem } from "typed-ecstasy";
+import { Entity, Engine, Family, IntervalIteratingSystem, service, declareComponent } from "typed-ecstasy";
 
 const deltaTime = 0.1;
 
-class IntervalComponentSpy extends Component {
-    public numUpdates = 0;
+interface IntervalData {
+    numUpdates: number;
 }
+const IntervalComponentSpy = declareComponent("IntervalComponentSpy").withoutConfig<IntervalData>({
+    reset(comp) {
+        comp.numUpdates = 0;
+    },
+});
 
-@Service()
+@service("IntervalIteratingSystemSpy")
 class IntervalIteratingSystemSpy extends IntervalIteratingSystem {
-    public constructor() {
-        super(Family.all(IntervalComponentSpy).get(), deltaTime * 2.0);
+    public constructor(engine: Engine) {
+        super(engine, Family.all(IntervalComponentSpy).get(), deltaTime * 2.0);
     }
 
     protected override processEntity(entity: Entity): void {
@@ -40,7 +44,7 @@ describe("IntervalIteratingSystem", () => {
 
         for (let i = 0; i < 10; ++i) {
             const entity = new Entity();
-            entity.add(new IntervalComponentSpy());
+            entity.add(engine.createComponent(IntervalComponentSpy)!);
             engine.entities.add(entity);
         }
 

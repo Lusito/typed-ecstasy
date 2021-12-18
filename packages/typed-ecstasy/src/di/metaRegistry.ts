@@ -1,3 +1,4 @@
+import { getName } from "../utils/nameUtil";
 import { HotSwapType } from "./hotSwapProxy";
 import { getRetainablePropsRecursively, metaData } from "./metaData";
 import { Constructor } from "./types";
@@ -20,13 +21,25 @@ export const metaRegistry = {
     registerService(constructor: Constructor<HotSwapType>, id: string, transient?: boolean) {
         metaData.serviceId.set(constructor, id);
 
+        const params = metaData.paramTypes.get(constructor);
+        if (!params) throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
+        params.forEach((param, index) => {
+            if (param === Function) {
+                throw new Error(
+                    `Constructor parameter ${index} of ${getName(
+                        constructor
+                    )} has been passed as "Function". You probably used a type import instead of a normal import.`
+                );
+            }
+        });
+
         const meta: ServiceMeta<string, HotSwapType> = {
             id,
             transient,
             constructor,
             retainableProps: getRetainablePropsRecursively(constructor),
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            params: metaData.paramTypes.get(constructor) || [],
+            params,
         };
         serviceMetaById.set(id, meta);
         return meta;

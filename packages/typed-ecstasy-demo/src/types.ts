@@ -17,4 +17,3 @@ export const GameConfig = InjectSymbol<GameConfig>("GameConfig");
 // Same procedure for other types we want to be injectable:
 export type GameContext2D = CanvasRenderingContext2D;
 export const GameContext2D = InjectSymbol<GameContext2D>("GameContext2D");
-console.log(GameContext2D);

@@ -1,21 +1,179 @@
-import { ComponentBlueprint } from "typed-ecstasy";
+import {
+    ComponentBlueprint,
+    Container,
+    Engine,
+    EntityFactory,
+    InferEntityConfig,
+    InjectSymbol,
+    declareComponent,
+} from "typed-ecstasy";
 
-import { PositionComponent } from "../../sample/components/PositionComponent";
-import { SpriteComponent } from "../../sample/components/SpriteComponent";
-import { PickupComponent } from "../../sample/components/PickupComponent";
-import { CameraFocusComponent } from "../../sample/components/CameraFocusComponent";
-import { setupEntityFactory } from "../../sample/entityFactory";
+/**
+ * GameConfig is just an example for a custom manual dependency.
+ * This could, for example, be (or contain) an asset manager.
+ * For the sake of this simple demo, one simple property will suffice.
+ */
+type GameConfig = {
+    defaultCameraFocusWeight: number;
+};
+
+// Notice how we also create and export a value here.
+// This is required, so that it can be used in the dependency injection.
+// If you have a class, this hack is not needed, since classes already have a type and a value.
+const GameConfig = InjectSymbol<GameConfig>("GameConfig");
+
+// Check out CameraFocusComponent for a more detailed explanation of how to declare components
+type PositionData = {
+    x: number;
+    y: number;
+};
+
+type PositionConfig = {
+    x?: number;
+    y?: number;
+};
+
+const PositionComponent = declareComponent("Position").withConfig<PositionData, PositionConfig>({
+    build(comp, config) {
+        comp.x = config("x", 1);
+        comp.y = config("y", 2);
+    },
+});
+
+type SpriteData = {
+    image: string;
+    layer: number;
+};
+
+type SpriteConfig = {
+    image: string;
+    layer?: number;
+};
+
+const SpriteComponent = declareComponent("Sprite").withConfig<SpriteData, SpriteConfig>({
+    build(comp, config) {
+        comp.image = config("image", "notfound.png");
+        comp.layer = config("layer", 1);
+    },
+});
+
+type PickupData = {
+    componentType: "Pickup";
+    material: "stone" | "wood";
+    amount: number;
+};
+
+type PickupConfig = {
+    material: "stone" | "wood";
+    amount: number;
+};
+
+const PickupComponent = declareComponent("Pickup").withConfig<PickupData, PickupConfig>({
+    build(comp, config) {
+        comp.material = config("material", "wood");
+        comp.amount = config("amount", 1);
+    },
+});
+
+type CameraFocusData = {
+    weight: number;
+};
+
+type CameraFocusConfig = {
+    weight?: number;
+};
+
+const CameraFocusComponent = declareComponent("CameraFocus").withConfig<CameraFocusData, CameraFocusConfig>(
+    (container: Container) => {
+        const { defaultCameraFocusWeight } = container.get(GameConfig);
+        return {
+            build(comp, config) {
+                comp.weight = config("weight", defaultCameraFocusWeight);
+            },
+        };
+    }
+);
+
+type VelocityData = {
+    x: number;
+    y: number;
+};
+
+type VelocityConfig = {
+    x?: number;
+    y?: number;
+};
+
+const VelocityComponent = declareComponent("Velocity").withConfig<VelocityData, VelocityConfig>({
+    build(comp, config) {
+        comp.x = config("x", 1);
+        comp.y = config("y", 2);
+    },
+});
+
+type EntityConfig = InferEntityConfig<
+    | typeof CameraFocusComponent
+    | typeof PickupComponent
+    | typeof PositionComponent
+    | typeof SpriteComponent
+    | typeof VelocityComponent
+>;
+
+const blueprints: Record<string, EntityConfig> = {
+    stone: {
+        Position: {
+            x: 10.1,
+            y: 11.2,
+        },
+        Velocity: {
+            x: 100,
+            y: 150,
+        },
+        Sprite: {
+            image: "stone.png",
+            layer: 3,
+        },
+        Pickup: {
+            material: "stone",
+            amount: 4,
+        },
+        CameraFocus: {
+            weight: 42,
+        },
+    },
+    void: {
+        Position: {},
+    },
+};
+
+function setupEntityFactory(engine: Engine) {
+    const factory: EntityFactory<EntityConfig> = engine.container.get(EntityFactory);
+
+    for (const name of Object.keys(blueprints)) {
+        const entityConfig = blueprints[name];
+        const entityBlueprint = Object.keys(entityConfig).map(
+            (key) => new ComponentBlueprint(key, entityConfig[key as keyof EntityConfig]!)
+        );
+        factory.addEntityBlueprint(name, entityBlueprint);
+    }
+
+    return factory;
+}
 
 describe("EntityFactory", () => {
-    const factory = setupEntityFactory();
+    const engine = new Engine();
+    engine.container.set(GameConfig, {
+        defaultCameraFocusWeight: 42,
+    });
+    const factory = setupEntityFactory(engine);
 
     it("throws an error if an entity blueprint is missing", () => {
         expect(() => factory.assemble("whoops")).toThrow("Could not find entity blueprint for 'whoops'");
     });
 
-    it("throws an error if a component factory is missing", () => {
+    it("ignores components that have not been registered", () => {
         factory.addEntityBlueprint("missing_component", [new ComponentBlueprint("Missing", {})]);
-        expect(() => factory.assemble("missing_component")).toThrow("Could not find component factory for 'Missing");
+        expect(() => factory.assemble("missing_component")).not.toThrow();
     });
 
     it("uses override properties if given", () => {

@@ -25,6 +25,8 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
     public constructor(name: string, defaultValues: TConfig) {
         const meta = getComponentMeta(name);
         if (meta) this.type = meta.type as ComponentTypeWithConfig<TName, TData, TConfig>;
+        // fixme: use logging framework to avoid logging during tests?
+        else console.warn(`Can't find metadata for component ${name}. This component will not be added!`);
         this.defaultValues = defaultValues;
     }
 

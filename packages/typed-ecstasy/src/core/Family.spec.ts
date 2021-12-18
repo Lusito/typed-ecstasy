@@ -1,17 +1,18 @@
-import { Service } from "typedi";
-import { Component, Engine, Family, IteratingSystem, Entity } from "typed-ecstasy";
+import { Engine, Family, IteratingSystem, Entity, service } from "typed-ecstasy";
 
-class ComponentA extends Component {}
-class ComponentB extends Component {}
-class ComponentC extends Component {}
-class ComponentD extends Component {}
-class ComponentE extends Component {}
-class ComponentF extends Component {}
+import { declareMarkerComponent } from "./Component";
 
-@Service()
+const ComponentA = declareMarkerComponent("A");
+const ComponentB = declareMarkerComponent("B");
+const ComponentC = declareMarkerComponent("C");
+const ComponentD = declareMarkerComponent("D");
+const ComponentE = declareMarkerComponent("E");
+const ComponentF = declareMarkerComponent("F");
+
+@service("TestSystemA")
 class TestSystemA extends IteratingSystem {
-    public constructor() {
-        super(Family.all(ComponentA).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentA).get());
     }
 
     protected override processEntity(): void {}
@@ -141,12 +142,12 @@ describe("Family", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentB)!);
 
         expect(family.matches(entity)).toBe(true);
 
-        entity.add(new ComponentC());
+        entity.add(engine.createComponent(ComponentC)!);
 
         expect(family.matches(entity)).toBe(true);
     });
@@ -157,8 +158,8 @@ describe("Family", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentB)!);
 
         expect(family.matches(entity)).toBe(false);
 
@@ -173,8 +174,8 @@ describe("Family", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentB)!);
 
         expect(family.matches(entity)).toBe(true);
 
@@ -189,12 +190,12 @@ describe("Family", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
-        entity.add(new ComponentC());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentC)!);
 
         expect(family.matches(entity)).toBe(false);
 
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentB)!);
 
         expect(family.matches(entity)).toBe(true);
     });
@@ -225,23 +226,23 @@ describe("Family", () => {
         expect(family1.matches(entity)).toBe(false);
         expect(family2.matches(entity)).toBe(false);
 
-        entity.add(new ComponentA());
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.createComponent(ComponentB)!);
 
         expect(family1.matches(entity)).toBe(false);
         expect(family2.matches(entity)).toBe(false);
 
-        entity.add(new ComponentC());
+        entity.add(engine.createComponent(ComponentC)!);
 
         expect(family1.matches(entity)).toBe(true);
         expect(family2.matches(entity)).toBe(false);
 
-        entity.add(new ComponentD());
+        entity.add(engine.createComponent(ComponentD)!);
 
         expect(family1.matches(entity)).toBe(true);
         expect(family2.matches(entity)).toBe(true);
 
-        entity.add(new ComponentE());
+        entity.add(engine.createComponent(ComponentE)!);
 
         expect(family1.matches(entity)).toBe(false);
         expect(family2.matches(entity)).toBe(false);
@@ -262,8 +263,8 @@ describe("Family", () => {
         engine.systems.add(TestSystemA);
 
         const e = new Entity();
-        e.add(new ComponentB());
-        e.add(new ComponentA());
+        e.add(engine.createComponent(ComponentB)!);
+        e.add(engine.createComponent(ComponentA)!);
         engine.entities.add(e);
 
         const f = Family.all(ComponentB).exclude(ComponentA).get();
@@ -277,8 +278,8 @@ describe("Family", () => {
         engine.systems.add(TestSystemA);
 
         const e = new Entity();
-        e.add(new ComponentB());
-        e.add(new ComponentA());
+        e.add(engine.createComponent(ComponentB)!);
+        e.add(engine.createComponent(ComponentA)!);
         engine.entities.add(e);
 
         const f = Family.all(ComponentA).exclude(ComponentB).get();
@@ -290,8 +291,8 @@ describe("Family", () => {
         const engine = new Engine();
 
         const e = new Entity();
-        e.add(new ComponentB());
-        e.add(new ComponentA());
+        e.add(engine.createComponent(ComponentB)!);
+        e.add(engine.createComponent(ComponentA)!);
         engine.entities.add(e);
 
         const f = Family.all(ComponentB).exclude(ComponentA).get();
@@ -304,11 +305,11 @@ describe("Family", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(new ComponentA());
+        entity.add(engine.createComponent(ComponentA)!);
         expect(family.matches(entity)).toBe(false);
-        entity.add(new ComponentB());
+        entity.add(engine.createComponent(ComponentB)!);
         expect(family.matches(entity)).toBe(true);
-        entity.add(new ComponentC());
+        entity.add(engine.createComponent(ComponentC)!);
         expect(family.matches(entity)).toBe(false);
     });
 });

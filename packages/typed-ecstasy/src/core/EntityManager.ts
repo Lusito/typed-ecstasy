@@ -194,8 +194,9 @@ export class EntityManager {
             this.entities.splice(index, 1);
             this.entitiesById.delete(entity.getId());
 
+            // fixme: can we iterate only over the families of the entity instead of over all known? Maybe use FamilyMeta in entity as well?
             const families = entity.getFamilies() as Set<Family>;
-            if (!families.size) {
+            if (families.size) {
                 for (const { family, entities } of this.familyMeta) {
                     if (family.matches(entity)) {
                         const index2 = entities.indexOf(entity);

@@ -1,31 +1,28 @@
 /* eslint-disable dot-notation */
-import { Container, setHotSwapListener } from "../di";
+import { Container } from "../di";
 import { EntitySystemManager } from "./EntitySystemManager";
-import { AbstractSystem } from "./AbstractSystem";
 import { EntityManager } from "./EntityManager";
 import { Allocator } from "./Allocator";
+import {
+    addComponentMetaListener,
+    ComponentBuilder,
+    ComponentBuilderWithConfig,
+    ComponentConfigGetter,
+    ComponentData,
+    ComponentType,
+    ComponentTypeWithConfig,
+    getComponentMeta,
+} from "./Component";
 
-setHotSwapListener<boolean>({
-    beforeHotSwap(target) {
-        if (target instanceof AbstractSystem) {
-            const enabled = target.isEnabled();
-            target.setEnabled(false);
-            return enabled;
-        }
-        return false;
-    },
-    afterHotSwap(target, enabled) {
-        if (target instanceof AbstractSystem) {
-            target.setEnabled(enabled);
-        }
-    },
-});
+const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 
 /**
  * The heart of the Entity framework. It is responsible for keeping track of entities and systems.
  * The engine should be updated every tick via the {@link update} method.
  */
 export class Engine {
+    private readonly factories: Array<ComponentBuilder<unknown> | ComponentBuilderWithConfig<unknown, unknown>> = [];
+
     public readonly allocator: Allocator;
 
     public readonly container = Container.create();
@@ -48,6 +45,11 @@ export class Engine {
         this.container.set(Container, this.container);
         this.container.set(Allocator, allocator);
         this.systems = this.container.get(EntitySystemManager);
+
+        // When the meta changes, just delete the factory and wait for it to be recreated on demand
+        addComponentMetaListener((type) => {
+            delete this.factories[type.id];
+        });
     }
 
     /**
@@ -77,5 +79,33 @@ export class Engine {
             this.systems["delayOperations"] = false;
         }
         this.updating = false;
+    }
+
+    public createComponent<TData>(type: ComponentType<string, TData>): ComponentData<TData> | undefined;
+    public createComponent<TData, TConfig>(
+        type: ComponentTypeWithConfig<string, TData, TConfig>,
+        config: ComponentConfigGetter<TConfig>
+    ): ComponentData<TData> | undefined;
+    public createComponent<TData, TConfig>(
+        type: ComponentType<string, TData> | ComponentTypeWithConfig<string, TData, TConfig>,
+        config?: ComponentConfigGetter<TConfig>
+    ) {
+        let factory = this.factories[type.id];
+        if (!factory) {
+            factory = this.createComponentFactory(type.name);
+            this.factories[type.id] = factory;
+        }
+        const comp = this.allocator.obtainComponent(type, factory);
+        if (factory.build && factory.build(comp, config || noopConfig) === false) return undefined;
+        return comp;
+    }
+
+    private createComponentFactory(name: string) {
+        const meta = getComponentMeta(name);
+        if (!meta) throw new Error(`Could not find component factory for "${name}"`);
+        if (typeof meta.factory === "function") {
+            return meta.factory(this.container);
+        }
+        return meta.factory;
     }
 }

@@ -1,12 +1,14 @@
 import { Engine } from "../core/Engine";
 import { Entity } from "../core/Entity";
 import { Family } from "../core/Family";
+import { addMetaData } from "../di";
 import { IntervalSystem } from "./IntervalSystem";
 
 /**
  * A simple EntitySystem that processes a {@link Family} of entities not once per frame, but after a given interval.
  * Entity processing logic should be placed in {@link processEntity}.
  */
+@addMetaData
 export abstract class IntervalIteratingSystem extends IntervalSystem {
     /** The Family used when the system was created. */
     public readonly family: Family;

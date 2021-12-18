@@ -1,18 +1,25 @@
-import { Service } from "typedi";
-import { Component, Entity, Engine, Family, IteratingSystem } from "typed-ecstasy";
+import {
+    Entity,
+    Engine,
+    Family,
+    IteratingSystem,
+    service,
+    declareMarkerComponent,
+    declareComponent,
+} from "typed-ecstasy";
 
 const deltaTime = 0.16;
 
-class ComponentA extends Component {}
-class ComponentB extends Component {}
-class ComponentC extends Component {}
+const ComponentA = declareMarkerComponent("A");
+const ComponentB = declareMarkerComponent("B");
+const ComponentC = declareMarkerComponent("C");
 
-@Service()
+@service("IteratingSystemMock")
 class IteratingSystemMock extends IteratingSystem {
     public numUpdates = 0;
 
-    public constructor() {
-        super(Family.all(ComponentA, ComponentB).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentA, ComponentB).get());
     }
 
     protected override processEntity(): void {
@@ -20,23 +27,30 @@ class IteratingSystemMock extends IteratingSystem {
     }
 }
 
-class SpyComponent extends Component {
-    public updates = 0;
+interface SpyComponentData {
+    updates: number;
 }
 
-class IndexComponent extends Component {
-    public index = 0;
+const SpyComponent = declareComponent("SpyComponent").withoutConfig<SpyComponentData>({
+    reset(comp) {
+        comp.updates = 0;
+    },
+});
 
-    public constructor(index = 0) {
-        super();
-        this.index = index;
-    }
+interface IndexComponentData {
+    index: number;
 }
 
-@Service()
+const IndexComponent = declareComponent("IndexComponent").withoutConfig<IndexComponentData>({
+    reset(comp) {
+        comp.index = 0;
+    },
+});
+
+@service("IteratingComponentRemovalSystem")
 class IteratingComponentRemovalSystem extends IteratingSystem {
-    public constructor() {
-        super(Family.all(SpyComponent, IndexComponent).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(SpyComponent, IndexComponent).get());
     }
 
     protected override processEntity(entity: Entity): void {
@@ -52,10 +66,10 @@ class IteratingComponentRemovalSystem extends IteratingSystem {
     }
 }
 
-@Service()
+@service("IteratingRemovalSystem")
 class IteratingRemovalSystem extends IteratingSystem {
-    public constructor() {
-        super(Family.all(SpyComponent, IndexComponent).get());
+    public constructor(engine: Engine) {
+        super(engine, Family.all(SpyComponent, IndexComponent).get());
     }
 
     protected override processEntity(entity: Entity): void {
@@ -91,21 +105,21 @@ describe("IteratingSystem", () => {
         engine.entities.add(e);
 
         // When entity has ComponentA
-        e.add(new ComponentA());
+        e.add(engine.createComponent(ComponentA)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(0);
 
         // When entity has ComponentA and ComponentB
         system.numUpdates = 0;
-        e.add(new ComponentB());
+        e.add(engine.createComponent(ComponentB)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(1);
 
         // When entity has ComponentA, ComponentB and ComponentC
         system.numUpdates = 0;
-        e.add(new ComponentC());
+        e.add(engine.createComponent(ComponentC)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(1);
@@ -128,8 +142,8 @@ describe("IteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
@@ -154,8 +168,8 @@ describe("IteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(new SpyComponent());
-            e.add(new IndexComponent(i + 1));
+            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
