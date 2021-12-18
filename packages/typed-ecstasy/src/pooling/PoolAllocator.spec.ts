@@ -35,12 +35,12 @@ describe("PoolAllocator", () => {
         });
         const engine = new Engine(allocator);
         expect(allocator["entityPool"]["max"]).toBe(1);
-        allocator.freeComponent(engine.createComponent(ComponentA)!);
-        allocator.freeComponent(engine.createComponent(ComponentB)!);
+        allocator.freeComponent(engine.obtainComponent(ComponentA)!);
+        allocator.freeComponent(engine.obtainComponent(ComponentB)!);
         expect(allocator["componentPools"][ComponentA.id]["max"]).toBe(3);
         expect(allocator["componentPools"][ComponentB.id]["max"]).toBe(4);
         expect(allocator["componentPools"][ComponentC.id]).toBeUndefined();
-        allocator.freeComponent(engine.createComponent(ComponentC)!);
+        allocator.freeComponent(engine.obtainComponent(ComponentC)!);
         expect(allocator["componentPools"][ComponentC.id]["max"]).toBe(2);
     });
 
@@ -49,16 +49,16 @@ describe("PoolAllocator", () => {
         const engine = new Engine();
         expect(allocator["entityPool"]["max"]).toBe(Number.MAX_SAFE_INTEGER);
         expect(allocator["componentPools"].length).toBe(0);
-        allocator.freeComponent(engine.createComponent(ComponentA)!);
+        allocator.freeComponent(engine.obtainComponent(ComponentA)!);
         expect(allocator["componentPools"][ComponentA.id]["max"]).toBe(Number.MAX_SAFE_INTEGER);
     });
 
     it("works for entities", () => {
         const allocator = new PoolAllocator();
         const engine = new Engine(allocator);
-        const a = engine.createComponent(ComponentA)!;
-        const b = engine.createComponent(ComponentB)!;
-        const c = engine.createComponent(ComponentC)!;
+        const a = engine.obtainComponent(ComponentA)!;
+        const b = engine.obtainComponent(ComponentB)!;
+        const c = engine.obtainComponent(ComponentC)!;
         const e = allocator.obtainEntity();
         expect(a.value).toBe("initialA");
         expect(b.value).toBe("initialB");
@@ -75,9 +75,9 @@ describe("PoolAllocator", () => {
         allocator.freeComponent(c);
         allocator.freeEntity(e);
 
-        expect(c).toBe(engine.createComponent(ComponentC));
-        expect(b).toBe(engine.createComponent(ComponentB));
-        expect(a).toBe(engine.createComponent(ComponentA));
+        expect(c).toBe(engine.obtainComponent(ComponentC));
+        expect(b).toBe(engine.obtainComponent(ComponentB));
+        expect(a).toBe(engine.obtainComponent(ComponentA));
         expect(e).toBe(allocator.obtainEntity());
 
         expect(a.value).toBe("resettedA");

@@ -2,7 +2,6 @@
 import { ComponentBlueprint } from "./ComponentBlueprint";
 import { Engine } from "../core/Engine";
 import { ComponentTypeWithConfig } from "../core/Component";
-import { Allocator } from "../core/Allocator";
 import { service } from "../di";
 
 export type UnknownComponentConfig = Record<string, unknown>;
@@ -34,7 +33,6 @@ export type EntityConfigOverrides<T> = {
 @service("typed-ecstasy/EntityFactory")
 export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
     private readonly entityBlueprints: Record<string, Array<ComponentBlueprint<string, unknown, unknown>>> = {};
-    private readonly allocator: Allocator;
     private readonly engine: Engine;
 
     /**
@@ -44,7 +42,6 @@ export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
      */
     public constructor(engine: Engine) {
         this.engine = engine;
-        this.allocator = engine.allocator;
     }
 
     /**
@@ -64,7 +61,7 @@ export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
      * @throws An exception if the entity could not be assembled.
      */
     public assemble(blueprintName: string, overrides?: EntityConfigOverrides<TEntityConfig>) {
-        const entity = this.allocator.obtainEntity();
+        const entity = this.engine.obtainEntity();
         try {
             const blueprint = this.entityBlueprints[blueprintName];
             if (!blueprint) throw new Error(`Could not find entity blueprint for '${blueprintName}'`);
@@ -78,7 +75,7 @@ export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
                 componentBlueprint["setOverrides"](
                     overrides?.[type.name as keyof EntityConfigOverrides<TEntityConfig>]
                 );
-                const component = this.engine.createComponent(type, componentBlueprint.get);
+                const component = this.engine.obtainComponent(type, componentBlueprint.get);
                 if (component) entity.add(component);
                 componentBlueprint["setOverrides"]();
             }

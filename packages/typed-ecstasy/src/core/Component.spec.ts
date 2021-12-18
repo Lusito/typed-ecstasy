@@ -8,8 +8,8 @@ const ComponentB = declareMarkerComponent("B");
 
 describe("Component", () => {
     const engine = new Engine();
-    const a = engine.createComponent(ComponentA)!;
-    const b = engine.createComponent(ComponentB)!;
+    const a = engine.obtainComponent(ComponentA)!;
+    const b = engine.obtainComponent(ComponentB)!;
 
     test("#componentName should return the component name", () => {
         expect(a.componentName).toBe("A");

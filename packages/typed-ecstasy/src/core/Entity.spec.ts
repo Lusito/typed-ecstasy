@@ -37,7 +37,7 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.obtainComponent(ComponentA)!);
 
         const components = entity.getAll();
         for (let i = 0; i < components.length; ++i) {
@@ -66,8 +66,8 @@ describe("Entity", () => {
         const engine = new Engine();
         const entity = new Entity();
         engine.entities.add(entity);
-        entity.add(engine.createComponent(ComponentA)!);
-        entity.add(engine.createComponent(ComponentB)!);
+        entity.add(engine.obtainComponent(ComponentA)!);
+        entity.add(engine.obtainComponent(ComponentB)!);
 
         const components = entity.getAll();
 
@@ -100,8 +100,8 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const a1 = entity.add(engine.createComponent(ComponentA)!);
-        const a2 = entity.add(engine.createComponent(ComponentA)!);
+        const a1 = entity.add(engine.obtainComponent(ComponentA)!);
+        const a2 = entity.add(engine.obtainComponent(ComponentA)!);
 
         const components = entity.getAll();
         for (let i = 0; i < components.length; ++i) {
@@ -119,8 +119,8 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const compA = entity.add(engine.createComponent(ComponentA)!);
-        const compB = entity.add(engine.createComponent(ComponentB)!);
+        const compA = entity.add(engine.obtainComponent(ComponentA)!);
+        const compB = entity.add(engine.obtainComponent(ComponentB)!);
 
         const retA = entity.get(ComponentA);
         const retB = entity.get(ComponentB);
@@ -137,8 +137,8 @@ describe("Entity", () => {
         const entity = new Entity();
         engine.entities.add(entity);
 
-        const compA = entity.add(engine.createComponent(ComponentA)!);
-        const compB = entity.add(engine.createComponent(ComponentB)!);
+        const compA = entity.add(engine.obtainComponent(ComponentA)!);
+        const compB = entity.add(engine.obtainComponent(ComponentB)!);
 
         const retA = entity.require(ComponentA);
         const retB = entity.require(ComponentB);

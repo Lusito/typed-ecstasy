@@ -163,7 +163,7 @@ describe("Engine", () => {
 
         for (let i = 0; i < 20; ++i) {
             const entity = new Entity();
-            entity.add(engine.createComponent(CounterComponent)!);
+            entity.add(engine.obtainComponent(CounterComponent)!);
             engine.entities.add(entity);
         }
 
@@ -189,7 +189,7 @@ describe("Engine", () => {
 
         for (let i = 0; i < 15000; i++) {
             const e = new Entity();
-            e.add(engine.createComponent(ComponentA)!);
+            e.add(engine.obtainComponent(ComponentA)!);
             engine.entities.add(e);
         }
 

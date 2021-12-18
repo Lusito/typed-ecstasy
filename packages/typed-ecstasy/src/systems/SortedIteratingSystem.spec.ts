@@ -105,7 +105,7 @@ class IteratingRemovalSystem extends SortedIteratingSystem {
 }
 
 function createOrderComponent(engine: Engine, name: string, zLayer: number) {
-    const order = engine.createComponent(OrderComponent)!;
+    const order = engine.obtainComponent(OrderComponent)!;
     order.name = name;
     order.zLayer = zLayer;
     return order;
@@ -124,14 +124,14 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(SpyComponent)!);
             e.add(createOrderComponent(engine, "A", i));
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
         const e = new Entity();
-        e.add(engine.createComponent(SpyComponent)!);
+        e.add(engine.obtainComponent(SpyComponent)!);
 
         engine.entities.add(e);
 
@@ -148,14 +148,14 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(SpyComponent)!);
             e.add(createOrderComponent(engine, "A", numEntities - i));
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
         const e = new Entity();
-        e.add(engine.createComponent(SpyComponent)!);
+        e.add(engine.obtainComponent(SpyComponent)!);
         e.add(createOrderComponent(engine, "A", 0));
 
         engine.entities.add(e);
@@ -179,13 +179,13 @@ describe("SortedIteratingSystem", () => {
         expect(system.receivedNames).toHaveLength(0);
 
         // When entity has OrderComponent and ComponentB
-        e.add(engine.createComponent(ComponentB)!);
+        e.add(engine.obtainComponent(ComponentB)!);
         engine.update(deltaTime);
         expect(system.receivedNames).toHaveSameOrderedMembers(["A"]);
         system.receivedNames.length = 0;
 
         // When entity has OrderComponent, ComponentB and ComponentC
-        e.add(engine.createComponent(ComponentC)!);
+        e.add(engine.obtainComponent(ComponentC)!);
         engine.update(deltaTime);
         expect(system.receivedNames).toHaveSameOrderedMembers(["A"]);
         system.receivedNames.length = 0;
@@ -206,9 +206,9 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(SpyComponent)!);
             e.add(createOrderComponent(engine, i.toString(), i));
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
@@ -233,9 +233,9 @@ describe("SortedIteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(SpyComponent)!);
             e.add(createOrderComponent(engine, i.toString(), i));
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }

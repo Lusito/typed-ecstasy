@@ -19,11 +19,10 @@ const ComponentB = declareComponent("B").withoutConfig<Data>({
 
 describe("PooledEntity", () => {
     it("should reset correctly", () => {
-        const allocator = new PoolAllocator();
-        const engine = new Engine(allocator);
-        const entity = allocator.obtainEntity();
-        const a = entity.add(engine.createComponent(ComponentA)!);
-        const b = entity.add(engine.createComponent(ComponentB)!);
+        const engine = new Engine(new PoolAllocator());
+        const entity = engine.obtainEntity();
+        const a = entity.add(engine.obtainComponent(ComponentA)!);
+        const b = entity.add(engine.obtainComponent(ComponentB)!);
         expect(entity.getId()).toBe(0);
         engine.entities.add(entity);
         const entityId = entity.getId();
@@ -41,22 +40,21 @@ describe("PooledEntity", () => {
         expect(entity["manager"]).toBe(null);
         expect(entity.getAll()).toHaveLength(0);
 
-        expect(allocator.obtainEntity()).toBe(entity);
-        expect(allocator.obtainEntity()).not.toBe(entity);
-        expect(engine.createComponent(ComponentA)!).toBe(a);
-        expect(engine.createComponent(ComponentA)!).not.toBe(a);
-        expect(engine.createComponent(ComponentB)!).toBe(b);
-        expect(engine.createComponent(ComponentB)!).not.toBe(b);
+        expect(engine.obtainEntity()).toBe(entity);
+        expect(engine.obtainEntity()).not.toBe(entity);
+        expect(engine.obtainComponent(ComponentA)!).toBe(a);
+        expect(engine.obtainComponent(ComponentA)!).not.toBe(a);
+        expect(engine.obtainComponent(ComponentB)!).toBe(b);
+        expect(engine.obtainComponent(ComponentB)!).not.toBe(b);
 
         engine.entities.add(entity);
         expect(entity.getId()).toBeGreaterThan(entityId);
     });
 
     it("should reset correctly for a single component", () => {
-        const allocator = new PoolAllocator();
-        const engine = new Engine(allocator);
-        const entity = allocator.obtainEntity();
-        const a = entity.add(engine.createComponent(ComponentA)!);
+        const engine = new Engine(new PoolAllocator());
+        const entity = engine.obtainEntity();
+        const a = entity.add(engine.obtainComponent(ComponentA)!);
         entity.remove(ComponentA);
         expect(a.value).toBe("resettedA");
     });

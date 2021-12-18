@@ -36,10 +36,9 @@ A [PoolAllocator](../../api/classes/poolallocator.md) is the class to use if you
 
 Simple usage might look like this:
 ```typescript
-const allocator = new PoolAllocator();
-const engine = new Engine(allocator);
-const entity = allocator.obtainEntity();
-entity.add(allocator.obtainComponent(PositionComponent));
+const engine = new Engine(new PoolAllocator());
+const entity = engine.obtainEntity();
+entity.add(engine.obtainComponent(PositionComponent));
 entity.remove(PositionComponent);
 entity.destroy();
 ```
@@ -63,16 +62,13 @@ In some situations, you'll want to use the allocator in a system. The class to u
 ```typescript
 @Service()
 class ExplosionSystem extends EntitySystem {
-    private allocator: Allocator;
-
-    public constructor(allocator: Allocator) {
-        super(Family.all(ComponentA, ComponentB).get());
-        this.allocator = allocator;
+    public constructor(engine: Engine) {
+        super(engine, Family.all(ComponentA, ComponentB).get());
         // ...
     }
 
     protected onExplode(entity: Entity): void {
-        const entity = this.allocator.obtainEntity();
+        const entity = this.engine.obtainEntity();
         // ...
     }
 }

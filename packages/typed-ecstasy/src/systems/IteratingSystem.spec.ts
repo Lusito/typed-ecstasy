@@ -105,21 +105,21 @@ describe("IteratingSystem", () => {
         engine.entities.add(e);
 
         // When entity has ComponentA
-        e.add(engine.createComponent(ComponentA)!);
+        e.add(engine.obtainComponent(ComponentA)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(0);
 
         // When entity has ComponentA and ComponentB
         system.numUpdates = 0;
-        e.add(engine.createComponent(ComponentB)!);
+        e.add(engine.obtainComponent(ComponentB)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(1);
 
         // When entity has ComponentA, ComponentB and ComponentC
         system.numUpdates = 0;
-        e.add(engine.createComponent(ComponentC)!);
+        e.add(engine.obtainComponent(ComponentC)!);
         engine.update(deltaTime);
 
         expect(system.numUpdates).toBe(1);
@@ -142,8 +142,8 @@ describe("IteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }
@@ -168,8 +168,8 @@ describe("IteratingSystem", () => {
 
         for (let i = 0; i < numEntities; ++i) {
             const e = new Entity();
-            e.add(engine.createComponent(SpyComponent)!);
-            e.add(engine.createComponent(IndexComponent)!).index = i + 1;
+            e.add(engine.obtainComponent(SpyComponent)!);
+            e.add(engine.obtainComponent(IndexComponent)!).index = i + 1;
 
             engine.entities.add(e);
         }

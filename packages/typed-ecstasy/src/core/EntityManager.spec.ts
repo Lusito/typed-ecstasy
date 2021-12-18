@@ -99,7 +99,7 @@ class RemoveEntityTwiceSystem extends EntitySystem {
             const entity = new Entity();
             this.onEntityCreated(entity);
             entity.flags = 1;
-            entity.add(engine.createComponent(PositionComponent)!);
+            entity.add(engine.obtainComponent(PositionComponent)!);
             engine.entities.add(entity);
         }
         for (const entity of this.entities!) {
@@ -168,7 +168,7 @@ describe("EntityManager", () => {
     test("unaddedEntity", () => {
         const engine = new Engine();
         let entity = new Entity();
-        const component = entity.add(engine.createComponent(ComponentA)!);
+        const component = entity.add(engine.obtainComponent(ComponentA)!);
         expect(entity.get(ComponentA)).toBe(component);
         entity.add(component);
         expect(entity.get(ComponentA)).toBe(component);
@@ -201,19 +201,19 @@ describe("EntityManager", () => {
         const entity3 = new Entity();
         const entity4 = new Entity();
 
-        entity1.add(engine.createComponent(ComponentA)!);
-        entity1.add(engine.createComponent(ComponentB)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentB)!);
 
-        entity2.add(engine.createComponent(ComponentA)!);
-        entity2.add(engine.createComponent(ComponentC)!);
+        entity2.add(engine.obtainComponent(ComponentA)!);
+        entity2.add(engine.obtainComponent(ComponentC)!);
 
-        entity3.add(engine.createComponent(ComponentA)!);
-        entity3.add(engine.createComponent(ComponentB)!);
-        entity3.add(engine.createComponent(ComponentC)!);
+        entity3.add(engine.obtainComponent(ComponentA)!);
+        entity3.add(engine.obtainComponent(ComponentB)!);
+        entity3.add(engine.obtainComponent(ComponentC)!);
 
-        entity4.add(engine.createComponent(ComponentA)!);
-        entity4.add(engine.createComponent(ComponentB)!);
-        entity4.add(engine.createComponent(ComponentC)!);
+        entity4.add(engine.obtainComponent(ComponentA)!);
+        entity4.add(engine.obtainComponent(ComponentB)!);
+        entity4.add(engine.obtainComponent(ComponentC)!);
 
         engine.entities.add(entity1);
         engine.entities.add(entity2);
@@ -232,7 +232,7 @@ describe("EntityManager", () => {
         const engine = new Engine();
 
         const entity = new Entity();
-        entity.add(engine.createComponent(ComponentA)!);
+        entity.add(engine.obtainComponent(ComponentA)!);
 
         engine.entities.add(entity);
 
@@ -265,19 +265,19 @@ describe("EntityManager", () => {
         engine.entities.add(entity3);
         engine.entities.add(entity4);
 
-        entity1.add(engine.createComponent(ComponentA)!);
-        entity1.add(engine.createComponent(ComponentB)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentB)!);
 
-        entity2.add(engine.createComponent(ComponentA)!);
-        entity2.add(engine.createComponent(ComponentC)!);
+        entity2.add(engine.obtainComponent(ComponentA)!);
+        entity2.add(engine.obtainComponent(ComponentC)!);
 
-        entity3.add(engine.createComponent(ComponentA)!);
-        entity3.add(engine.createComponent(ComponentB)!);
-        entity3.add(engine.createComponent(ComponentC)!);
+        entity3.add(engine.obtainComponent(ComponentA)!);
+        entity3.add(engine.obtainComponent(ComponentB)!);
+        entity3.add(engine.obtainComponent(ComponentC)!);
 
-        entity4.add(engine.createComponent(ComponentA)!);
-        entity4.add(engine.createComponent(ComponentB)!);
-        entity4.add(engine.createComponent(ComponentC)!);
+        entity4.add(engine.obtainComponent(ComponentA)!);
+        entity4.add(engine.obtainComponent(ComponentB)!);
+        entity4.add(engine.obtainComponent(ComponentC)!);
 
         expect(familyEntities).toHaveLength(3);
         expect(familyEntities.indexOf(entity1)).not.toBe(-1);
@@ -302,19 +302,19 @@ describe("EntityManager", () => {
         engine.entities.add(entity3);
         engine.entities.add(entity4);
 
-        entity1.add(engine.createComponent(ComponentA)!);
-        entity1.add(engine.createComponent(ComponentB)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentB)!);
 
-        entity2.add(engine.createComponent(ComponentA)!);
-        entity2.add(engine.createComponent(ComponentC)!);
+        entity2.add(engine.obtainComponent(ComponentA)!);
+        entity2.add(engine.obtainComponent(ComponentC)!);
 
-        entity3.add(engine.createComponent(ComponentA)!);
-        entity3.add(engine.createComponent(ComponentB)!);
-        entity3.add(engine.createComponent(ComponentC)!);
+        entity3.add(engine.obtainComponent(ComponentA)!);
+        entity3.add(engine.obtainComponent(ComponentB)!);
+        entity3.add(engine.obtainComponent(ComponentC)!);
 
-        entity4.add(engine.createComponent(ComponentA)!);
-        entity4.add(engine.createComponent(ComponentB)!);
-        entity4.add(engine.createComponent(ComponentC)!);
+        entity4.add(engine.obtainComponent(ComponentA)!);
+        entity4.add(engine.obtainComponent(ComponentB)!);
+        entity4.add(engine.obtainComponent(ComponentC)!);
 
         expect(familyEntities).toHaveLength(3);
         expect(familyEntities.indexOf(entity1)).not.toBe(-1);
@@ -345,10 +345,10 @@ describe("EntityManager", () => {
         engine.entities.add(entity1);
         engine.entities.add(entity2);
 
-        entity1.add(engine.createComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
 
-        entity2.add(engine.createComponent(ComponentA)!);
-        entity2.add(engine.createComponent(ComponentB)!);
+        entity2.add(engine.obtainComponent(ComponentA)!);
+        entity2.add(engine.obtainComponent(ComponentB)!);
 
         expect(entitiesWithComponentAOnly).toHaveLength(1);
         expect(entitiesWithComponentB).toHaveLength(1);
@@ -386,12 +386,12 @@ describe("EntityManager", () => {
         expect(listenerA.addedCount).toBe(0);
         expect(listenerB.addedCount).toBe(0);
 
-        entity1.add(engine.createComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
 
         expect(listenerA.addedCount).toBe(1);
         expect(listenerB.addedCount).toBe(0);
 
-        entity2.add(engine.createComponent(ComponentB)!);
+        entity2.add(engine.obtainComponent(ComponentB)!);
 
         expect(listenerA.addedCount).toBe(1);
         expect(listenerB.addedCount).toBe(1);
@@ -410,14 +410,14 @@ describe("EntityManager", () => {
         refBRemoved.enabled = false;
 
         entity2 = new Entity();
-        entity2.add(engine.createComponent(ComponentB)!);
+        entity2.add(engine.obtainComponent(ComponentB)!);
         engine.entities.add(entity2);
 
         expect(listenerA.addedCount).toBe(1);
         expect(listenerB.addedCount).toBe(1);
 
-        entity1.add(engine.createComponent(ComponentB)!);
-        entity1.add(engine.createComponent(ComponentA)!);
+        entity1.add(engine.obtainComponent(ComponentB)!);
+        entity1.add(engine.obtainComponent(ComponentA)!);
 
         expect(listenerA.addedCount).toBe(2);
         expect(listenerB.addedCount).toBe(1);
@@ -517,7 +517,7 @@ describe("EntityManager", () => {
 
         for (let i = 0; i < 10; i++) {
             const entity = new Entity();
-            entity.add(engine.createComponent(PositionComponent)!);
+            entity.add(engine.obtainComponent(PositionComponent)!);
             engine.entities.add(entity);
         }
 
@@ -568,7 +568,7 @@ describe("EntityManager", () => {
         const engine = new Engine();
 
         const e = new Entity();
-        e.add(engine.createComponent(PositionComponent)!);
+        e.add(engine.obtainComponent(PositionComponent)!);
         engine.entities.add(e);
 
         const signal = engine.entities.onRemoveForFamily(Family.all(PositionComponent).get());
@@ -587,7 +587,7 @@ describe("EntityManager", () => {
         const engine = new Engine();
 
         const e = new Entity();
-        e.add(engine.createComponent(PositionComponent)!);
+        e.add(engine.obtainComponent(PositionComponent)!);
 
         const signal = engine.entities.onAddForFamily(Family.all(PositionComponent).get());
         const e2 = new Entity();
@@ -604,7 +604,7 @@ describe("EntityManager", () => {
         const engine = new Engine();
 
         const e = new Entity();
-        e.add(engine.createComponent(PositionComponent)!);
+        e.add(engine.obtainComponent(PositionComponent)!);
         engine.entities.add(e);
         const family = Family.all(PositionComponent).get();
         const signal = engine.entities.onRemoveForFamily(family);
@@ -622,7 +622,7 @@ describe("EntityManager", () => {
         const engine = new Engine();
 
         const e = new Entity();
-        e.add(engine.createComponent(PositionComponent)!);
+        e.add(engine.obtainComponent(PositionComponent)!);
 
         const family = Family.all(PositionComponent).get();
         const signal = engine.entities.onAddForFamily(family);

@@ -44,7 +44,7 @@ describe("IntervalIteratingSystem", () => {
 
         for (let i = 0; i < 10; ++i) {
             const entity = new Entity();
-            entity.add(engine.createComponent(IntervalComponentSpy)!);
+            entity.add(engine.obtainComponent(IntervalComponentSpy)!);
             engine.entities.add(entity);
         }
 

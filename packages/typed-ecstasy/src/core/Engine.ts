@@ -81,12 +81,16 @@ export class Engine {
         this.updating = false;
     }
 
-    public createComponent<TData>(type: ComponentType<string, TData>): ComponentData<TData> | undefined;
-    public createComponent<TData, TConfig>(
+    public obtainEntity() {
+        return this.allocator.obtainEntity();
+    }
+
+    public obtainComponent<TData>(type: ComponentType<string, TData>): ComponentData<TData> | undefined;
+    public obtainComponent<TData, TConfig>(
         type: ComponentTypeWithConfig<string, TData, TConfig>,
         config: ComponentConfigGetter<TConfig>
     ): ComponentData<TData> | undefined;
-    public createComponent<TData, TConfig>(
+    public obtainComponent<TData, TConfig>(
         type: ComponentType<string, TData> | ComponentTypeWithConfig<string, TData, TConfig>,
         config?: ComponentConfigGetter<TConfig>
     ) {
