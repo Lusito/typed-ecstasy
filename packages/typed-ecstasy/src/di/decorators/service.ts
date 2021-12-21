@@ -2,7 +2,7 @@ import { enableHotSwapProxying } from "../Container";
 import type { HotSwapType } from "../hotSwapProxy";
 import { performHotSwap } from "../hotSwapRegistry";
 import { metaRegistry } from "../metaRegistry";
-import type { Constructor } from "../types";
+import type { Constructor } from "../Constructor";
 
 export interface ImportHot {
     accept: () => void;

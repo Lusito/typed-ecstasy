@@ -1,9 +1,9 @@
 import type {} from "@abraham/reflection";
 import { metaRegistry, ServiceMeta } from "./metaRegistry";
-import type { Constructor } from "./types";
+import type { Constructor } from "./Constructor";
 import { createHotSwapProxy, HotSwapType } from "./hotSwapProxy";
 import { registerHotSwapProxy } from "./hotSwapRegistry";
-import { getName } from "../utils/nameUtil";
+import { getConstructorName } from "./Constructor";
 
 let isHotSwapProxyingEnabled = false;
 
@@ -63,7 +63,9 @@ export class Container {
     private getForKey<T extends HotSwapType>(key: Constructor<T>) {
         const value = this.find(key);
         if (value) return value as T;
-        throw new Error(`Could not find value for symbol "${getName(key)}". Did you forget to set it manually?`);
+        throw new Error(
+            `Could not find value for symbol "${getConstructorName(key)}". Did you forget to set it manually?`
+        );
     }
 
     private getForMeta<T extends HotSwapType>(meta: ServiceMeta<string, T>) {

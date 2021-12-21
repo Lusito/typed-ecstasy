@@ -12,6 +12,15 @@ describe("DelayedOperations", () => {
         fnB.mockReset();
     });
 
+    it("should provide current shouldDelay state", () => {
+        const handler = createDelayedOperations({ fnA });
+        expect(handler.shouldDelay).toBe(false);
+        handler.shouldDelay = true;
+        expect(handler.shouldDelay).toBe(true);
+        handler.shouldDelay = false;
+        expect(handler.shouldDelay).toBe(false);
+    });
+
     describe("without delay", () => {
         it("should call the original instantly", () => {
             const handler = createDelayedOperations({ fnA });

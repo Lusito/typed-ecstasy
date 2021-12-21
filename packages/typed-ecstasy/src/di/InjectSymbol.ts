@@ -1,4 +1,4 @@
-import type { Constructor } from "./types";
+import type { Constructor } from "./Constructor";
 
 /**
  * @param name A descriptive name.
