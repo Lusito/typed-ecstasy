@@ -1,18 +1,24 @@
-
 /** @internal */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type HotSwapType = object;
+
 /** @internal */
-export interface HotSwapProxyConfig<T> {
-    proxy: T;
-    hotSwap: (newTarget: T) => void;
-}
+export const HOTSWAP = Symbol("HotSwap Proxy FN");
+
+/** @internal */
+export type HotSwapProxy<T extends HotSwapType = HotSwapType> = {
+    [HOTSWAP]?: (newTarget: T) => void;
+};
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
-export function createHotSwapProxy<T extends HotSwapType>(initialTarget: T): HotSwapProxyConfig<T> {
-    let target = initialTarget; // fixme: weakref to allow garbage collection?
-    const proxy = new Proxy({} as T, {
+export function createHotSwapProxy<T extends HotSwapType>(initialTarget: T): T {
+    let target = initialTarget;
+
+    const hotSwap = (newTarget: T) => {
+        target = newTarget;
+    };
+    return new Proxy({} as T, {
         apply(_, self, args) {
             return Reflect.apply(target as any, self, args);
         },
@@ -29,6 +35,7 @@ export function createHotSwapProxy<T extends HotSwapType>(initialTarget: T): Hot
             return Reflect.deleteProperty(target, key);
         },
         get(_, key) {
+            if (key === HOTSWAP) return hotSwap;
             const x = Reflect.get(target, key, target);
             return typeof x === "function" ? x.bind(target) : x;
         },
@@ -54,10 +61,4 @@ export function createHotSwapProxy<T extends HotSwapType>(initialTarget: T): Hot
             return Reflect.preventExtensions(target);
         },
     });
-    return {
-        proxy,
-        hotSwap(newTarget) {
-            target = newTarget;
-        },
-    };
 }

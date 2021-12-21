@@ -1,4 +1,4 @@
-import { enableHotContainers } from "../Container";
+import { enableHotSwapProxying } from "../Container";
 import { HotSwapType } from "../hotSwapProxy";
 import { performHotSwap } from "../hotSwapRegistry";
 import { metaRegistry } from "../metaRegistry";
@@ -31,7 +31,7 @@ export function service<TName extends string>(id: TName, config: ServiceConfig =
         const meta = metaRegistry.registerService(target, id, config.transient);
         const { hot } = config;
         if (hot) {
-            enableHotContainers();
+            enableHotSwapProxying();
             if (hot.data?.oldMeta) {
                 performHotSwap(meta, hot.data.oldMeta);
             }

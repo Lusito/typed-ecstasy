@@ -1,12 +1,10 @@
 import type { Container } from "./Container";
-import { HotSwapProxyConfig, HotSwapType } from "./hotSwapProxy";
+import { HotSwapProxy, HotSwapType, HOTSWAP } from "./hotSwapProxy";
 import { ServiceMeta } from "./metaRegistry";
 
 interface ListEntry {
     id: string;
-    // fixme: can't use WeakRef for the config, since the config might not be in use anymore, but the proxy itself is..
-    // .. maybe remove the HotSwapProxyConfig type and make the hotSwap method available through the proxy itself?
-    config: HotSwapProxyConfig<HotSwapType>;
+    proxyRef: WeakRef<HotSwapType>;
     containerRef: WeakRef<Container>;
 }
 let list: ListEntry[] = [];
@@ -52,20 +50,23 @@ function restoreRetainableProps(
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
 export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, T>, oldMeta: ServiceMeta<string, T>) {
-    list = list.filter(({ config, containerRef, id }) => {
+    list = list.filter(({ proxyRef, containerRef, id }) => {
+        const proxy = proxyRef.deref();
         const container = containerRef.deref();
-        if (!container || !config) return false;
+        if (!container || !proxy) return false;
+        const hotSwap = (proxy as HotSwapProxy)[HOTSWAP];
+        if (!hotSwap) return false;
         if (id === meta.id) {
             // fixme: maybe add callback for services, which reference this instance?
             // fixme: give actual instance to listener and storeHotSwap rather than proxy?
             // fixme: allow multiple listeners?
-            const data = hotSwapListener.beforeHotSwap(config.proxy);
-            const oldData = storeRetainableProps(config.proxy, oldMeta.retainableProps);
+            const data = hotSwapListener.beforeHotSwap(proxy);
+            const oldData = storeRetainableProps(proxy, oldMeta.retainableProps);
             // eslint-disable-next-line dot-notation
             const newValue = container["create"](meta);
-            config.hotSwap(newValue);
+            hotSwap(newValue);
             restoreRetainableProps(newValue, meta.retainableProps, oldData);
-            hotSwapListener.afterHotSwap(config.proxy, data);
+            hotSwapListener.afterHotSwap(proxy, data);
         }
         return true;
     });
@@ -73,10 +74,10 @@ export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, 
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
-export function registerHotSwapProxy(id: string, config: HotSwapProxyConfig<HotSwapType>, container: Container) {
+export function registerHotSwapProxy(id: string, proxy: HotSwapType, container: Container) {
     list.push({
         id,
-        config,
+        proxyRef: new WeakRef(proxy),
         containerRef: new WeakRef(container),
     });
 }

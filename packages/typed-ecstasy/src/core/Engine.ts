@@ -25,7 +25,7 @@ export class Engine {
 
     public readonly allocator: Allocator;
 
-    public readonly container = Container.create();
+    public readonly container = new Container();
 
     public readonly systems: EntitySystemManager;
 

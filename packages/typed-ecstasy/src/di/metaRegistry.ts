@@ -18,8 +18,6 @@ const serviceMetaById = new Map<string, ServiceMeta<string, HotSwapType>>();
 /** @internal */
 export const metaRegistry = {
     registerService(constructor: Constructor<HotSwapType>, id: string, transient?: boolean) {
-        metaData.serviceId.set(constructor, id);
-
         const params = metaData.paramTypes.get(constructor);
         if (!params) throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
         params.forEach((param, index) => {
@@ -41,6 +39,7 @@ export const metaRegistry = {
             params,
         };
         serviceMetaById.set(id, meta);
+        metaData.serviceId.set(constructor, id);
         return meta;
     },
     registerRetainable(constructor: Constructor<HotSwapType>, key: string | symbol) {
@@ -50,12 +49,15 @@ export const metaRegistry = {
         entries.add(key);
         metaData.retainable.set(constructor, entries);
     },
-    get(id: string) {
+    get<T extends HotSwapType>(constructor: Constructor<T>) {
+        const id = metaData.serviceId.getOwn(constructor);
+        if (!id) return null;
+
         const meta = serviceMetaById.get(id);
         if (!meta) {
-            throw new Error(`Could not find information about "${id}". Did you forget to add @service?`);
+            throw new Error(`Found id "${id}", but no metadata.. this should not be possible!`);
         }
-        return meta;
+        return meta as ServiceMeta<string, T>;
     },
     getId(constructor: Constructor<HotSwapType>) {
         return metaData.serviceId.getOwn(constructor);
