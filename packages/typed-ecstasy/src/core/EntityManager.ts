@@ -175,7 +175,7 @@ export class EntityManager {
                 meta.entities.push(entity);
                 entityFamilyMeta.add(meta);
 
-                this.notifyFamilyListenersAdd(meta.family, entity);
+                if (meta.onAdd) this.notifyEntity(entity, meta.onAdd);
             } else if (belongsToFamily && !matches) {
                 const familyEntities = meta.entities;
                 const index = familyEntities.indexOf(entity);
@@ -183,7 +183,7 @@ export class EntityManager {
                 if (index !== -1) familyEntities.splice(index, 1);
                 entityFamilyMeta.delete(meta);
 
-                this.notifyFamilyListenersRemove(meta.family, entity);
+                if (meta.onRemove) this.notifyEntity(entity, meta.onRemove);
             }
         }
     }
@@ -198,12 +198,12 @@ export class EntityManager {
             // Update all families meta.
             // eslint-disable-next-line prefer-destructuring
             const entityFamilyMeta = entity["familyMeta"];
-            for (const { family, entities } of entityFamilyMeta) {
+            for (const { entities, onRemove } of entityFamilyMeta) {
                 const index2 = entities.indexOf(entity);
                 /* istanbul ignore else: this will never happen */
                 if (index2 !== -1) entities.splice(index2, 1);
 
-                this.notifyFamilyListenersRemove(family, entity);
+                if (onRemove) this.notifyEntity(entity, onRemove);
             }
 
             this.notifying = true;
@@ -232,22 +232,10 @@ export class EntityManager {
         this.notifying = false;
     }
 
-    private notifyFamilyListenersAdd(family: Family, entity: Entity) {
-        const meta = this.familyMeta.find((m) => m.family === family);
-        if (meta?.onAdd) {
-            this.notifying = true;
-            meta.onAdd.emit(entity);
-            this.notifying = false;
-        }
-    }
-
-    private notifyFamilyListenersRemove(family: Family, entity: Entity) {
-        const meta = this.familyMeta.find((m) => m.family === family);
-        if (meta?.onRemove) {
-            this.notifying = true;
-            meta.onRemove.emit(entity);
-            this.notifying = false;
-        }
+    private notifyEntity(entity: Entity, signal: EntitySignal) {
+        this.notifying = true;
+        signal.emit(entity);
+        this.notifying = false;
     }
 
     private registerFamily(family: Family) {
