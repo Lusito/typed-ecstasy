@@ -15,16 +15,12 @@ export interface HotSwapListener<T> {
     afterHotSwap: (target: any, data: T) => void;
 }
 
-let hotSwapListener: HotSwapListener<unknown> = {
-    beforeHotSwap: () => undefined,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    afterHotSwap: () => {},
-};
+const hotSwapListeners = new Set<HotSwapListener<unknown>>();
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
-export function setHotSwapListener<T>(listener: HotSwapListener<T>) {
-    hotSwapListener = listener as HotSwapListener<unknown>;
+export function addHotSwapListener<T>(listener: HotSwapListener<T>) {
+    hotSwapListeners.add(listener as HotSwapListener<unknown>);
 }
 
 function storeRetainableProps(target: HotSwapType, retainableProps: Set<string | symbol>) {
@@ -59,14 +55,18 @@ export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, 
         if (id === meta.id) {
             // fixme: maybe add callback for services, which reference this instance?
             // fixme: give actual instance to listener and storeHotSwap rather than proxy?
-            // fixme: allow multiple listeners?
-            const data = hotSwapListener.beforeHotSwap(proxy);
+            const listenerData = Array.from(hotSwapListeners).map((listener) => ({
+                listener,
+                data: listener.beforeHotSwap(proxy),
+            }));
             const oldData = storeRetainableProps(proxy, oldMeta.retainableProps);
             // eslint-disable-next-line dot-notation
             const newValue = container["create"](meta);
             hotSwap(newValue);
             restoreRetainableProps(newValue, meta.retainableProps, oldData);
-            hotSwapListener.afterHotSwap(proxy, data);
+            for (const { listener, data } of listenerData) {
+                listener.afterHotSwap(proxy, data);
+            }
         }
         return true;
     });

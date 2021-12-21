@@ -1,6 +1,6 @@
 import { Engine } from "./Engine";
 import { AbstractSystemManager } from "./AbstractSystemManager";
-import { addMetaData, retainable, setHotSwapListener } from "../di";
+import { addMetaData, retainable, addHotSwapListener } from "../di";
 
 /**
  * Base class for all systems.
@@ -84,7 +84,7 @@ export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
     }
 }
 
-setHotSwapListener<boolean>({
+addHotSwapListener<boolean>({
     beforeHotSwap(target) {
         if (target instanceof AbstractSystem) {
             const enabled = target.isEnabled();
