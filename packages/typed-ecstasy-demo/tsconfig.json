@@ -1,20 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
-    "module": "CommonJS",
-    "declaration": true,
-    "noEmit": true,
-    "lib": ["ESNext", "DOM"],
-    "strict": true,
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noImplicitOverride": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node"
+    "lib": ["ESNext", "DOM"]
   },
+  "include": ["src"],
   "exclude": ["dist"]
 }

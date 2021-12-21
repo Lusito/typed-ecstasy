@@ -4,7 +4,6 @@
     "module": "CommonJS",
     "declaration": true,
     "lib": ["esNext"],
-    "outDir": "./dist",
     "strict": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
@@ -12,6 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitOverride": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "paths": {
       "typed-ecstasy": ["./packages/typed-ecstasy/src/index.ts"]
