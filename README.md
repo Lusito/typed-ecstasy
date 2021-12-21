@@ -1,3 +1,11 @@
+# Version 3 Branch (WIP)
+
+### Welcome!
+
+Somehow you stumbled upon this new branch. It is a work in progress of version 3. Please take a look at [this issue](https://github.com/Lusito/typed-ecstasy/issues/9) to get more information.
+
+# Original Readme
+
 ![typed-ecstasy](https://lusito.github.io/typed-ecstasy/logo.png)
 
 [![Minified + gzipped size](https://badgen.net/bundlephobia/minzip/typed-ecstasy)](https://www.npmjs.com/package/typed-ecstasy)
@@ -18,6 +26,7 @@ Automated unit tests are running on [Travis-CI](https://travis-ci.org/)
 For a real project using this, check out [my asteroids clone](https://github.com/Lusito/typed-asteroids).
 
 #### Fair Warning
+
 Since version 1, the target is now es2015, so if you want to support older browser, you'll have to ensure that this module is being transpiled to an older es version during your build-process.
 
 ### Get started
