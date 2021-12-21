@@ -33,6 +33,7 @@ export class PooledEntity extends Entity {
 
     public reset() {
         this.removeAllInternal();
+        this.familyMeta.clear();
         this.manager = null;
         this.uuid = 0;
         this.flags = 0;

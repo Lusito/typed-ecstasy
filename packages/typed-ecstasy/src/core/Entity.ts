@@ -1,7 +1,6 @@
 /* eslint-disable dot-notation */
 import type { ComponentData, ComponentType } from "./Component";
-import type { EntityManager } from "./EntityManager";
-import type { Family } from "./Family";
+import type { EntityManager, FamilyMeta } from "./EntityManager";
 
 /**
  * Simple containers of components, which give an entity data.
@@ -16,7 +15,7 @@ export class Entity {
 
     private readonly componentsById: Array<ComponentData<unknown> | undefined> = [];
 
-    private readonly families = new Set<Family>();
+    protected readonly familyMeta = new Set<FamilyMeta>();
 
     protected manager: EntityManager | null = null;
 
@@ -128,10 +127,5 @@ export class Entity {
             return true;
         }
         return false;
-    }
-
-    /** @returns All {@link Family Families}, this entity belongs to (only updated when added to a manager). */
-    public getFamilies(): ReadonlySet<Family> {
-        return this.families;
     }
 }

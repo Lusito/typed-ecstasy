@@ -6,7 +6,7 @@ import { EntitySignal } from "./EntitySignal";
 import { Allocator } from "./Allocator";
 import { ComponentData, ComponentType } from "./Component";
 
-interface FamilyMeta {
+export interface FamilyMeta {
     family: Family;
     entities: Entity[];
     onAdd?: EntitySignal;
@@ -165,24 +165,25 @@ export class EntityManager {
     private updateFamilyInternal(entity: Entity) {
         if (entity["scheduledForRemoval"]) return;
 
-        const families = entity.getFamilies() as Set<Family>;
-        for (const { family, entities } of this.familyMeta) {
-            const belongsToFamily = families.has(family);
-            const matches = family.matches(entity);
+        // eslint-disable-next-line prefer-destructuring
+        const entityFamilyMeta = entity["familyMeta"];
+        for (const meta of this.familyMeta) {
+            const belongsToFamily = entityFamilyMeta.has(meta);
+            const matches = meta.family.matches(entity);
 
             if (!belongsToFamily && matches) {
-                entities.push(entity);
-                families.add(family);
+                meta.entities.push(entity);
+                entityFamilyMeta.add(meta);
 
-                this.notifyFamilyListenersAdd(family, entity);
+                this.notifyFamilyListenersAdd(meta.family, entity);
             } else if (belongsToFamily && !matches) {
-                const familyEntities = entities;
+                const familyEntities = meta.entities;
                 const index = familyEntities.indexOf(entity);
                 /* istanbul ignore else: this will never happen */
                 if (index !== -1) familyEntities.splice(index, 1);
-                families.delete(family);
+                entityFamilyMeta.delete(meta);
 
-                this.notifyFamilyListenersRemove(family, entity);
+                this.notifyFamilyListenersRemove(meta.family, entity);
             }
         }
     }
@@ -194,19 +195,15 @@ export class EntityManager {
             this.entities.splice(index, 1);
             this.entitiesById.delete(entity.getId());
 
-            // fixme: can we iterate only over the families of the entity instead of over all known? Maybe use FamilyMeta in entity as well?
-            const families = entity.getFamilies() as Set<Family>;
-            if (families.size) {
-                for (const { family, entities } of this.familyMeta) {
-                    if (family.matches(entity)) {
-                        const index2 = entities.indexOf(entity);
-                        /* istanbul ignore else: this will never happen */
-                        if (index2 !== -1) entities.splice(index2, 1);
+            // Update all families meta.
+            // eslint-disable-next-line prefer-destructuring
+            const entityFamilyMeta = entity["familyMeta"];
+            for (const { family, entities } of entityFamilyMeta) {
+                const index2 = entities.indexOf(entity);
+                /* istanbul ignore else: this will never happen */
+                if (index2 !== -1) entities.splice(index2, 1);
 
-                        families.delete(family);
-                        this.notifyFamilyListenersRemove(family, entity);
-                    }
-                }
+                this.notifyFamilyListenersRemove(family, entity);
             }
 
             this.notifying = true;
@@ -257,13 +254,14 @@ export class EntityManager {
         let meta = this.familyMeta.find((m) => m.family === family);
         if (!meta) {
             const entities: Entity[] = [];
+            meta = { family, entities };
             for (const e of this.entities) {
                 if (family.matches(e)) {
                     entities.push(e);
-                    e["families"].add(family);
+                    // eslint-disable-next-line prefer-destructuring
+                    e["familyMeta"].add(meta);
                 }
             }
-            meta = { family, entities };
             this.familyMeta.push(meta);
         }
         return meta;
