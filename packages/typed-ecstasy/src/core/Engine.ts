@@ -3,14 +3,7 @@ import { Container } from "../di";
 import { EntitySystemManager } from "./EntitySystemManager";
 import { EntityManager } from "./EntityManager";
 import { Allocator } from "./Allocator";
-import {
-    ComponentBuilder,
-    ComponentBuilderWithConfig,
-    ComponentConfigGetter,
-    ComponentData,
-    ComponentType,
-    ComponentTypeWithConfig,
-} from "./Component";
+import { ComponentBuilder, ComponentConfigGetter, ComponentData, ComponentType } from "./Component";
 import { componentMetaRegistry } from "./componentMetaRegistry";
 
 const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
@@ -20,7 +13,7 @@ const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
  * The engine should be updated every tick via the {@link update} method.
  */
 export class Engine {
-    private readonly factories: Array<ComponentBuilder<unknown> | ComponentBuilderWithConfig<unknown, unknown>> = [];
+    private readonly factories: Array<ComponentBuilder<unknown, unknown>> = [];
 
     private readonly allocator: Allocator;
 
@@ -83,13 +76,13 @@ export class Engine {
         return this.allocator.obtainEntity();
     }
 
-    public obtainComponent<TData>(type: ComponentType<string, TData>): ComponentData<TData> | undefined;
+    public obtainComponent<TData>(type: ComponentType<string, TData, never>): ComponentData<TData> | undefined;
     public obtainComponent<TData, TConfig>(
-        type: ComponentTypeWithConfig<string, TData, TConfig>,
+        type: ComponentType<string, TData, TConfig>,
         config: ComponentConfigGetter<TConfig>
     ): ComponentData<TData> | undefined;
     public obtainComponent<TData, TConfig>(
-        type: ComponentType<string, TData> | ComponentTypeWithConfig<string, TData, TConfig>,
+        type: ComponentType<string, TData> | ComponentType<string, TData, TConfig>,
         config?: ComponentConfigGetter<TConfig>
     ) {
         let factory = this.factories[type.id];

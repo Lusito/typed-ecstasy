@@ -1,16 +1,9 @@
-import type { ComponentFactory, ComponentFactoryWithConfig, ComponentType } from "./Component";
+import type { ComponentFactory, ComponentType } from "./Component";
 
-export type ComponentMeta =
-    | {
-          type: ComponentType;
-          withConfig: false;
-          factory: ComponentFactory<unknown>;
-      }
-    | {
-          type: ComponentType;
-          withConfig: true;
-          factory: ComponentFactoryWithConfig<unknown, unknown>;
-      };
+export type ComponentMeta<TData = unknown, TConfig = unknown> = {
+    type: ComponentType;
+    factory: ComponentFactory<TData, TConfig>;
+};
 
 let nextId = 1;
 const componentMetaMap: Record<string, ComponentMeta> = {};

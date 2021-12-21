@@ -1,4 +1,4 @@
-import { ComponentConfigGetter, ComponentTypeWithConfig } from "../core/Component";
+import { ComponentConfigGetter, ComponentType } from "../core/Component";
 import { componentMetaRegistry } from "../core/componentMetaRegistry";
 
 const emptyOverrides = {};
@@ -11,7 +11,7 @@ const emptyOverrides = {};
  */
 export class ComponentBlueprint<TName extends string, TData, TConfig> {
     /** The component type of this blueprint. */
-    public readonly type?: ComponentTypeWithConfig<TName, TData, TConfig>;
+    public readonly type?: ComponentType<TName, TData, TConfig>;
 
     private overrides: Partial<TConfig> = emptyOverrides;
 
@@ -25,7 +25,7 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
      */
     public constructor(name: string, defaultValues: TConfig) {
         const meta = componentMetaRegistry.get(name);
-        if (meta) this.type = meta.type as ComponentTypeWithConfig<TName, TData, TConfig>;
+        if (meta) this.type = meta.type as unknown as ComponentType<TName, TData, TConfig>;
         else console.warn(`Can't find metadata for component "${name}". This component will not be added!`);
         this.defaultValues = defaultValues;
     }

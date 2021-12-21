@@ -1,5 +1,5 @@
 import { Allocator } from "../core/Allocator";
-import type { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "../core/Component";
+import type { ComponentBuilder, ComponentData, ComponentType } from "../core/Component";
 import type { Entity } from "../core/Entity";
 import { Pool } from "./Pool";
 import { PooledEntity } from "./PooledEntity";
@@ -53,8 +53,8 @@ export class PoolAllocator extends Allocator {
     }
 
     public override obtainComponent<T>(
-        type: ComponentType<string, T>,
-        factory: ComponentBuilder<T> | ComponentBuilderWithConfig<T, unknown>
+        type: ComponentType<string, T, unknown>,
+        factory: ComponentBuilder<T, unknown>
     ): ComponentData<T> {
         const pool = this.componentPools[type.id];
         if (pool) {

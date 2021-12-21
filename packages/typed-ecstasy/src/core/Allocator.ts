@@ -1,4 +1,4 @@
-import type { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "./Component";
+import type { ComponentBuilder, ComponentData, ComponentType } from "./Component";
 import { Entity } from "./Entity";
 
 // fixme: utils?
@@ -30,8 +30,8 @@ export class Allocator {
      * @returns A new or reused component of the specified type.
      */
     public obtainComponent<T>(
-        type: ComponentType<string, T>,
-        factory: ComponentBuilder<T> | ComponentBuilderWithConfig<T, unknown>
+        type: ComponentType<string, T, unknown>,
+        factory: ComponentBuilder<T, unknown>
     ): ComponentData<T> {
         const comp = {
             componentId: type.id,
@@ -47,7 +47,7 @@ export class Allocator {
      *
      * @param component The component data to free.
      */
-    public freeComponent<T>(component: ComponentData<T>) {
+    public freeComponent(component: ComponentData<unknown>) {
         component.componentFactory.reset?.(component);
         // override this
     }
