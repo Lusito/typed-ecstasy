@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 import { AbstractSystem, AbstractSystemManager, Engine, service, addMetaData } from "typed-ecstasy";
 
-class TestSystem extends AbstractSystem<TestSystem> {}
+class TestSystem extends AbstractSystem<TestSystem, any> {}
 
 @service("TestSystemManager")
 class TestSystemManager extends AbstractSystemManager<TestSystem> {}

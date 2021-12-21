@@ -2,11 +2,13 @@ import { AbstractSystem } from "./AbstractSystem";
 import { Engine } from "./Engine";
 import { Entity } from "./Entity";
 import { Family } from "./Family";
+import type { SubSystemManager } from "./SubSystemManager";
 
 /**
  * Base class for sub-systems to be used with {@link SortedSubIteratingSystem}.
  */
-export abstract class SubSystem extends AbstractSystem<SubSystem> {
+export abstract class SubSystem extends AbstractSystem<SubSystem, SubSystemManager> {
+    private desiredEnabled = false;
     public readonly family: Family;
 
     /**
@@ -16,6 +18,21 @@ export abstract class SubSystem extends AbstractSystem<SubSystem> {
     public constructor(engine: Engine, family: Family) {
         super(engine);
         this.family = family;
+    }
+
+    public override setEnabled(enabled: boolean) {
+        this.desiredEnabled = enabled;
+        // eslint-disable-next-line dot-notation
+        super.setEnabled(enabled && this["manager"]?.["isEnabled"]() !== false);
+    }
+
+    /**
+     * Updates the enabled state.
+     *
+     * @internal
+     */
+    public updateEnabled() {
+        this.setEnabled(this.desiredEnabled);
     }
 
     /**

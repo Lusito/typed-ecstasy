@@ -3,7 +3,7 @@ import { AbstractSystem } from "typed-ecstasy";
 
 import { Engine } from "./Engine";
 
-class TestSystem extends AbstractSystem<TestSystem> {}
+class TestSystem extends AbstractSystem<TestSystem, any> {}
 
 describe("AbstractSystem", () => {
     const engine = new Engine();

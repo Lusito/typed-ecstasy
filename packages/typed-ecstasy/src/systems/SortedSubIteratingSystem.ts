@@ -24,6 +24,7 @@ export class SortedSubIteratingSystem extends SortedIteratingSystem {
     public constructor(engine: Engine, family: Family, comparator: EntityComparator, subSystems: SubSystemManager) {
         super(engine, family, comparator);
         this.subSystems = subSystems;
+        this.subSystems["isEnabled"] = () => this.isEnabled();
     }
 
     public override processEntity(entity: Entity, deltaTime: number) {
@@ -42,14 +43,13 @@ export class SortedSubIteratingSystem extends SortedIteratingSystem {
         }
     }
 
-    // fixme: make sure all subsystems get en-/disabled without actually changing the setting
     protected override onEnable() {
         super.onEnable();
-        // this.subSystems.onEnable();
+        this.subSystems.updateEnabled();
     }
 
     protected override onDisable() {
         super.onDisable();
-        // this.subSystems.onDisable();
+        this.subSystems.updateEnabled();
     }
 }

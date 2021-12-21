@@ -3,9 +3,9 @@ import { addMetaData, Constructor, Container } from "../di";
 import { createDelayedOperations } from "../utils/DelayedOperations";
 import type { AbstractSystem } from "./AbstractSystem";
 
-const systemEnabled = (system: AbstractSystem<any>) => system.isEnabled();
+const systemEnabled = (system: AbstractSystem<any, any>) => system.isEnabled();
 
-const compareSystems = (a: AbstractSystem<any>, b: AbstractSystem<any>) => a["priority"] - b["priority"];
+const compareSystems = (a: AbstractSystem<any, any>, b: AbstractSystem<any, any>) => a["priority"] - b["priority"];
 
 /**
  * Base class for all system managers.
@@ -13,7 +13,7 @@ const compareSystems = (a: AbstractSystem<any>, b: AbstractSystem<any>) => a["pr
  * @template TSystem The base system class (EntitySystem or SubSystem).
  */
 @addMetaData
-export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any>> {
+export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, any>> {
     private readonly instances: TSystem[] = [];
 
     private readonly instancesByClass = new Map<Constructor<TSystem>, TSystem>();

@@ -8,11 +8,14 @@ import { addMetaData, retainable, addHotSwapListener } from "../di";
  * @template TSystem The base system class (EntitySystem or SubSystem).
  */
 @addMetaData
-export abstract class AbstractSystem<TSystem extends AbstractSystem<any>> {
+export abstract class AbstractSystem<
+    TSystem extends AbstractSystem<any, any>,
+    TSystemManager extends AbstractSystemManager<TSystem>
+> {
     public readonly engine: Engine;
 
     @retainable
-    private manager: AbstractSystemManager<TSystem> | null = null;
+    private manager: TSystemManager | null = null;
 
     private enabled = false; // will be set to true during systems.add
 
