@@ -23,7 +23,7 @@ const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 export class Engine {
     private readonly factories: Array<ComponentBuilder<unknown> | ComponentBuilderWithConfig<unknown, unknown>> = [];
 
-    public readonly allocator: Allocator;
+    private readonly allocator: Allocator;
 
     public readonly container = new Container();
 

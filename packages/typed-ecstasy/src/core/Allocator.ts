@@ -2,7 +2,6 @@ import { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentT
 import { Entity } from "./Entity";
 
 // fixme: utils?
-// fixme: user code should have very limited access to the allocator
 /**
  * An allocator can be used for obtaining new or reused entities/components.
  * This allocator just creates new instances every time and does not support pooling.
