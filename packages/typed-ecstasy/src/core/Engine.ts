@@ -4,15 +4,14 @@ import { EntitySystemManager } from "./EntitySystemManager";
 import { EntityManager } from "./EntityManager";
 import { Allocator } from "./Allocator";
 import {
-    addComponentMetaListener,
     ComponentBuilder,
     ComponentBuilderWithConfig,
     ComponentConfigGetter,
     ComponentData,
     ComponentType,
     ComponentTypeWithConfig,
-    getComponentMeta,
 } from "./Component";
+import { componentMetaRegistry } from "./componentMetaRegistry";
 
 const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 
@@ -46,7 +45,7 @@ export class Engine {
         this.systems = this.container.get(EntitySystemManager);
 
         // When the meta changes, just delete the factory and wait for it to be recreated on demand
-        addComponentMetaListener((type) => {
+        componentMetaRegistry.addListener((type) => {
             delete this.factories[type.id];
         });
     }
@@ -104,7 +103,7 @@ export class Engine {
     }
 
     private createComponentFactory(name: string) {
-        const meta = getComponentMeta(name);
+        const meta = componentMetaRegistry.get(name);
         if (!meta) throw new Error(`Could not find component factory for "${name}"`);
         if (typeof meta.factory === "function") {
             return meta.factory(this.container);

@@ -1,7 +1,6 @@
 export * from "./core/AbstractSystem";
 export * from "./core/AbstractSystemManager";
 export * from "./core/Allocator";
-// fixme: split Component into public and internal code for simpler export statements
 export * from "./core/Component";
 export * from "./core/Engine";
 export * from "./core/Entity";

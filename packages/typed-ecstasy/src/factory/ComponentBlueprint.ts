@@ -1,4 +1,5 @@
-import { ComponentConfigGetter, ComponentTypeWithConfig, getComponentMeta } from "../core/Component";
+import { ComponentConfigGetter, ComponentTypeWithConfig } from "../core/Component";
+import { componentMetaRegistry } from "../core/componentMetaRegistry";
 
 const emptyOverrides = {};
 
@@ -23,7 +24,7 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
      * @param defaultValues The default values to use.
      */
     public constructor(name: string, defaultValues: TConfig) {
-        const meta = getComponentMeta(name);
+        const meta = componentMetaRegistry.get(name);
         if (meta) this.type = meta.type as ComponentTypeWithConfig<TName, TData, TConfig>;
         else console.warn(`Can't find metadata for component "${name}". This component will not be added!`);
         this.defaultValues = defaultValues;

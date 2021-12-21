@@ -1,4 +1,5 @@
 import type { Container } from "../di";
+import { componentMetaRegistry } from "./componentMetaRegistry";
 
 export type ComponentConfigGetter<T> = <TKey extends Extract<keyof T, string>>(
     key: TKey,
@@ -37,52 +38,20 @@ export type ComponentData<T> = T & {
     readonly componentFactory: Readonly<ComponentBuilder<T>> | Readonly<ComponentBuilderWithConfig<T, unknown>>;
 };
 
-export type ComponentMeta =
-    | {
-          type: ComponentType;
-          withConfig: false;
-          factory: ComponentFactory<unknown>;
-      }
-    | {
-          type: ComponentType;
-          withConfig: true;
-          factory: ComponentFactoryWithConfig<unknown, unknown>;
-      };
-
-let nextId = 1;
-const componentMetaMap: Record<string, ComponentMeta> = {};
-
-export function getComponentMeta(name: string): Readonly<ComponentMeta> | undefined {
-    return componentMetaMap[name];
-}
-
-const listeners = new Set<(type: ComponentType) => void>();
-export function addComponentMetaListener(listener: (type: ComponentType) => void) {
-    listeners.add(listener);
-}
-
 export function declareComponent<TName extends string>(name: TName) {
-    let meta = componentMetaMap[name];
-    if (!meta) {
-        meta = {
-            type: {
-                name,
-                id: nextId++,
-            },
-        } as unknown as ComponentMeta;
-        componentMetaMap[name] = meta;
-    }
+    const meta = componentMetaRegistry.getOrCreate(name);
+
     return {
         withConfig<TData, TConfig>(factory: ComponentFactoryWithConfig<TData, TConfig>) {
             meta.withConfig = true;
             meta.factory = factory as ComponentFactoryWithConfig<TData, unknown>;
-            listeners.forEach((listener) => listener(meta.type));
+            componentMetaRegistry.notifyListeners(meta);
             return meta.type as ComponentTypeWithConfig<TName, TData, TConfig>;
         },
         withoutConfig<TData>(factory: ComponentFactory<TData>) {
             meta.withConfig = false;
             meta.factory = factory;
-            listeners.forEach((listener) => listener(meta.type));
+            componentMetaRegistry.notifyListeners(meta);
             return meta.type as ComponentType<TName, TData>;
         },
     };
