@@ -1,3 +1,4 @@
+// fixme: check what actually needs to be exported, especially on Component
 export * from "./core/AbstractSystem";
 export * from "./core/AbstractSystemManager";
 export * from "./core/Allocator";

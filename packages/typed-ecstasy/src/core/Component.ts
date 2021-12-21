@@ -88,6 +88,7 @@ export function declareComponent<TName extends string>(name: TName) {
     };
 }
 
+// fixme: can we save memory by only having one instance of a marker component? Is it worth the effort?
 export const declareMarkerComponent = <TName extends string>(name: TName) => declareComponent(name).withoutConfig<unknown>({});
 
 export function isComponent<T>(
