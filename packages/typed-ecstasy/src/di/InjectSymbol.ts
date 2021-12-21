@@ -1,4 +1,4 @@
-import { Constructor } from "./types";
+import type { Constructor } from "./types";
 
 /**
  * @param name A descriptive name.
@@ -6,6 +6,6 @@ import { Constructor } from "./types";
  */
 export function InjectSymbol<T>(name: string) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const value = {[name]() {}}
+    const value = { [name]() {} };
     return value[name] as unknown as Constructor<T>;
 }

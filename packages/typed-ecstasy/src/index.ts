@@ -1,7 +1,7 @@
-// fixme: check what actually needs to be exported, especially on Component
 export * from "./core/AbstractSystem";
 export * from "./core/AbstractSystemManager";
 export * from "./core/Allocator";
+// fixme: split Component into public and internal code for simpler export statements
 export * from "./core/Component";
 export * from "./core/Engine";
 export * from "./core/Entity";
@@ -17,7 +17,6 @@ export * from "./factory/ComponentBlueprint";
 export * from "./factory/EntityFactory";
 export * from "./pooling/Pool";
 export * from "./pooling/PoolAllocator";
-export * from "./pooling/PooledEntity";
 export * from "./systems/IntervalIteratingSystem";
 export * from "./systems/IntervalSystem";
 export * from "./systems/IteratingSystem";

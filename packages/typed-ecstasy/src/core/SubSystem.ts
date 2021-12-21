@@ -1,7 +1,7 @@
 import { AbstractSystem } from "./AbstractSystem";
-import { Engine } from "./Engine";
-import { Entity } from "./Entity";
-import { Family } from "./Family";
+import type { Engine } from "./Engine";
+import type { Entity } from "./Entity";
+import type { Family } from "./Family";
 import type { SubSystemManager } from "./SubSystemManager";
 
 /**

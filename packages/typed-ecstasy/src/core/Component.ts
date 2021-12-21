@@ -1,4 +1,4 @@
-import { Container } from "../di";
+import type { Container } from "../di";
 
 export type ComponentConfigGetter<T> = <TKey extends Extract<keyof T, string>>(
     key: TKey,
@@ -89,7 +89,8 @@ export function declareComponent<TName extends string>(name: TName) {
 }
 
 // fixme: can we save memory by only having one instance of a marker component? Is it worth the effort?
-export const declareMarkerComponent = <TName extends string>(name: TName) => declareComponent(name).withoutConfig<unknown>({});
+export const declareMarkerComponent = <TName extends string>(name: TName) =>
+    declareComponent(name).withoutConfig<unknown>({});
 
 export function isComponent<T>(
     instance: ComponentData<unknown>,

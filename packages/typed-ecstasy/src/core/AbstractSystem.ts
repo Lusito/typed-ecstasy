@@ -1,5 +1,5 @@
 import { Engine } from "./Engine";
-import { AbstractSystemManager } from "./AbstractSystemManager";
+import type { AbstractSystemManager } from "./AbstractSystemManager";
 import { addMetaData, retainable, addHotSwapListener } from "../di";
 
 /**

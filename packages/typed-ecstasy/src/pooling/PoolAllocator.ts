@@ -1,6 +1,6 @@
 import { Allocator } from "../core/Allocator";
-import { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "../core/Component";
-import { Entity } from "../core/Entity";
+import type { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "../core/Component";
+import type { Entity } from "../core/Entity";
 import { Pool } from "./Pool";
 import { PooledEntity } from "./PooledEntity";
 

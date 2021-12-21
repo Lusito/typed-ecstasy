@@ -1,4 +1,4 @@
-import { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "./Component";
+import type { ComponentBuilder, ComponentBuilderWithConfig, ComponentData, ComponentType } from "./Component";
 import { Entity } from "./Entity";
 
 // fixme: utils?

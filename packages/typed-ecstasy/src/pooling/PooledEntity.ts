@@ -1,4 +1,4 @@
-import { Allocator } from "../core/Allocator";
+import type { Allocator } from "../core/Allocator";
 import { Entity } from "../core/Entity";
 
 /**

@@ -1,12 +1,11 @@
-import { addMetaData, retainable } from "../di";
-import { Engine } from "../core/Engine";
+import { retainable } from "../di";
+import type { Engine } from "../core/Engine";
 import { EntitySystem } from "../core/EntitySystem";
 
 /**
  * A simple EntitySystem that does not run its update logic every call to {@link update}, but after a
  * given interval. The actual logic should be placed in {@link updateInterval}.
  */
-@addMetaData
 export abstract class IntervalSystem extends EntitySystem {
     @retainable
     private interval: number;

@@ -1,14 +1,12 @@
-import { Engine } from "../core/Engine";
-import { Entity } from "../core/Entity";
+import type { Engine } from "../core/Engine";
+import type { Entity } from "../core/Entity";
 import { EntitySystem } from "../core/EntitySystem";
-import { Family } from "../core/Family";
-import { addMetaData } from "../di";
+import type { Family } from "../core/Family";
 
 /**
  * A simple EntitySystem that iterates over each entity and calls {@link processEntity} for each entity every time the
  * EntitySystem is updated. This is really just a convenience class as most systems iterate over a list of entities.
  */
-@addMetaData
 export abstract class IteratingSystem extends EntitySystem {
     /** The Family used when the system was created. */
     public readonly family: Family;

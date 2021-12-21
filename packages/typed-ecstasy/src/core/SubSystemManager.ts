@@ -1,6 +1,6 @@
 import { service } from "../di";
 import { AbstractSystemManager } from "./AbstractSystemManager";
-import { SubSystem } from "./SubSystem";
+import type { SubSystem } from "./SubSystem";
 
 /**
  * A manager for sub systems to be used with {@link SortedSubIteratingSystem}.

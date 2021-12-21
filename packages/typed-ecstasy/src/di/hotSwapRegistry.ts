@@ -1,6 +1,6 @@
 import type { Container } from "./Container";
 import { HotSwapProxy, HotSwapType, HOTSWAP_TARGET } from "./hotSwapProxy";
-import { ServiceMeta } from "./metaRegistry";
+import type { ServiceMeta } from "./metaRegistry";
 
 interface ListEntry {
     id: string;

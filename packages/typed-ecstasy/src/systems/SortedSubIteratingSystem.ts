@@ -1,17 +1,15 @@
 /* eslint-disable dot-notation */
 import { EntityComparator, SortedIteratingSystem } from "./SortedIteratingSystem";
-import { SubSystemManager } from "../core/SubSystemManager";
-import { Engine } from "../core/Engine";
-import { Family } from "../core/Family";
-import { Entity } from "../core/Entity";
-import { addMetaData } from "../di";
+import type { SubSystemManager } from "../core/SubSystemManager";
+import type { Engine } from "../core/Engine";
+import type { Family } from "../core/Family";
+import type { Entity } from "../core/Entity";
 
 /**
  * Imagine a SortedIteratingSystem that you can add SubSystems to.
  * For each entity being processed, all SubSystems that match the entities family will be called in the order they have been added.
  * An example use-case would be to do multiple render steps for each entity, while entities are ordered by a z-index.
  */
-@addMetaData
 export class SortedSubIteratingSystem extends SortedIteratingSystem {
     public readonly subSystems: SubSystemManager;
 

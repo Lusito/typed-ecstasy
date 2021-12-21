@@ -1,10 +1,10 @@
 /* eslint-disable dot-notation */
-import { Entity } from "./Entity";
-import { Family } from "./Family";
+import type { Entity } from "./Entity";
+import type { Family } from "./Family";
 import { createDelayedOperations } from "../utils/DelayedOperations";
 import { EntitySignal } from "./EntitySignal";
-import { Allocator } from "./Allocator";
-import { ComponentData, ComponentType } from "./Component";
+import type { Allocator } from "./Allocator";
+import type { ComponentData, ComponentType } from "./Component";
 
 export interface FamilyMeta {
     family: Family;

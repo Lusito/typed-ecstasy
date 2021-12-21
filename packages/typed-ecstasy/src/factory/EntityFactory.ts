@@ -1,13 +1,13 @@
 /* eslint-disable dot-notation */
-import { ComponentBlueprint } from "./ComponentBlueprint";
+import type { ComponentBlueprint } from "./ComponentBlueprint";
 import { Engine } from "../core/Engine";
-import { ComponentTypeWithConfig } from "../core/Component";
+import type { ComponentTypeWithConfig } from "../core/Component";
 import { service } from "../di";
 
 export type UnknownComponentConfig = Record<string, unknown>;
 export type UnknownEntityConfig = Record<string, UnknownComponentConfig>;
 
-type InferComponentConfigMap<T> = T extends ComponentTypeWithConfig<infer TName, any, infer TConfig>
+export type InferComponentConfigMap<T> = T extends ComponentTypeWithConfig<infer TName, any, infer TConfig>
     ? Record<TName, TConfig>
     : never;
 export type InferEntityConfig<T> = (T extends any ? (x: InferComponentConfigMap<T>) => any : never) extends (

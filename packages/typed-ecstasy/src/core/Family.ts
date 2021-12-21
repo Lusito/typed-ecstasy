@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
-import { Entity } from "./Entity";
-import { ComponentType } from "./Component";
+import type { Entity } from "./Entity";
+import type { ComponentType } from "./Component";
 
 function getFamilyHash(all: readonly number[], one: readonly number[], exclude: readonly number[]) {
     return `${all.join(",")};${one.join(",")};${exclude.join(",")}`;

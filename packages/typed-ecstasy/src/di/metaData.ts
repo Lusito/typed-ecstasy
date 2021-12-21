@@ -1,4 +1,4 @@
-import { HotSwapType } from "./hotSwapProxy";
+import type { HotSwapType } from "./hotSwapProxy";
 
 function createMetaHelper<T>(symbol: string | symbol) {
     return {

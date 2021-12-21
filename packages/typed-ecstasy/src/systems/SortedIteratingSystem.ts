@@ -1,10 +1,10 @@
 import { SignalConnections } from "typed-signals";
 
 import { EntitySystem } from "../core/EntitySystem";
-import { Engine } from "../core/Engine";
-import { addMetaData, retainable } from "../di";
-import { Entity } from "../core/Entity";
-import { Family } from "../core/Family";
+import type { Engine } from "../core/Engine";
+import { retainable } from "../di";
+import type { Entity } from "../core/Entity";
+import type { Family } from "../core/Family";
 
 /**
  * A comparator for entities.
@@ -20,7 +20,6 @@ export type EntityComparator = (a: Entity, b: Entity) => number;
  * class as rendering systems tend to iterate over a list of entities in a sorted manner. Adding entities will cause
  * the entity list to be resorted. Call {@link forceSort} if you changed your sorting criteria.
  */
-@addMetaData
 export abstract class SortedIteratingSystem extends EntitySystem {
     /** The Family used when the system was created. */
     public readonly family: Family;

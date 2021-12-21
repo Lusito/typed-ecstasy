@@ -1,6 +1,6 @@
 import type {} from "@abraham/reflection";
 import { metaRegistry, ServiceMeta } from "./metaRegistry";
-import { Constructor } from "./types";
+import type { Constructor } from "./types";
 import { createHotSwapProxy, HotSwapType } from "./hotSwapProxy";
 import { registerHotSwapProxy } from "./hotSwapRegistry";
 import { getName } from "../utils/nameUtil";

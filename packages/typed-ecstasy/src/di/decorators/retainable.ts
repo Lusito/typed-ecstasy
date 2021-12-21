@@ -1,6 +1,6 @@
-import { HotSwapType } from "../hotSwapProxy";
+import type { HotSwapType } from "../hotSwapProxy";
 import { metaRegistry } from "../metaRegistry";
-import { Constructor } from "../types";
+import type { Constructor } from "../types";
 
 // eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns
 /**

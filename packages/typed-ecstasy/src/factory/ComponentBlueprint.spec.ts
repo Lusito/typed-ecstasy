@@ -4,7 +4,10 @@ const ComponentA = declareMarkerComponent("A");
 
 describe("Blueprint", () => {
     it("should return the fallback parameter if no default values are provided", () => {
-        const blueprint = new ComponentBlueprint(ComponentA.name, { undefined: undefined as any, any: undefined as any });
+        const blueprint = new ComponentBlueprint(ComponentA.name, {
+            undefined: undefined as any,
+            any: undefined as any,
+        });
         expect(blueprint.get("undefined", false)).toBe(false);
         expect(blueprint.get("undefined", true)).toBe(true);
         expect(blueprint.get("undefined", 42)).toBe(42);
