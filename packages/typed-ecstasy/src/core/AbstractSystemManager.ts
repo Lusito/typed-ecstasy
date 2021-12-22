@@ -18,7 +18,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
 
     private readonly instancesByClass = new Map<Constructor<TSystem>, TSystem>();
 
-    private readonly container: Container;
+    public readonly container: Container;
 
     // Mechanism to delay operations to avoid affecting system processing
     private delayedOperations = createDelayedOperations({
@@ -95,6 +95,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
             this.instancesByClass.delete(clazz);
             system.setEnabled(false);
             system["manager"] = null;
+            // fixme: remove from container?
         }
     }
 
@@ -106,6 +107,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
     }
 
     private removeAllInternal() {
+        // fixme: remove from container?
         this.instancesByClass.forEach((system) => {
             if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;

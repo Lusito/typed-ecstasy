@@ -1,4 +1,4 @@
-import { service } from "../di";
+import { Container, service } from "../di";
 import { AbstractSystemManager } from "./AbstractSystemManager";
 import type { SubSystem } from "./SubSystem";
 
@@ -7,6 +7,11 @@ import type { SubSystem } from "./SubSystem";
  */
 @service("typed-ecstasy/SubSystemManager", { transient: true })
 export class SubSystemManager extends AbstractSystemManager<SubSystem> {
+    /** @param container The parent container. */
+    public constructor(container: Container) {
+        super(new Container(container));
+    }
+
     /**
      * @internal
      * @returns If the SortedSubIteratingSystem this manager belongs to is enabled.
