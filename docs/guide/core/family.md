@@ -30,7 +30,7 @@ The [EntityManager](../../api/classes/entitymanager.md) has the capability of pr
 const entities = engine.entities.forFamily(family);
 ```
 
-Usually you'd store the result in the attribute of an [EntitySystem](entitysystem.md) (the returned array will always be the same and as such up-to-date).
+Usually you'd store the result in the attribute of an [EntitySystem](entitysystem.md) (the returned array will always be the same instance and as such be up-to-date).
 
 You can iterate over them either with a *for of* loop:
 ```typescript

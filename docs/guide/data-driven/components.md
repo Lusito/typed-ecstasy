@@ -1,5 +1,7 @@
 # Code for the Components
 
+FIXME: This needs to be updated:
+
 Let's create a folder `src/components` and add 5 files to it:
 - componentFactories.ts
 - PositionComponent.ts

@@ -2,7 +2,7 @@
 
 [EntitySystem](../../api/classes/entitysystem.md) derived classes contain the logic that process our game entities.
 
-**Make sure** to check out the page about [Dependency Injection](../core/dependency-injection.md).
+**Make sure** to check out the pages about [Dependency Injection](../core/dependency-injection.md) and [Hot Module Replacement](../core/hot-module-replacement.md).
 
 ## Creating a Custom EntitySystem
 In addition to extending the [built-in entitysystems](../systems/README.md), you can extend [EntitySystem](../../api/classes/entitysystem.md) itself.
@@ -11,12 +11,18 @@ These are some methods you might want to override.
 
 ```typescript
 /**
- * Called when this EntitySystem is added to the engine or re-enabled after being disabled.
+ * Called in three situations:
+ * - When the system is enabled **and** currently being added to the manager
+ * - When the system is already added to the manager **and** is currently being enabled.
+ * - On the development server (during Hot Module Replacement) when the old system was enabled and being replaced by a newer version
  */
 protected onEnable() {}
 
 /**
- * Called when this EntitySystem is removed from the engine or being disabled.
+ * Called in three situations:
+ * - When the system is enabled **and** currently being removed from the manager
+ * - When the system is already added to the manager **and** is currently being disabled.
+ * - On the development server (during Hot Module Replacement) when the system is enabled and being replaced by a newer version
  */
 protected onDisable() {}
 
@@ -31,12 +37,12 @@ public abstract update(deltaTime: number): void;
 For instance, let us say we want to change our entities' position according to their velocity. We can create a `MovementSystem` that takes care of it.
 
 ```typescript
-@Service()
+@service("MovementSystem")
 class MovementSystem extends EntitySystem {
 	private entities: Entity[] = [];
 	
 	protected override onEnable() {
-		this.entities = this.engine.forFamily(Family.all(PositionComponent, VelocityComponent).get());
+		this.entities = this.engine.entities.forFamily(Family.all(PositionComponent, VelocityComponent).get());
 	}
 
 	protected override onDisable() {
@@ -76,6 +82,7 @@ engine.systems.remove(MovementSystem);
 
 Be careful though if you remove systems, which are still referenced in other places.
 
+FIXME: re-evaluate this statement:
 Removing a system from the engine will also remove it from the dependency container, so unless you have other references to the system, it should be garbage collected.
 
 ## Updating All Systems

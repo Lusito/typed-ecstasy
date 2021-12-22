@@ -9,10 +9,10 @@ function comparator(a: Entity, b: Entity): number {
 	return a.require(PositionComponent).z - b.require(PositionComponent).z;
 }
 
-@Service()
+@service("RenderingSystem")
 class RenderingSystem extends SortedIteratingSystem {
-	public constructor() {
-		super(Family.all(RenderableComponent, PositionComponent).get(), comparator);
+	public constructor(engine: Engine) {
+		super(engine, Family.all(RenderableComponent, PositionComponent).get(), comparator);
 	}
 
 	protected processEntity(entity: Entity, deltaTime: number): void {

@@ -24,6 +24,7 @@ themeConfig:
       children:
       - core/
       - core/dependency-injection
+      - core/hot-module-replacement
       - core/engine
       - core/entity
       - core/component

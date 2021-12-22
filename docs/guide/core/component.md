@@ -1,5 +1,7 @@
 # Components
 
+FIXME: This needs to be rewritten:
+
 [Components](../../api/classes/component.md) are meant to be data bags and nothing more. All logic should be placed in ([EntitySystems](entitysystem.md)). So it is recommended to declare components like plain c-structs. Adding getters and setters is acceptable though.
 
 ### Creating component classes

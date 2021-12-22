@@ -1,5 +1,7 @@
 # EntityConfig and Context
 
+FIXME: This needs to be updated:
+
 As you saw in the componentFactory.ts, we need to define two types: `SampleEntityConfig` and `SampleContext`,
 
 Here's an example of how they might look like:

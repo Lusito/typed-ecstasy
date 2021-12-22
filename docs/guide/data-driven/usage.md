@@ -1,5 +1,7 @@
 # Using the Entity Factory
 
+FIXME: This needs to be updated:
+
 Now we can assembly our entities:
 
 ## src/entrypoint.ts

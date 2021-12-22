@@ -1,5 +1,7 @@
 # Defining Blueprints
 
+FIXME: This might need to be updated:
+
 Now that we know how we can configure an entity, we can define entity blueprints for our entities.
 Depending on your use-case you could define them in TypeScript files (to have auto-completion and type-safety),
 store them as json files or get them in some other form. For simplicity, let's write them in a TypeScript file here.

@@ -1,5 +1,7 @@
 ## Setting Up the Entity Factory
 
+FIXME: This needs to be updated:
+
 Finally, let's configure an EntityFactory, which will then be able to assemble our entities:
 
 ## src/entityFactory.ts

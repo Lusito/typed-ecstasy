@@ -12,7 +12,7 @@ npm i typed-ecstasy typed-signals
 yarn add typed-ecstasy typed-signals
 ```
 
-## Enable Annotations and Reflection
+## Enable Decorators and Reflection
 
 Since typed-ecstasy uses dependency injection, we'll need some extra work if you don't have this set up yet:
 
