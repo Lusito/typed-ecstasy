@@ -13,8 +13,6 @@ export function enableHotSwapProxying() {
     isHotSwapProxyingEnabled = true;
 }
 
-// fixme: would it be possible to use proxies for manual dependencies as well?
-// ... That would reduce the possibilities (i.e. no simple types, just objects)
 /**
  * A dependency injection container.
  */
@@ -38,7 +36,7 @@ export class Container {
      * @param value The value to set.
      * @throws When no key as supplied.
      */
-    public set<T extends HotSwapType>(key: Constructor<T>, value: T) {
+    public set<T>(key: Constructor<T>, value: T) {
         if (!key) throw new Error("You need to supply a key");
 
         const id = metaRegistry.getId(key);
