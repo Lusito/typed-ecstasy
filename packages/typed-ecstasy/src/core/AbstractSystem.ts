@@ -30,17 +30,19 @@ export abstract class AbstractSystem<
     }
 
     /**
-     * Called in two situations:
+     * Called in three situations:
      * - When the system is enabled **and** currently being added to the manager
      * - When the system is already added to the manager **and** is currently being enabled.
+     * - On the development server (during Hot Module Replacement) when the old system was enabled and being replaced by a newer version
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     protected onEnable() {}
 
     /**
-     * Called in two situations:
+     * Called in three situations:
      * - When the system is enabled **and** currently being removed from the manager
      * - When the system is already added to the manager **and** is currently being disabled.
+     * - On the development server (during Hot Module Replacement) when the system is enabled and being replaced by a newer version
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     protected onDisable() {}
