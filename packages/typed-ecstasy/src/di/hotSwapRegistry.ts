@@ -1,6 +1,7 @@
 import type { Container } from "./Container";
-import { HotSwapProxy, HotSwapType, HOTSWAP_TARGET } from "./hotSwapProxy";
+import { HotSwapProxy, HotSwapType, HotSwapProxyTarget } from "./hotSwapProxy";
 import type { ServiceMeta } from "./metaRegistry";
+import { PostConstruct, PreDestroy, ServiceInstance } from "./symbols";
 
 interface ListEntry {
     id: string;
@@ -50,7 +51,7 @@ export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, 
         const proxy = proxyRef.deref();
         const container = containerRef.deref();
         if (!container || !proxy) return false;
-        const oldValue = (proxy as HotSwapProxy)[HOTSWAP_TARGET];
+        const oldValue = (proxy as HotSwapProxy)[HotSwapProxyTarget] as ServiceInstance;
         if (!oldValue) return false;
         if (id === meta.id) {
             // fixme: maybe inform services, which reference this instance?
@@ -59,12 +60,14 @@ export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, 
                 data: listener.beforeHotSwap(oldValue),
             }));
             const oldData = storeRetainableProps(oldValue, oldMeta.retainableProps);
+            oldValue[PreDestroy]?.();
 
             // eslint-disable-next-line dot-notation
-            const newValue = container["create"](meta);
+            const newValue = container["create"](meta) as ServiceInstance;
 
-            (proxy as HotSwapProxy)[HOTSWAP_TARGET] = newValue;
+            (proxy as HotSwapProxy)[HotSwapProxyTarget] = newValue;
             restoreRetainableProps(newValue, meta.retainableProps, oldData);
+            newValue[PostConstruct]?.();
             for (const { listener, data } of listenerData) {
                 listener.afterHotSwap(newValue, data);
             }

@@ -3,11 +3,11 @@
 export type HotSwapType = object;
 
 /** @internal */
-export const HOTSWAP_TARGET = Symbol("HotSwap Proxy Target");
+export const HotSwapProxyTarget = Symbol("HotSwap Proxy Target");
 
 /** @internal */
 export type HotSwapProxy<T extends HotSwapType = HotSwapType> = {
-    [HOTSWAP_TARGET]?: T;
+    [HotSwapProxyTarget]?: T;
 };
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
@@ -31,12 +31,12 @@ export function createHotSwapProxy<T extends HotSwapType>(initialTarget: T): T {
             return Reflect.deleteProperty(target, key);
         },
         get(_, key) {
-            if (key === HOTSWAP_TARGET) return target;
+            if (key === HotSwapProxyTarget) return target;
             const x = Reflect.get(target, key, target);
             return typeof x === "function" ? x.bind(target) : x;
         },
         set(_, key, value) {
-            if (key === HOTSWAP_TARGET) {
+            if (key === HotSwapProxyTarget) {
                 target = value;
                 return true;
             }

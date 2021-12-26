@@ -7,3 +7,4 @@ export type { HotSwapType } from "./hotSwapProxy";
 export { addHotSwapListener } from "./hotSwapRegistry";
 export type { HotSwapListener } from "./hotSwapRegistry";
 export * from "./InjectSymbol";
+export * from "./symbols";

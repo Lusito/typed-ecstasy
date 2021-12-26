@@ -49,11 +49,18 @@ private listeners = new Set<MyListener>();
 
 Of course, for this to work, both the old service class and the new service class needs to have this decorator on the property. Otherwise, no action will be performed. If you have such a situation, wou will need to reload the webpage.
 
-### Special Considerations
+### Make Sure Your Service Cleans up Properly
 
-You should make override the onEnable and onDisable of your systems to correctly set up and clean up your logic, so the replaced system leaves nothing behind.
+When a Service can be created and destroyed, the code should make sure to properly clean up any remaining resources.
+For example if you add a listener, always make sure to remove it when the service is destroyed (or disabled, if it's a system):
 
-For example if you add a listener, always make sure to remove it in onDisable:
+There are two approaches you can use to have "setup" and "shut down" your service:
+
+#### using onEnable / onDisable
+
+Systems are a special kind of service, which can be disabled. Here you actually might want to set up when the service gets enabled and shut down when it gets disabled (which happens upon removal and hot-swap as well).
+
+Here you can override the `onEnable` and `onDisable` methods:
 
 ```ts
 protected override onEnable(): void {
@@ -69,9 +76,36 @@ protected override onDisable(): void {
 }
 ```
 
-**Additional note:** onDisable will be called before `@retainable` properties are stored, so you can prepare them if needed.
+**Implementation notes:**
+- `onDisable` will be called before `@retainable` properties are stored.
+- `onEnable` will be called after `@retainable` properties are restored.
+- If a system was disabled during hot-swap, onEnable will obviously not be called until you re-enable the system.
 
-**FIXME:** This only works for systems, but other services don't have onEnable/onDisable code, so how to handle them?.
-- decorators for @postConstruct/@preDestroy?
-- just methods named postConstruct/preDestroy?
-- pass container as parameter?
+#### The Generic Approach for All Services
+
+Every service can implement `[PostConstruct]` and `[PreDestroy]` Methods.
+Notice how we use symbols to avoid naming conflicts:
+
+```ts
+import { service, PostConstruct, PreDestroy } from "typed-ecsasy";
+
+@service("MyService")
+class MyService {
+    // ...
+    protected [PostConstruct](): void {
+        // Don't forget to call the super-method if you have abstract Services, which also implement the PostConstruct method:
+        // super[PostConstruct]();
+        this.messageService.addListener(this.onMessage);
+    }
+
+    protected [PreDestroy](): void {
+        // Don't forget to call the super-method if you have abstract Services, which also implement the PreDestroy method:
+        // super[PreDestroy]();
+        this.messageService.removeListener(this.onMessage);
+    }
+}
+```
+
+**Implementation notes:**
+- `PreDestroy` will be called after `@retainable` properties are stored (and thus also after `onDisable` was called).
+- `PostConstruct` will be called after `@retainable` properties are restored, but before `onEnable` is called.

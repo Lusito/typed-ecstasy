@@ -4,6 +4,7 @@ import type { Constructor } from "./Constructor";
 import { createHotSwapProxy, HotSwapType } from "./hotSwapProxy";
 import { registerHotSwapProxy } from "./hotSwapRegistry";
 import { getConstructorName } from "./Constructor";
+import { PostConstruct, ServiceInstance } from "./symbols";
 
 let isHotSwapProxyingEnabled = false;
 
@@ -13,6 +14,9 @@ export function enableHotSwapProxying() {
     isHotSwapProxyingEnabled = true;
 }
 
+// fixme: allow removing services.
+// Before removed, call PreDestroy.
+// After removed, what happens with the respective proxy?
 /**
  * A dependency injection container.
  */
@@ -70,6 +74,7 @@ export class Container {
         let value = this.find(meta.id);
         if (!value) {
             value = this.create(meta);
+            (value as ServiceInstance)[PostConstruct]?.();
             if (isHotSwapProxyingEnabled) {
                 value = createHotSwapProxy(value);
                 registerHotSwapProxy(meta.id, value, this);
