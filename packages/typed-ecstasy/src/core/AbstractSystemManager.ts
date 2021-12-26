@@ -33,6 +33,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
         this.container = container;
     }
 
+    /** @internal */
     protected set delayOperations(shouldDelay: boolean) {
         this.delayedOperations.shouldDelay = shouldDelay;
     }

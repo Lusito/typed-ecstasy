@@ -72,15 +72,28 @@ export class Engine {
         this.updating = false;
     }
 
+    /**
+     * @returns A new or recycled entity.
+     */
     public obtainEntity() {
         return this.allocator.obtainEntity();
     }
 
+    /**
+     * @param type The component type to obtain.
+     * @returns The new or recycled component or undefined.
+     */
     public obtainComponent<TData>(type: ComponentType<string, TData, never>): ComponentData<TData> | undefined;
+    /**
+     * @param type The component type to obtain.
+     * @param config The configuration to use.
+     * @returns The new or recycled component or undefined.
+     */
     public obtainComponent<TData, TConfig>(
         type: ComponentType<string, TData, TConfig>,
         config: ComponentConfigGetter<TConfig>
     ): ComponentData<TData> | undefined;
+    // eslint-disable-next-line jsdoc/require-jsdoc
     public obtainComponent<TData, TConfig>(
         type: ComponentType<string, TData> | ComponentType<string, TData, TConfig>,
         config?: ComponentConfigGetter<TConfig>

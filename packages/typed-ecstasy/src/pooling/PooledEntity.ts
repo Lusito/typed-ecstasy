@@ -28,9 +28,12 @@ export class PooledEntity extends Entity {
             if (component) this.allocator.freeComponent(component);
         }
 
-        return super.removeAllInternal();
+        super.removeAllInternal();
     }
 
+    /**
+     * Reset the entity when it gets added to a pool.
+     */
     public reset() {
         this.removeAllInternal();
         this.familyMeta.clear();

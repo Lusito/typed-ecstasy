@@ -102,17 +102,25 @@ export class Entity {
         return !!this.componentsById[type.id];
     }
 
+    /**
+     * @internal
+     * @param component The component data to add.
+     */
     protected addInternal(component: ComponentData<unknown>) {
         const id = component.componentId;
         const oldComponent = this.componentsById[id];
-        if (component === oldComponent) return false;
+        if (component !== oldComponent) {
+            if (oldComponent) this.removeInternal(id);
 
-        if (oldComponent) this.removeInternal(id);
-
-        this.componentsById[id] = component;
-        return true;
+            this.componentsById[id] = component;
+        }
     }
 
+    /**
+     * @internal
+     * @param id The component id to remove.
+     * @returns The removed component data.
+     */
     protected removeInternal(id: number) {
         const component = this.componentsById[id];
         if (component) {
@@ -121,11 +129,8 @@ export class Entity {
         return component;
     }
 
+    /** @internal */
     protected removeAllInternal() {
-        if (this.componentsById.length) {
-            this.componentsById.length = 0;
-            return true;
-        }
-        return false;
+        this.componentsById.length = 0;
     }
 }

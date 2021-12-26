@@ -68,11 +68,13 @@ export class EntityManager {
         this.allocator = allocator;
     }
 
+    /** @internal */
     protected set delayOperations(shouldDelay: boolean) {
         this.#delayOperations = shouldDelay;
         this.delayedOperations.shouldDelay = this.#delayOperations || this.#notifying;
     }
 
+    /** @internal */
     protected set notifying(notifying: boolean) {
         this.#notifying = notifying;
         this.delayedOperations.shouldDelay = this.#delayOperations || this.#notifying;
@@ -188,7 +190,7 @@ export class EntityManager {
         }
     }
 
-    protected removeInternal(entity: Entity) {
+    private removeInternal(entity: Entity) {
         if (entity["manager"]) {
             const index = this.entities.indexOf(entity);
             if (index === -1) throw new Error("Entity does not belong to this manager");

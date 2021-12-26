@@ -1,6 +1,6 @@
 import { HotSwapType } from "./hotSwapProxy";
 import { getRetainablePropsRecursively, metaData } from "./metaData";
-import { Constructor, getConstructorName } from "./Constructor";
+import { Constructor } from "./Constructor";
 
 /** @internal */
 export type ServiceMeta<TName extends string, TType extends HotSwapType> = {
@@ -22,9 +22,7 @@ export const metaRegistry = {
         params.forEach((param, index) => {
             if (param === Function) {
                 throw new Error(
-                    `Constructor parameter ${index} of ${getConstructorName(
-                        constructor
-                    )} has been passed as "Function". You probably used a type import instead of a normal import.`
+                    `Constructor parameter ${index} of ${id} has been passed as "Function". You probably used a type import instead of a normal import.`
                 );
             }
         });

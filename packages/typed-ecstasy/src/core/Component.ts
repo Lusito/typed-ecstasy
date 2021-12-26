@@ -34,15 +34,33 @@ export type ComponentData<T> = T & {
     readonly componentFactory: Readonly<ComponentBuilder<T, unknown>>;
 };
 
+/**
+ * Creates a builder object for declaring a new component type.
+ *
+ * @param name The name of the component.
+ * @returns A builder object to continue building the component type.
+ */
 export function declareComponent<TName extends string>(name: TName) {
     const meta = componentMetaRegistry.getOrCreate(name);
 
     return {
+        /**
+         * Declare the component with a config object in mind.
+         *
+         * @param factory The factory to use.
+         * @returns The new component type.
+         */
         withConfig<TData, TConfig>(factory: ComponentFactory<TData, TConfig>) {
             (meta as ComponentMeta<TData, TConfig>).factory = factory;
             componentMetaRegistry.notifyListeners(meta);
             return meta.type as unknown as ComponentType<TName, TData, TConfig>;
         },
+        /**
+         * Declare the component without a config object in mind.
+         *
+         * @param factory The factory to use.
+         * @returns The new component type.
+         */
         withoutConfig<TData>(factory: ComponentFactory<TData, never>) {
             (meta as unknown as ComponentMeta<TData, never>).factory = factory;
             componentMetaRegistry.notifyListeners(meta);
@@ -52,12 +70,22 @@ export function declareComponent<TName extends string>(name: TName) {
 }
 
 // fixme: can we save memory by only having one instance of a marker component? Is it worth the effort?
+/**
+ * Declares a simple marker component (i.e. A component without actual data).
+ *
+ * @param name The name of the component.
+ * @returns The new component type.
+ */
 export const declareMarkerComponent = <TName extends string>(name: TName) =>
     declareComponent(name).withoutConfig<unknown>({});
 
-export function isComponent<T>(
-    instance: ComponentData<unknown>,
-    declaredComponent: ComponentType<any, any>
-): instance is ComponentData<T> {
-    return instance.componentId === declaredComponent.id;
+/**
+ * Check if a component data object matches a specified component type.
+ *
+ * @param data The component data to check.
+ * @param type The component type to compare against.
+ * @returns True if data matches the specified component type.
+ */
+export function isComponent<T>(data: ComponentData<unknown>, type: ComponentType<any, any>): data is ComponentData<T> {
+    return data.componentId === type.id;
 }
