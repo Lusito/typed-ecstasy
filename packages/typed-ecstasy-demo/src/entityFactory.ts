@@ -13,10 +13,11 @@ export function setupEntityFactory(engine: Engine) {
         const entityConfig = blueprints[name];
 
         // An entity blueprint is essentially just an array of ComponentBlueprint objects.
-        const entityBlueprint = Object.keys(entityConfig).map(
+        const entityBlueprint = Object.keys(entityConfig).map((key) => {
             // eslint-disable-next-line no-loop-func, @typescript-eslint/no-non-null-assertion
-            (key) => new ComponentBlueprint(key, entityConfig[key as keyof EntityConfig]!)
-        );
+            const x = entityConfig[key as keyof EntityConfig]!;
+            return new ComponentBlueprint(key, x === true ? {} : x);
+        });
         factory.addEntityBlueprint(name, entityBlueprint);
     }
 

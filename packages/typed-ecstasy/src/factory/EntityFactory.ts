@@ -4,19 +4,19 @@ import { Engine } from "../core/Engine";
 import type { ComponentType } from "../core/Component";
 import { service } from "../di";
 
-export type UnknownComponentConfig = Record<string, unknown>;
+export type UnknownComponentConfig = Record<string, unknown> | true;
 export type UnknownEntityConfig = Record<string, UnknownComponentConfig>;
 
 export type InferComponentConfigMap<T> = T extends ComponentType<infer TName, any, infer TConfig>
     ? [TConfig] extends [never]
-        ? never
+        ? Record<TName, true>
         : Record<TName, TConfig>
     : never;
 export type InferEntityConfig<T> = (T extends any ? (x: InferComponentConfigMap<T>) => any : never) extends (
     x: infer R
 ) => any
     ? Partial<R>
-    : never;
+    : unknown;
 
 /**
  * An object with overrides for each component.
@@ -34,7 +34,7 @@ export type EntityConfigOverrides<T> = {
  */
 @service("typed-ecstasy/EntityFactory")
 export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
-    private readonly entityBlueprints: Record<string, Array<ComponentBlueprint<string, unknown, unknown>>> = {};
+    private readonly entityBlueprints: Record<string, ComponentBlueprint[]> = {};
     private readonly engine: Engine;
 
     /**
@@ -50,7 +50,7 @@ export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
      * @param name The name used to identify the entity blueprint.
      * @param blueprint The list of component blueprints for this entity.
      */
-    public addEntityBlueprint(name: string, blueprint: Array<ComponentBlueprint<string, unknown, unknown>>) {
+    public addEntityBlueprint(name: string, blueprint: ComponentBlueprint[]) {
         this.entityBlueprints[name] = blueprint;
     }
 

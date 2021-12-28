@@ -6,6 +6,7 @@ import { addMetaData, retainable, addHotSwapListener } from "../di";
  * Base class for all systems.
  *
  * @template TSystem The base system class (EntitySystem or SubSystem).
+ * @template TSystemManager The system manager class (EntitySystemManager or SubSystemManager).
  */
 @addMetaData
 export abstract class AbstractSystem<

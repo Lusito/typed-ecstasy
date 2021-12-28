@@ -7,15 +7,14 @@ const emptyOverrides = {};
  * Stores the name of a component and key/value pairs to construct the component.
  *
  * @see {@link EntityFactory}
- * @template TConfig The blueprint interface.
  */
-export class ComponentBlueprint<TName extends string, TData, TConfig> {
+export class ComponentBlueprint {
     /** The component type of this blueprint. */
-    public readonly type?: ComponentType<TName, TData, TConfig>;
+    public readonly type?: ComponentType;
 
-    private overrides: Partial<TConfig> = emptyOverrides;
+    private overrides: Record<string, unknown> = emptyOverrides;
 
-    private defaultValues: TConfig;
+    private defaultValues: Record<string, unknown>;
 
     /**
      * Creates a new blueprint with the specified component name.
@@ -23,9 +22,9 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
      * @param name The name of the component.
      * @param defaultValues The default values to use.
      */
-    public constructor(name: string, defaultValues: TConfig) {
+    public constructor(name: string, defaultValues: Record<string, unknown> = {}) {
         const meta = componentMetaRegistry.get(name);
-        if (meta) this.type = meta.type as unknown as ComponentType<TName, TData, TConfig>;
+        if (meta) this.type = meta.type;
         else console.warn(`Can't find metadata for component "${name}". This component will not be added!`);
         this.defaultValues = defaultValues;
     }
@@ -35,7 +34,7 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
      *
      * @param overrides The overrides to use on the next get* calls.
      */
-    protected setOverrides(overrides?: Partial<TConfig>) {
+    protected setOverrides(overrides?: Record<string, unknown>) {
         this.overrides = overrides ?? emptyOverrides;
     }
 
@@ -46,7 +45,7 @@ export class ComponentBlueprint<TName extends string, TData, TConfig> {
      * @param fallback The value to return if no default value and no override value exists for the key.
      * @returns The corresponding value from overrides, defaultValues or the fallback parameter (in that order).
      */
-    public get: ComponentConfigGetter<TConfig> = (key, fallback) => {
+    public get: ComponentConfigGetter<any> = (key, fallback) => {
         if (key in this.overrides) {
             const value = this.overrides[key];
             if (value !== undefined) return value as any;

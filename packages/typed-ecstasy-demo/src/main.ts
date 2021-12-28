@@ -2,6 +2,8 @@ import "@abraham/reflection";
 import { Allocator, Engine } from "typed-ecstasy";
 
 import { setupEntityFactory } from "./entityFactory";
+import { defaultLevel } from "./levels/default";
+import { InputSystem } from "./systems/InputSystem";
 import { MovementSystem } from "./systems/MovementSystem";
 import { RenderSystem } from "./systems/RenderSystem";
 import { GameConfig, GameContext2D } from "./types";
@@ -21,25 +23,22 @@ engine.container.set(GameConfig, { defaultCameraFocusWeight: 1 });
 
 const factory = setupEntityFactory(engine);
 
-// Create an entity in a simple fashion:
-const simple = factory.assemble("stone");
-// Then add it to the engine:
-engine.entities.add(simple);
+for (const [type, x, y, width, height] of defaultLevel) {
+    engine.entities.add(factory.assemble(type, {
+        Position: {
+            x,
+            y,
+        },
+        Size: {
+            width,
+            height
+        }
+    }));
+}
 
-// Or override settings by component:
-const modified = factory.assemble("stone", {
-    Position: {
-        x: 40,
-        y: 300,
-    },
-    Sprite: {
-        image: "rgb(0, 200, 0)",
-    },
-});
-// Don't forget to add it to the engine:
-engine.entities.add(modified);
 engine.systems.add(MovementSystem);
 engine.systems.add(RenderSystem);
+engine.systems.add(InputSystem);
 
 let lastTime = 0;
 let hasError = false;

@@ -1,0 +1,16 @@
+import { declareComponent } from "typed-ecstasy";
+
+// Check out CameraFocusComponent for a more detailed explanation of how to declare components
+export type SizeData = {
+    width: number;
+    height: number;
+};
+
+export type SizeConfig = Partial<SizeData>;
+
+export const SizeComponent = declareComponent("Size").withConfig<SizeData, SizeConfig>({
+    build(comp, config) {
+        comp.width = config("width", 0);
+        comp.height = config("height", 0);
+    },
+});

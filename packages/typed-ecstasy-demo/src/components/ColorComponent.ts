@@ -1,19 +1,19 @@
 import { declareComponent } from "typed-ecstasy";
 
 // Check out CameraFocusComponent for a more detailed explanation of how to declare components
-export type SpriteData = {
-    image: string;
+export type ColorData = {
+    color: string;
     layer: number;
 };
 
-export type SpriteConfig = {
-    image: string;
+export type ColorConfig = {
+    color: string;
     layer?: number;
 };
 
-export const SpriteComponent = declareComponent("Sprite").withConfig<SpriteData, SpriteConfig>({
+export const ColorComponent = declareComponent("Color").withConfig<ColorData, ColorConfig>({
     build(comp, config) {
-        comp.image = config("image", "notfound.png");
+        comp.color = config("color", "pink");
         comp.layer = config("layer", 1);
     },
 });
