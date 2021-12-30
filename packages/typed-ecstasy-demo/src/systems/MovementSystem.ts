@@ -5,8 +5,7 @@ import { PositionComponent, PositionData } from "../components/PositionComponent
 import { SizeComponent, SizeData } from "../components/SizeComponent";
 import { TriggerComponent } from "../components/TriggerComponent";
 import { VelocityComponent, VelocityData } from "../components/VelocityComponent";
-
-const family = Family.all(PositionComponent, SizeComponent, VelocityComponent).get();
+import { GameState } from "../services/GameState";
 
 // Adjusted from: https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
 function sweptAABB(
@@ -97,16 +96,19 @@ function sweptAABB(
     return entryTime;
 }
 
+const family = Family.all(PositionComponent, SizeComponent, VelocityComponent).get();
 const tempNormalA = { x: 0, y: 0 };
 const tempNormalB = { x: 0, y: 0 };
 
 @service("game/MovementSystem", { hot: module.hot })
 export class MovementSystem extends IteratingSystem {
+    private readonly gameState: GameState;
     private readonly collidables: readonly Entity[];
 
-    public constructor(engine: Engine) {
+    public constructor(engine: Engine, gameState: GameState) {
         super(engine, family);
 
+        this.gameState = gameState;
         this.collidables = engine.entities.forFamily(
             Family.all(CollidableComponent, SizeComponent, PositionComponent).get()
         );
@@ -181,13 +183,12 @@ export class MovementSystem extends IteratingSystem {
             for (const action of trigger.actions) {
                 switch (action.type) {
                     case "score":
-                        // fixme: add to score
+                        this.gameState.addScore(action.value);
                         break;
-                    case "removeBall":
+                    case "removeOther":
                         entity.destroy();
                         break;
                     case "removeSelf":
-                        // fixme: add system, which listens for removal from group and finishes game when all collidables are gone
                         collidable.destroy();
                         break;
                 }

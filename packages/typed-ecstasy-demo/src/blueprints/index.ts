@@ -15,7 +15,7 @@ export const blueprints: Record<string, EntityConfig> = {
     // Level
     wall: wallBlueprint,
     void: voidBlueprint,
-    // Player/Paddel
+    // Paddle
     paddle: paddleBlueprint,
     // Ball
     ball: ballBlueprint,

@@ -1,23 +1,26 @@
 import { Engine, Entity, EntityFactory, Family, IteratingSystem, service } from "typed-ecstasy";
 
 import { BallComponent } from "../components/BallComponent";
-import { PlayerComponent } from "../components/PlayerComponent";
+import { InputComponent } from "../components/InputComponent";
 import { PositionComponent } from "../components/PositionComponent";
 import { SizeComponent } from "../components/SizeComponent";
 import { EntityConfig } from "../EntityConfig";
 import { wallSize } from "../levels/default";
+import { GameState } from "../services/GameState";
 
-const family = Family.all(PlayerComponent, PositionComponent, SizeComponent).get();
+const family = Family.all(InputComponent, PositionComponent, SizeComponent).get();
 
 @service("game/InputSystem", { hot: module.hot })
 export class InputSystem extends IteratingSystem {
-    private canvas = document.getElementById("canvas")!;
+    private readonly gameState: GameState;
+    private readonly canvas = document.getElementById("canvas")!;
     private mouseX = 0;
     private balls: Entity[] = [];
     private launchBall = false;
 
-    public constructor(engine: Engine) {
+    public constructor(engine: Engine, gameState: GameState) {
         super(engine, family);
+        this.gameState = gameState;
     }
 
     protected override onEnable() {
@@ -47,23 +50,26 @@ export class InputSystem extends IteratingSystem {
     protected override processEntity(entity: Entity) {
         const position = entity.require(PositionComponent);
         const size = entity.require(SizeComponent);
-        position.x = Math.max(wallSize, Math.min(this.canvas.clientWidth - wallSize - size.width, this.mouseX - size.width / 2));
+        position.x = Math.max(
+            wallSize,
+            Math.min(this.canvas.clientWidth - wallSize - size.width, this.mouseX - size.width / 2)
+        );
 
         if (this.launchBall) {
-            const player = entity.require(PlayerComponent);
-            if (player.remainingBalls > 0) {
+            if (this.gameState.removeBall()) {
                 const factory: EntityFactory<EntityConfig> = this.engine.container.get(EntityFactory);
-                this.engine.entities.add(factory.assemble("ball", {
-                    Position: {
-                        x: position.x + size.width/2,
-                        y: position.y - size.height/2,
-                    },
-                    Velocity: {
-                        y: -220,
-                        x: 120
-                    }
-                }));
-                player.remainingBalls--;
+                this.engine.entities.add(
+                    factory.assemble("ball", {
+                        Position: {
+                            x: position.x + size.width / 2,
+                            y: position.y - size.height / 2,
+                        },
+                        Velocity: {
+                            y: -220,
+                            x: 120,
+                        },
+                    })
+                );
             }
             this.launchBall = false;
         }

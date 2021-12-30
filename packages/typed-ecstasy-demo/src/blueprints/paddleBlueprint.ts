@@ -13,7 +13,5 @@ export const paddleBlueprint: EntityConfig = {
     Color: {
         color: "#0A85C2",
     },
-    Player: {
-        remainingBalls: 3,
-    },
+    Input: true,
 };

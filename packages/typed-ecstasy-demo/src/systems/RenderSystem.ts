@@ -4,17 +4,16 @@ import { PositionComponent } from "../components/PositionComponent";
 import { ColorComponent } from "../components/ColorComponent";
 import { GameContext2D } from "../types";
 import { SizeComponent } from "../components/SizeComponent";
+import { InputComponent } from "../components/InputComponent";
 
 const family = Family.all(PositionComponent, ColorComponent, SizeComponent).get();
 
-// fixme: use sorted iterating system
 @service("game/RenderSystem", { hot: module.hot })
 export class RenderSystem extends IteratingSystem {
     private readonly context2D: GameContext2D;
 
-    // fixme: find better example for retainable property
     @retainable
-    private size = 3;
+    private accumulator = 0;
 
     public constructor(engine: Engine, context2D: GameContext2D) {
         super(engine, family);
@@ -22,7 +21,7 @@ export class RenderSystem extends IteratingSystem {
     }
 
     public override update(deltaTime: number) {
-        this.size += deltaTime;
+        this.accumulator += deltaTime;
         this.context2D.clearRect(0, 0, 620, 710);
         super.update(deltaTime);
     }
@@ -31,7 +30,27 @@ export class RenderSystem extends IteratingSystem {
         const position = entity.require(PositionComponent);
         const size = entity.require(SizeComponent);
         const color = entity.require(ColorComponent);
+        this.context2D.strokeStyle = "";
         this.context2D.fillStyle = color.color;
+        this.context2D.lineWidth = 0;
         this.context2D.fillRect(position.x, position.y, size.width, size.height);
+
+        // Just to demonstrate how we can use hot-module replacement
+        if (entity.has(InputComponent)) {
+            // Try modifying the values here:
+            const pulseColor = "rgba(255,0,255,0.5)";
+            const pulseSpeed = 2;
+            const borderMin = 1;
+            const borderMax = 5;
+            this.context2D.strokeStyle = pulseColor;
+            const border = borderMin + (1 + Math.sin(this.accumulator * pulseSpeed)) * 0.5 * (borderMax - borderMin);
+            this.context2D.lineWidth = border;
+            this.context2D.strokeRect(
+                position.x - 0.5 * border,
+                position.y - 0.5 * border,
+                size.width + border,
+                size.height + border
+            );
+        }
     }
 }

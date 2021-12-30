@@ -7,7 +7,7 @@ export const voidBlueprint: EntityConfig = {
     Trigger: {
         actions: [
             {
-                type: "removeBall",
+                type: "removeOther",
             },
         ],
     },

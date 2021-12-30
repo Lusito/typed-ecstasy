@@ -7,7 +7,7 @@ import type { PositionComponent } from "./components/PositionComponent";
 import type { SizeComponent } from "./components/SizeComponent";
 import type { TriggerComponent } from "./components/TriggerComponent";
 import type { VelocityComponent } from "./components/VelocityComponent";
-import type { PlayerComponent } from "./components/PlayerComponent";
+import type { InputComponent } from "./components/InputComponent";
 
 /**
  * This detects all possible component configurations from the specified component types.
@@ -20,5 +20,5 @@ export type EntityConfig = InferEntityConfig<
     | typeof ColorComponent
     | typeof TriggerComponent
     | typeof BallComponent
-    | typeof PlayerComponent
+    | typeof InputComponent
 >;

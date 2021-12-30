@@ -10,7 +10,7 @@ export type TriggerAction =
           type: "removeSelf";
       }
     | {
-          type: "removeBall";
+          type: "removeOther";
       };
 export type TriggerData = {
     actions: TriggerAction[];
