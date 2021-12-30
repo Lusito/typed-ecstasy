@@ -103,3 +103,11 @@ async function init() {
 }
 
 init();
+
+// Anything that isn't explicitly handled needs a forced reload.
+// Otherwise the game might be created twice
+if (module.hot) {
+    module.hot.dispose(() => {
+        window.location.reload();
+    });
+}
