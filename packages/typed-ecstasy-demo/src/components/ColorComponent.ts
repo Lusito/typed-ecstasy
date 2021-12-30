@@ -1,6 +1,6 @@
 import { declareComponent } from "typed-ecstasy";
 
-// Check out CameraFocusComponent for a more detailed explanation of how to declare components
+// Check out SoundComponent for a more detailed explanation of how to declare components
 export type ColorData = {
     color: string;
     layer: number;

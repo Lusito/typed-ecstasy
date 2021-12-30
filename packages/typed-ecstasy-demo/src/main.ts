@@ -15,7 +15,7 @@ import { defaultLevel } from "./levels/default";
 import { InputSystem } from "./systems/InputSystem";
 import { MovementSystem } from "./systems/MovementSystem";
 import { RenderSystem } from "./systems/RenderSystem";
-import { GameAudioContext, GameConfig, GameContext2D } from "./types";
+import { GameAudioContext, GameContext2D } from "./types";
 import { loadAudioBuffer } from "./utils";
 import { SoundService } from "./services/SoundService";
 
@@ -54,10 +54,10 @@ async function init() {
     const allocator = new Allocator();
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const engine = new Engine(allocator);
+    // some manual dependencies, which can be used by component factories and services
     engine.container.set(GameContext2D, context2D);
     engine.container.set(GameAudioContext, audioBuffers);
-    // A simple config dependency, which can be used by component factories and services
-    engine.container.set(GameConfig, { defaultCameraFocusWeight: 1 });
+    // By getting the SoundService, we also create an instance of it.
     engine.container.get(SoundService);
 
     const factory = setupEntityFactory(engine);
