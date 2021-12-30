@@ -3,10 +3,11 @@ import { SignalConnections } from "typed-signals";
 
 import { BallComponent } from "../components/BallComponent";
 import { CollidableComponent } from "../components/CollidableComponent";
-import { InputComponent } from "../components/InputComponent";
+import { ColorComponent } from "../components/ColorComponent";
+import { TriggerComponent } from "../components/TriggerComponent";
 
 const ballsFamily = Family.all(BallComponent).get();
-const bricksFamily = Family.all(CollidableComponent).exclude(InputComponent).get();
+const bricksFamily = Family.all(CollidableComponent, TriggerComponent, ColorComponent).get();
 
 @service("game/GameState", { hot: module.hot })
 export class GameState {
