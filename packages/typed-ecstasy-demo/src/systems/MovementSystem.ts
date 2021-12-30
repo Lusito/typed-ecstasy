@@ -154,7 +154,7 @@ export class MovementSystem extends IteratingSystem {
             }
 
             const sound = bestCollidable.get(SoundComponent);
-            if (sound) this.sounds.play(sound.hitSound);
+            if (sound) this.sounds.play(sound.hit);
 
             this.runCollisionTriggers(entity, bestCollidable);
             const c = bestCollidable.require(CollidableComponent);

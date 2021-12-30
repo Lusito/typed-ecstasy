@@ -15,6 +15,6 @@ export const paddleBlueprint: EntityConfig = {
     },
     Input: true,
     Sound: {
-        hitSound: "hitPaddle",
+        hit: "hitPaddle",
     },
 };

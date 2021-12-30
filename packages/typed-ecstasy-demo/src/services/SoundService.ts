@@ -5,8 +5,10 @@ import { SoundPlayer } from "sounts";
 import { InputComponent } from "../components/InputComponent";
 import { GameAudioContext } from "../types";
 import { SoundComponent } from "../components/SoundComponent";
+import { BallComponent } from "../components/BallComponent";
 
-const soundFamily = Family.all(SoundComponent).exclude(InputComponent).get();
+const soundFamily = Family.all(SoundComponent).get();
+const ballFamily = Family.all(BallComponent).get();
 
 @service("game/SoundService", { hot: module.hot })
 export class SoundService {
@@ -27,7 +29,13 @@ export class SoundService {
         this.connections.add(
             this.engine.entities.onRemoveForFamily(soundFamily).connect((e) => {
                 const sound = e.require(SoundComponent);
-                if (sound.removeSound) this.player.play(sound.removeSound);
+                if (sound.remove) this.player.play(sound.remove);
+            })
+        );
+        this.connections.add(
+            this.engine.entities.onAddForFamily(ballFamily).connect((e) => {
+                const sound = e.require(SoundComponent);
+                if (sound.create) this.player.play(sound.create);
             })
         );
     }

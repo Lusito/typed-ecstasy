@@ -4,8 +4,9 @@ import { GameAudioContext } from "../types";
 
 // First of all, we need the component data type. This is what you will interact with in your entity systems.
 export type SoundData = {
-    removeSound?: AudioBuffer;
-    hitSound?: AudioBuffer;
+    create?: AudioBuffer;
+    remove?: AudioBuffer;
+    hit?: AudioBuffer;
 };
 
 // Then we need a configuration type, i.e. the data that is needed to assemble your entity correctly
@@ -13,8 +14,9 @@ export type SoundData = {
 // we need to first define, what properties can be configured using that data.
 // The following interface represent your json data:
 export type SoundConfig = {
-    removeSound?: keyof GameAudioContext["sounds"] | null;
-    hitSound?: keyof GameAudioContext["sounds"] | null;
+    create?: keyof GameAudioContext["sounds"] | null;
+    remove?: keyof GameAudioContext["sounds"] | null;
+    hit?: keyof GameAudioContext["sounds"] | null;
 };
 
 export const SoundComponent = declareComponent("Sound").withConfig<SoundData, SoundConfig>((container) => {
@@ -32,16 +34,19 @@ export const SoundComponent = declareComponent("Sound").withConfig<SoundData, So
             // Use config() to receive configuration properties
             // It will automatically know the property names and types as specified in the config type above.
             // FIXME: possibility to not have a default value? => return undefined?
-            const removeSound = config(
+            const createSound = config(
                 // config() has autocompletion for the properties you defined in the config type above!
-                "removeSound",
+                "create",
                 // The second parameter is a fallback value, which gets used when no value was found for the specified key.
                 // Its type is matched against the type in your config type above.
                 null
             );
-            comp.removeSound = removeSound ? sounds[removeSound] : undefined;
-            const hitSound = config("hitSound", null);
-            comp.hitSound = hitSound ? sounds[hitSound] : undefined;
+            comp.create = createSound ? sounds[createSound] : undefined;
+
+            const removeSound = config("remove", null);
+            comp.remove = removeSound ? sounds[removeSound] : undefined;
+            const hitSound = config("hit", null);
+            comp.hit = hitSound ? sounds[hitSound] : undefined;
 
             // Return false if you want to prevent the component from actually being added to the entity.
             // return false;

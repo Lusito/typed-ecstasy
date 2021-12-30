@@ -12,4 +12,7 @@ export const ballBlueprint: EntityConfig = {
         layer: 10,
     },
     Ball: true,
+    Sound: {
+        create: "hitPaddle",
+    },
 };

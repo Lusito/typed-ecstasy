@@ -8,6 +8,6 @@ export const wallBlueprint: EntityConfig = {
         color: "white",
     },
     Sound: {
-        hitSound: "hitWall",
+        hit: "hitWall",
     },
 };
