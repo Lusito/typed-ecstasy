@@ -18,10 +18,17 @@ There is currently no built-in way to check if a component or system is schedule
 
 ## Keeping References
 
-- It's good advice to never keep references to components.
-  - Always access them via their entity.
-- Avoid references to entities as much as possible.
-  - You can, store the entity-id instead and then retrieve the entity from the entity-manager [by using this id](../../api/classes/entitymanager.md#get).
-  - If you absolutely must store an entity reference, make sure to listen for the onRemove signal, so you can clear this reference.
+Entities and components might get reused if [pooling](pooling.md) is configured.
+So if you store references to entities or components, you might end up accessing something you did not intend.
 
-Entities and components might get reused if [pooling](pooling.md) is configured, so you might end up accessing an entity that is now something entirely different if you keep a reference.
+- Never keep references to components!
+  - Always access them via their entity.
+  - You can, of course, declare a variable for it and pass that around, but don't remember it past an update-step.
+- Avoid references to entities as much as possible.
+  - The usual approach is to use systems to iterate over entities.
+  - If you need an up-to-date list of all entities in the engine, use [engine.entities.getAll](../../api/classes/entitymanager.md#getAll).
+  - If you need an up-to-date list of entities for a specific family, use [engine.entities.forFamily](../../api/classes/entitymanager.md#forfamily).
+  - If you need to store a single entity, there are multiple ways to achieve this:
+    - The most comfortable way is [by using an EntityRef](../../api/classes/entity.md#createref). Every time you need the entity, call `deref()` on the `EntityRef`. It will return undefined when the entity is no longer in use.
+    - Alternatively, you can store the [id](../../api/classes/entity.md#getid) of the entity and when you need the entity, call [engine.entities.get](../../api/classes/entitymanager.md#get).
+    - If the above approaches are not good for you and you store the entity itself, make sure to listen for the [onRemove](../../api/classes/entitymanager.md#onremove) or the [onRemoveForFamily](../../api/classes/entitymanager.md#onremoveforfamily) signal, so you can properly react to the entity no longer existing or matching your criteria.

@@ -3,6 +3,14 @@ import type { ComponentData, ComponentType } from "./Component";
 import type { EntityManager, FamilyMeta } from "./EntityManager";
 
 /**
+ * A reference to an entity. It becomes invalid once the entity has been removed.
+ */
+export interface EntityRef {
+    /** @returns The entity or undefined if no longer valid. */
+    deref(): Entity | undefined;
+}
+
+/**
  * Simple containers of components, which give an entity data.
  */
 export class Entity {
@@ -132,5 +140,20 @@ export class Entity {
     /** @internal */
     protected removeAllInternal() {
         this.componentsById.length = 0;
+    }
+
+    /**
+     * @returns A reference to this entity.
+     */
+    public createRef(): EntityRef {
+        const ref = new WeakRef(this);
+        const { uuid } = this;
+        return {
+            deref() {
+                const entity = ref.deref();
+                if (!entity || entity.scheduledForRemoval || entity.uuid !== uuid) return undefined;
+                return entity;
+            },
+        };
     }
 }

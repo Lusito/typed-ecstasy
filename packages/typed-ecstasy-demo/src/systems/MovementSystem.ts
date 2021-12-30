@@ -102,22 +102,14 @@ const tempNormalB = { x: 0, y: 0 };
 
 @service("game/MovementSystem", { hot: module.hot })
 export class MovementSystem extends IteratingSystem {
-    private collidables: Entity[] = [];
+    private readonly collidables: readonly Entity[];
 
     public constructor(engine: Engine) {
         super(engine, family);
-    }
 
-    protected override onEnable() {
-        super.onEnable();
-        this.collidables = this.engine.entities.forFamily(
+        this.collidables = engine.entities.forFamily(
             Family.all(CollidableComponent, SizeComponent, PositionComponent).get()
         );
-    }
-
-    protected override onDisable() {
-        super.onDisable();
-        this.collidables = [];
     }
 
     protected override processEntity(entity: Entity, deltaTime: number) {

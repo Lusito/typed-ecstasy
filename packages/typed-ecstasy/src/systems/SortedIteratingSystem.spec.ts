@@ -118,7 +118,6 @@ describe("SortedIteratingSystem", () => {
         const entities = engine.entities.forFamily(family);
 
         const system = engine.systems.add(IteratingRemovalSystem);
-        const systemEntities = system.getEntities();
 
         const numEntities = 10;
 
@@ -135,7 +134,7 @@ describe("SortedIteratingSystem", () => {
 
         engine.entities.add(e);
 
-        expect(entities).toHaveSameOrderedMembers(systemEntities);
+        expect(entities).toHaveSameOrderedMembers(system.entities);
         expect(system.family).toBe(family);
     });
 
@@ -161,8 +160,7 @@ describe("SortedIteratingSystem", () => {
         engine.entities.add(e);
 
         const system = engine.systems.add(IteratingRemovalSystem);
-        const systemEntities = system.getEntities();
-        expect(entities).toHaveSameMembers(systemEntities);
+        expect(entities).toHaveSameMembers(system.entities);
         expect(system.family).toBe(family);
     });
 

@@ -2,6 +2,8 @@
 
 In typed-ecstasy, [entities](../../api/classes/entity.md) are simple bags of components grouped under a unique ID. All non zero entity IDs are considered valid.
 
+Please make sure to read [special-considerations](special-considerations.md) if you want to store entities or components.
+
 ## Creating and Adding an Entity
 If you want to create an Entity, you need to ask your [Engine](../../api/classes/engine.md) for a new instance.
 

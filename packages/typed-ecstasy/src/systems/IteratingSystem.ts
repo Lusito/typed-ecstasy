@@ -11,7 +11,8 @@ export abstract class IteratingSystem extends EntitySystem {
     /** The Family used when the system was created. */
     public readonly family: Family;
 
-    private entities: Entity[] = [];
+    /** The list of entities processed by the system. */
+    public readonly entities: readonly Entity[];
 
     /**
      * @param engine The engine to use.
@@ -20,23 +21,11 @@ export abstract class IteratingSystem extends EntitySystem {
     public constructor(engine: Engine, family: Family) {
         super(engine);
         this.family = family;
-    }
-
-    protected override onEnable() {
         this.entities = this.engine.entities.forFamily(this.family);
-    }
-
-    protected override onDisable() {
-        this.entities = [];
     }
 
     public override update(deltaTime: number) {
         for (const entity of this.entities) this.processEntity(entity, deltaTime);
-    }
-
-    /** @returns A list of entities processed by the system. */
-    public getEntities() {
-        return this.entities;
     }
 
     /**

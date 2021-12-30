@@ -7,7 +7,6 @@ import { EntitySystem } from "../core/EntitySystem";
  * given interval. The actual logic should be placed in {@link updateInterval}.
  */
 export abstract class IntervalSystem extends EntitySystem {
-    @retainable
     private interval: number;
 
     @retainable

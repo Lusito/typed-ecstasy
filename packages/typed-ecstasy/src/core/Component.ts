@@ -27,6 +27,8 @@ export type ComponentType<TName extends string = string, TData = unknown, TConfi
     _unusedConfig?: TConfig;
 };
 
+export type ComponentDataFor<T extends ComponentType> = T extends ComponentType<any, infer TData, any> ? TData : never;
+
 export type ComponentData<T> = T & {
     readonly componentId: number;
     readonly componentName: string;

@@ -30,9 +30,8 @@ describe("IntervalIteratingSystem", () => {
         const entities = engine.entities.forFamily(family);
 
         const system = engine.systems.add(IntervalIteratingSystemSpy);
-        const systemEntities = system.getEntities();
 
-        expect(entities).toHaveSameOrderedMembers(systemEntities);
+        expect(entities).toHaveSameOrderedMembers(system.entities);
         expect(system.family).toBe(family);
     });
 

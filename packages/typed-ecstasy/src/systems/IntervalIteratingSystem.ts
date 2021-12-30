@@ -11,7 +11,8 @@ export abstract class IntervalIteratingSystem extends IntervalSystem {
     /** The Family used when the system was created. */
     public readonly family: Family;
 
-    private entities: Entity[] = [];
+    /** The list of entities processed by the system. */
+    public readonly entities: readonly Entity[] = [];
 
     /**
      * @param engine The engine to use.
@@ -21,27 +22,13 @@ export abstract class IntervalIteratingSystem extends IntervalSystem {
     public constructor(engine: Engine, family: Family, interval: number) {
         super(engine, interval);
         this.family = family;
-    }
-
-    protected override onEnable() {
         this.entities = this.engine.entities.forFamily(this.family);
-    }
-
-    protected override onDisable() {
-        this.entities = [];
     }
 
     protected override updateInterval() {
         for (const entity of this.entities) {
             this.processEntity(entity);
         }
-    }
-
-    /**
-     * @returns A list of entities processed by the system.
-     */
-    public getEntities() {
-        return this.entities;
     }
 
     /**

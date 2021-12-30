@@ -2,7 +2,6 @@ import { SignalConnections } from "typed-signals";
 
 import { EntitySystem } from "../core/EntitySystem";
 import type { Engine } from "../core/Engine";
-import { retainable } from "../di";
 import type { Entity } from "../core/Entity";
 import type { Family } from "../core/Family";
 
@@ -24,11 +23,11 @@ export abstract class SortedIteratingSystem extends EntitySystem {
     /** The Family used when the system was created. */
     public readonly family: Family;
 
-    private entities: Entity[] = [];
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+    #entities: Entity[] = [];
 
     private shouldSort = false;
 
-    @retainable
     private comparator: EntityComparator;
 
     private readonly connections = new SignalConnections();
@@ -65,49 +64,48 @@ export abstract class SortedIteratingSystem extends EntitySystem {
     /** Sorts the entities if needed. */
     private sort() {
         if (this.shouldSort) {
-            this.entities.sort(this.comparator);
+            this.#entities.sort(this.comparator);
             this.shouldSort = false;
         }
     }
 
     private entityAdded = (entity: Entity) => {
-        this.entities.push(entity);
+        this.#entities.push(entity);
         this.shouldSort = true;
     };
 
     private entityRemoved = (entity: Entity) => {
         const index = this.entities.indexOf(entity);
         if (index !== -1) {
-            this.entities.splice(index, 1);
+            this.#entities.splice(index, 1);
             this.shouldSort = true;
         }
     };
 
     protected override onEnable() {
-        this.entities = this.engine.entities.forFamily(this.family).slice().sort(this.comparator);
+        this.#entities = this.engine.entities.forFamily(this.family).slice().sort(this.comparator);
         this.connections.add(this.engine.entities.onAddForFamily(this.family).connect(this.entityAdded));
         this.connections.add(this.engine.entities.onRemoveForFamily(this.family).connect(this.entityRemoved));
     }
 
     protected override onDisable() {
         this.connections.disconnectAll();
-        this.entities = [];
+        this.#entities = [];
         this.shouldSort = false;
     }
 
     public override update(deltaTime: number) {
         this.sort();
-        for (const entity of this.entities) {
+        for (const entity of this.#entities) {
             this.processEntity(entity, deltaTime);
         }
     }
 
-    /**
-     * @returns The set of entities processed by the system.
-     */
-    public getEntities() {
+    // eslint-disable-next-line jsdoc/require-returns
+    /** The list of entities processed by the system. */
+    public get entities(): readonly Entity[] {
         this.sort();
-        return this.entities;
+        return this.#entities;
     }
 
     /**

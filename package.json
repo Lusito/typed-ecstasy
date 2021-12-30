@@ -24,7 +24,9 @@
     "lint:style:fix": "yarn run lint:style:base --write",
     "release": "lerna publish",
     "start": "yarn workspace typed-ecstasy-demo start",
-    "start:fresh": "yarn run build:lib && yarn start"
+    "start:fresh": "yarn run build:lib && yarn start",
+    "test": "yarn workspace typed-ecstasy test",
+    "test:ci": "yarn workspace typed-ecstasy test:ci"
   },
   "devDependencies": {
     "@lusito/eslint-config": "^1.7.0",
