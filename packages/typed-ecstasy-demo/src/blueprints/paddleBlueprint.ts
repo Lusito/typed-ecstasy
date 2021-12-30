@@ -14,4 +14,7 @@ export const paddleBlueprint: EntityConfig = {
         color: "#0A85C2",
     },
     Input: true,
+    Sound: {
+        hitSound: "hitPaddle",
+    },
 };

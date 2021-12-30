@@ -8,6 +8,7 @@ import type { SizeComponent } from "./components/SizeComponent";
 import type { TriggerComponent } from "./components/TriggerComponent";
 import type { VelocityComponent } from "./components/VelocityComponent";
 import type { InputComponent } from "./components/InputComponent";
+import type { SoundComponent } from "./components/SoundComponent";
 
 /**
  * This detects all possible component configurations from the specified component types.
@@ -21,4 +22,5 @@ export type EntityConfig = InferEntityConfig<
     | typeof TriggerComponent
     | typeof BallComponent
     | typeof InputComponent
+    | typeof SoundComponent
 >;

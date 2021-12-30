@@ -14,6 +14,7 @@
     "@parcel/config-default": "^2.0.1",
     "@parcel/transformer-typescript-tsc": "^2.0.1",
     "parcel": "^2.0.1",
+    "sounts": "^0.8.0",
     "typed-ecstasy": "3.0.0",
     "typed-signals": "^2.3.0"
   }

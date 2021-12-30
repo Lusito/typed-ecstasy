@@ -3,9 +3,11 @@ import { Engine, Entity, Family, IteratingSystem, service } from "typed-ecstasy"
 import { CollidableComponent } from "../components/CollidableComponent";
 import { PositionComponent, PositionData } from "../components/PositionComponent";
 import { SizeComponent, SizeData } from "../components/SizeComponent";
+import { SoundComponent } from "../components/SoundComponent";
 import { TriggerComponent } from "../components/TriggerComponent";
 import { VelocityComponent, VelocityData } from "../components/VelocityComponent";
 import { GameState } from "../services/GameState";
+import { SoundService } from "../services/SoundService";
 
 // Adjusted from: https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
 function sweptAABB(
@@ -103,12 +105,14 @@ const tempNormalB = { x: 0, y: 0 };
 @service("game/MovementSystem", { hot: module.hot })
 export class MovementSystem extends IteratingSystem {
     private readonly gameState: GameState;
+    private readonly sounds: SoundService;
     private readonly collidables: readonly Entity[];
 
-    public constructor(engine: Engine, gameState: GameState) {
+    public constructor(engine: Engine, gameState: GameState, sounds: SoundService) {
         super(engine, family);
 
         this.gameState = gameState;
+        this.sounds = sounds;
         this.collidables = engine.entities.forFamily(
             Family.all(CollidableComponent, SizeComponent, PositionComponent).get()
         );
@@ -148,6 +152,9 @@ export class MovementSystem extends IteratingSystem {
                 position.y += deltaTime * vel.y;
                 break;
             }
+
+            const sound = bestCollidable.get(SoundComponent);
+            if (sound) this.sounds.play(sound.hitSound);
 
             this.runCollisionTriggers(entity, bestCollidable);
             const c = bestCollidable.require(CollidableComponent);

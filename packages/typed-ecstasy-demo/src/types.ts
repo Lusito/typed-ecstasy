@@ -17,3 +17,16 @@ export const GameConfig = InjectSymbol<GameConfig>("GameConfig");
 // Same procedure for other types we want to be injectable:
 export type GameContext2D = CanvasRenderingContext2D;
 export const GameContext2D = InjectSymbol<GameContext2D>("GameContext2D");
+
+export type GameAudioContext = {
+    audioContext: AudioContext;
+    sounds: {
+        hitPaddle: AudioBuffer;
+        hitWall: AudioBuffer;
+        yellowExplosion: AudioBuffer;
+        greenExplosion: AudioBuffer;
+        orangeExplosion: AudioBuffer;
+        redExplosion: AudioBuffer;
+    };
+};
+export const GameAudioContext = InjectSymbol<GameAudioContext>("GameAudioContext");

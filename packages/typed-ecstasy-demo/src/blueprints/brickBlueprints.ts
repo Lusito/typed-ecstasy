@@ -27,6 +27,9 @@ export const redBrickBlueprint: EntityConfig = {
             },
         ],
     },
+    Sound: {
+        removeSound: "redExplosion",
+    },
 };
 
 export const orangeBrickBlueprint: EntityConfig = {
@@ -44,6 +47,9 @@ export const orangeBrickBlueprint: EntityConfig = {
                 type: "removeSelf",
             },
         ],
+    },
+    Sound: {
+        removeSound: "orangeExplosion",
     },
 };
 
@@ -63,6 +69,9 @@ export const greenBrickBlueprint: EntityConfig = {
             },
         ],
     },
+    Sound: {
+        removeSound: "greenExplosion"
+    },
 };
 
 export const yellowBrickBlueprint: EntityConfig = {
@@ -80,5 +89,8 @@ export const yellowBrickBlueprint: EntityConfig = {
                 type: "removeSelf",
             },
         ],
+    },
+    Sound: {
+        removeSound: "yellowExplosion"
     },
 };
