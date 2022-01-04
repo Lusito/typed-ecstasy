@@ -7,16 +7,15 @@ import { service } from "../di";
 export type UnknownComponentConfig = Record<string, unknown> | true;
 export type UnknownEntityConfig = Record<string, UnknownComponentConfig>;
 
-export type InferComponentConfigMap<T> = T extends ComponentType<infer TName, any, infer TConfig>
+export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T extends ComponentType<
+    infer TName,
+    any,
+    infer TConfig
+>
     ? [TConfig] extends [never]
-        ? Record<TName, true>
-        : Record<TName, TConfig>
+        ? Partial<Record<TName, true>>
+        : Partial<Record<TName, TConfig>>
     : never;
-export type InferEntityConfig<T> = (T extends any ? (x: InferComponentConfigMap<T>) => any : never) extends (
-    x: infer R
-) => any
-    ? Partial<R>
-    : unknown;
 
 /**
  * An object with overrides for each component.
@@ -33,7 +32,7 @@ export type EntityConfigOverrides<T> = {
  * @template TEntityConfig The entity configuration type.
  */
 @service("typed-ecstasy/EntityFactory")
-export class EntityFactory<TEntityConfig extends UnknownEntityConfig = never> {
+export class EntityFactory<TEntityConfig> {
     private readonly entityBlueprints: Record<string, ComponentBlueprint[]> = {};
     private readonly engine: Engine;
 

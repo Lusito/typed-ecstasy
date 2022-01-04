@@ -1,4 +1,4 @@
-import { declareComponent } from "typed-ecstasy";
+import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
 // Check out SoundComponent for a more detailed explanation of how to declare components
 export type SizeData = {
@@ -14,3 +14,8 @@ export const SizeComponent = declareComponent("Size").withConfig<SizeData, SizeC
         comp.height = config("height", 0);
     },
 });
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface EntityConfig extends PartialEntityConfig<typeof SizeComponent> {}
+}

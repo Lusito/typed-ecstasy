@@ -4,7 +4,6 @@ import { BallComponent } from "../components/BallComponent";
 import { InputComponent } from "../components/InputComponent";
 import { PositionComponent } from "../components/PositionComponent";
 import { SizeComponent } from "../components/SizeComponent";
-import { EntityConfig } from "../EntityConfig";
 import { wallSize } from "../levels/default";
 import { GameState } from "../services/GameState";
 
@@ -13,6 +12,7 @@ const family = Family.all(InputComponent, PositionComponent, SizeComponent).get(
 @service("game/InputSystem", { hot: module.hot })
 export class InputSystem extends IteratingSystem {
     private readonly gameState: GameState;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     private readonly canvas = document.getElementById("canvas")!;
     private mouseX = 0;
     private balls: Entity[] = [];

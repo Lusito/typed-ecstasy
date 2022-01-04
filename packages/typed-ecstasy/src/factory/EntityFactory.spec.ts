@@ -3,7 +3,7 @@ import {
     Container,
     Engine,
     EntityFactory,
-    InferEntityConfig,
+    PartialEntityConfig,
     InjectSymbol,
     declareComponent,
 } from "typed-ecstasy";
@@ -111,13 +111,11 @@ const VelocityComponent = declareComponent("Velocity").withConfig<VelocityData, 
     },
 });
 
-type EntityConfig = InferEntityConfig<
-    | typeof CameraFocusComponent
-    | typeof PickupComponent
-    | typeof PositionComponent
-    | typeof SpriteComponent
-    | typeof VelocityComponent
->;
+type EntityConfig = PartialEntityConfig<typeof CameraFocusComponent> &
+    PartialEntityConfig<typeof PickupComponent> &
+    PartialEntityConfig<typeof PositionComponent> &
+    PartialEntityConfig<typeof SpriteComponent> &
+    PartialEntityConfig<typeof VelocityComponent>;
 
 const blueprints: Record<string, EntityConfig> = {
     stone: {

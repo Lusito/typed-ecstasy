@@ -1,5 +1,3 @@
-import { EntityConfig } from "../EntityConfig";
-
 const brickBlueprint: EntityConfig = {
     Position: {},
     Size: {
@@ -70,7 +68,7 @@ export const greenBrickBlueprint: EntityConfig = {
         ],
     },
     Sound: {
-        remove: "greenExplosion"
+        remove: "greenExplosion",
     },
 };
 
@@ -91,6 +89,6 @@ export const yellowBrickBlueprint: EntityConfig = {
         ],
     },
     Sound: {
-        remove: "yellowExplosion"
+        remove: "yellowExplosion",
     },
 };

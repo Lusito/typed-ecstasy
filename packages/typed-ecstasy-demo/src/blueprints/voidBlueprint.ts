@@ -1,5 +1,3 @@
-import { EntityConfig } from "../EntityConfig";
-
 export const voidBlueprint: EntityConfig = {
     Position: {},
     Size: {},

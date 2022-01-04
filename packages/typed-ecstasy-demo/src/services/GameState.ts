@@ -15,6 +15,7 @@ export class GameState {
     private readonly balls: readonly Entity[] = [];
     private readonly bricks: readonly Entity[] = [];
     private readonly connections = new SignalConnections();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     private readonly infoElement = document.getElementById("info")!;
 
     @retainable

@@ -1,5 +1,3 @@
-import { EntityConfig } from "../EntityConfig";
-
 export const wallBlueprint: EntityConfig = {
     Position: {},
     Size: {},

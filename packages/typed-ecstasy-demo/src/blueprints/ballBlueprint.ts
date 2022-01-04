@@ -1,5 +1,3 @@
-import { EntityConfig } from "../EntityConfig";
-
 export const ballBlueprint: EntityConfig = {
     Position: {},
     Size: {

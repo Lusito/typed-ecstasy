@@ -1,4 +1,4 @@
-import { declareComponent } from "typed-ecstasy";
+import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
 // Check out SoundComponent for a more detailed explanation of how to declare components
 export type CollidableData = {
@@ -20,3 +20,8 @@ export const CollidableComponent = declareComponent("Collidable").withConfig<Col
         // comp.impactControlY = config("impactControlY", 0);
     },
 });
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface EntityConfig extends PartialEntityConfig<typeof CollidableComponent> {}
+}

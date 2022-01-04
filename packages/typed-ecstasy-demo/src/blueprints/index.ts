@@ -1,4 +1,3 @@
-import { EntityConfig } from "../EntityConfig";
 import { ballBlueprint } from "./ballBlueprint";
 import { greenBrickBlueprint, orangeBrickBlueprint, redBrickBlueprint, yellowBrickBlueprint } from "./brickBlueprints";
 import { paddleBlueprint } from "./paddleBlueprint";

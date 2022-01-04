@@ -2,7 +2,6 @@ import { Engine, Family, PostConstruct, PreDestroy, service } from "typed-ecstas
 import { SignalConnections } from "typed-signals";
 import { SoundPlayer } from "sounts";
 
-import { InputComponent } from "../components/InputComponent";
 import { GameAudioContext } from "../types";
 import { SoundComponent } from "../components/SoundComponent";
 import { BallComponent } from "../components/BallComponent";

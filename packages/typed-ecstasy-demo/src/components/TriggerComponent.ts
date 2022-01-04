@@ -1,4 +1,4 @@
-import { declareComponent } from "typed-ecstasy";
+import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
 // Check out SoundComponent for a more detailed explanation of how to declare components
 export type TriggerAction =
@@ -23,3 +23,8 @@ export const TriggerComponent = declareComponent("Trigger").withConfig<TriggerDa
         comp.actions = config("actions", []);
     },
 });
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface EntityConfig extends PartialEntityConfig<typeof TriggerComponent> {}
+}

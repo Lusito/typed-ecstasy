@@ -1,4 +1,4 @@
-import { declareComponent } from "typed-ecstasy";
+import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
 import { GameAudioContext } from "../types";
 
@@ -55,3 +55,8 @@ export const SoundComponent = declareComponent("Sound").withConfig<SoundData, So
 });
 
 // You can declare a component without using a config. See FIXME
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface EntityConfig extends PartialEntityConfig<typeof SoundComponent> {}
+}

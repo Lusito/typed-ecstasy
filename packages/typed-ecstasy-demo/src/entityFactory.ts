@@ -1,7 +1,8 @@
 import { EntityFactory, ComponentBlueprint, Engine } from "typed-ecstasy";
 
 import { blueprints } from "./blueprints";
-import type { EntityConfig } from "./EntityConfig";
+
+type EntityConfigKey = keyof EntityConfig;
 
 // This shows how you could set up an entity factory.
 export function setupEntityFactory(engine: Engine) {
@@ -14,8 +15,8 @@ export function setupEntityFactory(engine: Engine) {
 
         // An entity blueprint is essentially just an array of ComponentBlueprint objects.
         const entityBlueprint = Object.keys(entityConfig).map((key) => {
-            // eslint-disable-next-line no-loop-func, @typescript-eslint/no-non-null-assertion
-            const x = entityConfig[key as keyof EntityConfig]!;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const x = entityConfig[key as EntityConfigKey]!;
             return new ComponentBlueprint(key, x === true ? {} : x);
         });
         factory.addEntityBlueprint(name, entityBlueprint);

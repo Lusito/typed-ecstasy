@@ -8,7 +8,7 @@ interface NodeModule {
     hot?: ImportHot;
 }
 
-declare module 'url:*' {
+declare module "url:*" {
     const content: string;
     export default content;
 }
