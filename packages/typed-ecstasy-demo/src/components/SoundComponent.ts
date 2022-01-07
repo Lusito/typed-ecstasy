@@ -1,12 +1,12 @@
 import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
-import { GameAudioContext } from "../types";
+import { GameSound, GameSoundKey, GameSounds } from "../types";
 
 // First of all, we need the component data type. This is what you will interact with in your entity systems.
 export type SoundData = {
-    create?: AudioBuffer;
-    remove?: AudioBuffer;
-    hit?: AudioBuffer;
+    create?: GameSound;
+    remove?: GameSound;
+    hit?: GameSound;
 };
 
 // Then we need a configuration type, i.e. the data that is needed to assemble your entity correctly
@@ -14,14 +14,14 @@ export type SoundData = {
 // we need to first define, what properties can be configured using that data.
 // The following interface represent your json data:
 export type SoundConfig = {
-    create?: keyof GameAudioContext["sounds"] | null;
-    remove?: keyof GameAudioContext["sounds"] | null;
-    hit?: keyof GameAudioContext["sounds"] | null;
+    create?: GameSoundKey | null;
+    remove?: GameSoundKey | null;
+    hit?: GameSoundKey | null;
 };
 
 export const SoundComponent = declareComponent("Sound").withConfig<SoundData, SoundConfig>((container) => {
     // In this place, you can store some context information supplied by your game
-    const { sounds } = container.get(GameAudioContext);
+    const sounds = container.get(GameSounds);
     return {
         // Optional: You can implement a reset method, which will be called to set initial values of a new component or when the component is reset.
         // Since we set all properties in the "build" method, the following is not needed. It might be useful though for garbage collection purposes:

@@ -2,7 +2,6 @@ import { Engine, Family, PostConstruct, PreDestroy, service } from "typed-ecstas
 import { SignalConnections } from "typed-signals";
 import { SoundPlayer } from "sounts";
 
-import { GameAudioContext } from "../types";
 import { SoundComponent } from "../components/SoundComponent";
 import { BallComponent } from "../components/BallComponent";
 
@@ -15,9 +14,9 @@ export class SoundService {
     private readonly connections = new SignalConnections();
     private readonly player: SoundPlayer;
 
-    public constructor(engine: Engine, audio: GameAudioContext) {
+    public constructor(engine: Engine, audioContext: AudioContext) {
         this.engine = engine;
-        this.player = new SoundPlayer(audio.audioContext.destination);
+        this.player = new SoundPlayer(audioContext.destination);
     }
 
     public play(buffer: AudioBuffer) {
@@ -28,13 +27,13 @@ export class SoundService {
         this.connections.add(
             this.engine.entities.onRemoveForFamily(soundFamily).connect((e) => {
                 const sound = e.require(SoundComponent);
-                if (sound.remove) this.player.play(sound.remove);
+                if (sound.remove) this.player.play(sound.remove.buffer);
             })
         );
         this.connections.add(
             this.engine.entities.onAddForFamily(ballFamily).connect((e) => {
                 const sound = e.require(SoundComponent);
-                if (sound.create) this.player.play(sound.create);
+                if (sound.create) this.player.play(sound.create.buffer);
             })
         );
     }

@@ -1,23 +1,15 @@
 import "@abraham/reflection";
 import { PoolAllocator, Container, Engine } from "typed-ecstasy";
 import { createAudioContext } from "sounts";
-/* eslint-disable import/no-unresolved, import/extensions */
-import yellowExplosionUrl from "url:./sounds/explosion_yellow.wav";
-import greenExplosionUrl from "url:./sounds/explosion_green.wav";
-import orangeExplosionUrl from "url:./sounds/explosion_orange.wav";
-import redExplosionUrl from "url:./sounds/explosion_red.wav";
-import hitPaddleUrl from "url:./sounds/hit_paddle.wav";
-import hitWallUrl from "url:./sounds/hit_wall.wav";
-/* eslint-enable import/no-unresolved, import/extensions */
 
 import { setupEntityFactory } from "./entityFactory";
 import { defaultLevel } from "./levels/default";
 import { InputSystem } from "./systems/InputSystem";
 import { MovementSystem } from "./systems/MovementSystem";
 import { RenderSystem } from "./systems/RenderSystem";
-import { GameAudioContext, GameContext2D } from "./types";
-import { loadAudioBuffer } from "./utils";
+import { GameContext2D, GameSounds } from "./types";
 import { SoundService } from "./services/SoundService";
+import { AssetService } from "./services/AssetService";
 
 // This is a simplified example of how you would use an entity factory to assemble entities
 
@@ -25,32 +17,11 @@ const audioContext = createAudioContext();
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context2D = canvas.getContext("2d");
 
-async function createGameAudioContext(): Promise<GameAudioContext> {
-    const hitPaddle = await loadAudioBuffer(audioContext, hitPaddleUrl);
-    const hitWall = await loadAudioBuffer(audioContext, hitWallUrl);
-    const yellowExplosion = await loadAudioBuffer(audioContext, yellowExplosionUrl);
-    const greenExplosion = await loadAudioBuffer(audioContext, greenExplosionUrl);
-    const orangeExplosion = await loadAudioBuffer(audioContext, orangeExplosionUrl);
-    const redExplosion = await loadAudioBuffer(audioContext, redExplosionUrl);
-
-    return {
-        audioContext,
-        sounds: {
-            hitPaddle,
-            hitWall,
-            yellowExplosion,
-            greenExplosion,
-            orangeExplosion,
-            redExplosion,
-        },
-    };
-}
-
 async function init() {
     const container = new Container();
-    // Fixme: create AssetService, which takes care of loading that stuff
+    container.set(AudioContext, audioContext);
     // Load some sounds
-    const audioBuffers = await createGameAudioContext();
+    const gameSounds = await container.get(AssetService).loadSounds();
 
     const engine = new Engine({
         allocator: new PoolAllocator(),
@@ -59,8 +30,7 @@ async function init() {
 
     // some manual dependencies, which can be used by component factories and services
     container.set(GameContext2D, context2D);
-    container.set(GameAudioContext, audioBuffers);
-    // fixme: let SoundService create the audiocontext? nope, it needs the engine first
+    container.set(GameSounds, gameSounds);
     // By getting the SoundService, we also create an instance of it.
     container.get(SoundService);
 
