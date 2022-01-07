@@ -1,5 +1,5 @@
 import "@abraham/reflection";
-import { Allocator, Engine } from "typed-ecstasy";
+import { PoolAllocator, Container, Engine } from "typed-ecstasy";
 import { createAudioContext } from "sounts";
 /* eslint-disable import/no-unresolved, import/extensions */
 import yellowExplosionUrl from "url:./sounds/explosion_yellow.wav";
@@ -47,19 +47,24 @@ async function createGameAudioContext(): Promise<GameAudioContext> {
 }
 
 async function init() {
+    const container = new Container();
+    // Fixme: create AssetService, which takes care of loading that stuff
     // Load some sounds
     const audioBuffers = await createGameAudioContext();
 
-    // Use PoolAllocator instead to use object pooling
-    const allocator = new Allocator();
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const engine = new Engine(allocator);
-    // some manual dependencies, which can be used by component factories and services
-    engine.container.set(GameContext2D, context2D);
-    engine.container.set(GameAudioContext, audioBuffers);
-    // By getting the SoundService, we also create an instance of it.
-    engine.container.get(SoundService);
+    const engine = new Engine({
+        allocator: new PoolAllocator(),
+        container,
+    });
 
+    // some manual dependencies, which can be used by component factories and services
+    container.set(GameContext2D, context2D);
+    container.set(GameAudioContext, audioBuffers);
+    // fixme: let SoundService create the audiocontext? nope, it needs the engine first
+    // By getting the SoundService, we also create an instance of it.
+    container.get(SoundService);
+
+    // fixme: Need to re-setup entity factory when blueprints change.. create service for this?
     const factory = setupEntityFactory(engine);
 
     for (const [type, x, y, width, height] of defaultLevel) {
@@ -77,6 +82,7 @@ async function init() {
         );
     }
 
+    // fixme: create service for engine code?
     engine.systems.add(MovementSystem);
     engine.systems.add(RenderSystem);
     engine.systems.add(InputSystem);
@@ -107,6 +113,7 @@ init();
 // Anything that isn't explicitly handled needs a forced reload.
 // Otherwise the game might be created twice
 if (module.hot) {
+    // fixme: reuse old game instead of reloading
     module.hot.dispose(() => {
         window.location.reload();
     });

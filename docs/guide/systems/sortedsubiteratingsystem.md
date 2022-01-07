@@ -6,7 +6,7 @@ For example, render a sprite and above that some particle effects of a player. B
 [SortedSubIteratingSystem](../../api/classes/sortedsubiteratingsystem.md) allows to add multiple [SubSystem](../../api/classes/subsystem.md) instances to the system.
 
 ```typescript
-@service("SpriteRenderSystem")
+@service()
 class SpriteRenderSystem extends SubSystem {
     public constructor(engine: Engine) {
 		super(engine, Family.all(SpriteComponent).get());
@@ -17,7 +17,7 @@ class SpriteRenderSystem extends SubSystem {
 	}
 }
 
-@service("ParticleRenderSystem")
+@service()
 class ParticleRenderSystem extends SubSystem {
     public constructor(engine: Engine) {
 		super(engine, Family.all(ParticlesComponent).get());
@@ -28,7 +28,7 @@ class ParticleRenderSystem extends SubSystem {
 	}
 }
 
-@service("RenderSystem")
+@service()
 class RenderSystem extends SortedSubIteratingSystem {
     public constructor(engine: Engine) {
 		super(engine, Family.all(PositionComponent).one(SpriteComponent, ParticlesComponent).get(), comparator);

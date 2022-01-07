@@ -21,19 +21,14 @@ In short:
 
 ## @service Decorator
 
-All services (for example EntitySystem implementations) must be annotated with `@service(name, config?)`:
+All services (for example EntitySystem implementations) must be annotated with `@service(config?)`:
 
 ```typescript
-@service("MovementSystem")
+@service()
 class MovementSystem extends EntitySystem {
     // ...
 }
 ```
-
-Now, you might wonder why you need to specify a (unique) name to the decorator. This is here to enable [hot module replacement](./hot-module-replacement.md).
-Ideally, this would be automatically supplied, but I haven't found a way to do this reliably yet.
-
-You should remember, that this name is needed and must be unique within your application. If you plan on providing a library with services, I suggest to establish a naming convention. For example `<package-name>/<service-name>`.
 
 ### Transient Services
 
@@ -41,7 +36,7 @@ By default, all services are non-transient. This means, that each time you requi
 Making it transient means, that a new instance is created whenever someone requests the service.
 
 ```typescript
-@service("RandomService", { transient: true })
+@service({ transient: true })
 class RandomService {}
 ```
 
@@ -49,12 +44,12 @@ class RandomService {}
 
 If you need an instance of another service in a service, you can simply put it into the constructor:
 ```typescript
-@service("AssetService")
+@service()
 class AssetService {
     // ...
 }
 
-@service("RenderSystem")
+@service()
 class RenderSystem extends EntitySystem {
     public constructor(assetService: AssetService) {
         //...
@@ -85,7 +80,7 @@ class MyData { /* ... */ }
 engine.container.set(MyData, new MyData());
 
 // Use constructor injection
-@service("DataService")
+@service()
 class DataService {
     public constructor(data: MyData) {
         //...
@@ -107,7 +102,7 @@ export const GameContext2D = InjectSymbol<GameContext2D>("GameContext2D");
 engine.container.set(GameContext2D, canvas.getContext("2d"));
 
 // Use constructor injection
-@service("DataService")
+@service()
 class DataService {
     public constructor(context2D: GameContext2D) {
         //...

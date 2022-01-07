@@ -1,7 +1,7 @@
 import { enableHotSwapProxying } from "../Container";
 import type { HotSwapType } from "../hotSwapProxy";
 import { performHotSwap } from "../hotSwapRegistry";
-import { metaRegistry } from "../metaRegistry";
+import { metaRegistry, ServiceMeta } from "../metaRegistry";
 import type { Constructor } from "../Constructor";
 
 export interface ImportHot {
@@ -10,6 +10,7 @@ export interface ImportHot {
     data: any;
 }
 
+// fixme: decide on interface vs type
 export type ServiceConfig = {
     /** A transient service will return a new instance every time you request it from the container. */
     transient?: boolean;
@@ -18,27 +19,35 @@ export type ServiceConfig = {
     hot?: ImportHot;
 };
 
+interface ImportHotData {
+    meta: ServiceMeta<HotSwapType>;
+}
+
 // eslint-disable-next-line jsdoc/require-returns
 /**
  * Decorate a service class.
  *
- * @param id The unique ID for the service.
  * @param config The configuration for the service.
  */
-export function service<TName extends string>(id: TName, config: ServiceConfig = {}) {
+export function service(config: ServiceConfig = {}) {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return (target: Constructor<HotSwapType>) => {
-        const meta = metaRegistry.registerService(target, id, config.transient);
-        const { hot } = config;
+        const { hot, transient } = config;
         if (hot) {
+            const oldData = hot.data as ImportHotData | undefined;
+            const id: symbol = oldData?.meta.id ?? Symbol(target.name);
+            const meta = metaRegistry.registerService(target, id, transient);
+
             enableHotSwapProxying();
-            if (hot.data?.oldMeta) {
-                performHotSwap(meta, hot.data.oldMeta);
+            if (oldData?.meta) {
+                performHotSwap(meta, oldData.meta);
             }
             hot.accept();
-            hot.dispose((data) => {
-                data.oldMeta = meta;
+            hot.dispose((data: ImportHotData) => {
+                data.meta = meta;
             });
+        } else {
+            metaRegistry.registerService(target, Symbol(target.name), transient);
         }
     };
 }

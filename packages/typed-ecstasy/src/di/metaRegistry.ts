@@ -3,8 +3,8 @@ import { getRetainablePropsRecursively, metaData } from "./metaData";
 import { Constructor } from "./Constructor";
 
 /** @internal */
-export type ServiceMeta<TName extends string, TType extends HotSwapType> = {
-    id: TName;
+export type ServiceMeta<TType extends HotSwapType> = {
+    id: symbol;
     transient?: boolean;
     _unusedType?: TType;
     params: Array<Constructor<unknown>>;
@@ -12,22 +12,22 @@ export type ServiceMeta<TName extends string, TType extends HotSwapType> = {
     constructor: Constructor<TType>;
 };
 
-const serviceMetaById = new Map<string, ServiceMeta<string, HotSwapType>>();
+const serviceMetaById = new Map<symbol, ServiceMeta<HotSwapType>>();
 
 /** @internal */
 export const metaRegistry = {
-    registerService(constructor: Constructor<HotSwapType>, id: string, transient?: boolean) {
+    registerService(constructor: Constructor<HotSwapType>, id: symbol, transient?: boolean) {
         const params = metaData.paramTypes.get(constructor);
         if (!params) throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
         params.forEach((param, index) => {
             if (param === Function) {
                 throw new Error(
-                    `Constructor parameter ${index} of ${id} has been passed as "Function". You probably used a type import instead of a normal import.`
+                    `Constructor parameter ${index} of ${id.toString()} has been passed as "Function". You probably used a type import instead of a normal import.`
                 );
             }
         });
 
-        const meta: ServiceMeta<string, HotSwapType> = {
+        const meta: ServiceMeta<HotSwapType> = {
             id,
             transient,
             constructor,
@@ -52,9 +52,9 @@ export const metaRegistry = {
 
         const meta = serviceMetaById.get(id);
         if (!meta) {
-            throw new Error(`Found id "${id}", but no metadata.. this should not be possible!`);
+            throw new Error(`Found id "${id.toString()}", but no metadata.. this should not be possible!`);
         }
-        return meta as ServiceMeta<string, T>;
+        return meta as ServiceMeta<T>;
     },
     getId(constructor: Constructor<HotSwapType>) {
         return metaData.serviceId.getOwn(constructor);

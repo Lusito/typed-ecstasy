@@ -5,10 +5,10 @@ abstract class SystemMockBase extends EntitySystem {
     public update(): void {}
 }
 
-@service("SystemMockA")
+@service()
 class SystemMockA extends SystemMockBase {}
 
-@service("SystemMockB")
+@service()
 class SystemMockB extends SystemMockBase {}
 
 describe("EntitySystemManager", () => {

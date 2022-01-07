@@ -8,6 +8,11 @@ import { componentMetaRegistry } from "./componentMetaRegistry";
 
 const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 
+export interface EngineOptions {
+    allocator?: Allocator;
+    container?: Container;
+}
+
 /**
  * The heart of the Entity framework. It is responsible for keeping track of entities and systems.
  * The engine should be updated every tick via the {@link update} method.
@@ -17,7 +22,7 @@ export class Engine {
 
     private readonly allocator: Allocator;
 
-    public readonly container = new Container();
+    public readonly container: Container;
 
     public readonly systems: EntitySystemManager;
 
@@ -28,13 +33,13 @@ export class Engine {
     /**
      * Creates a new Engine.
      *
-     * @param allocator The optional allocator to use for creating entities & components.
+     * @param options The optional allocator to use for creating entities & components.
      */
-    public constructor(allocator: Allocator = new Allocator()) {
-        this.allocator = allocator;
-        this.entities = new EntityManager(allocator);
+    public constructor(options: EngineOptions = {}) {
+        this.allocator = options.allocator ?? new Allocator();
+        this.container = options.container ?? new Container();
+        this.entities = new EntityManager(this.allocator);
         this.container.set(Engine, this);
-        this.container.set(Container, this.container);
         this.systems = this.container.get(EntitySystemManager);
 
         // When the meta changes, just delete the factory and wait for it to be recreated on demand

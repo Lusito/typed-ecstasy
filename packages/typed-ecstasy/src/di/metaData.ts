@@ -17,7 +17,7 @@ function createMetaHelper<T>(symbol: string | symbol) {
 /** @internal */
 export const metaData = {
     paramTypes: createMetaHelper<any[]>("design:paramtypes"),
-    serviceId: createMetaHelper<string>(Symbol("Service ID")),
+    serviceId: createMetaHelper<symbol>(Symbol("Service ID")),
     retainable: createMetaHelper<Set<string | symbol>>(Symbol("Service retainable properties")),
 };
 

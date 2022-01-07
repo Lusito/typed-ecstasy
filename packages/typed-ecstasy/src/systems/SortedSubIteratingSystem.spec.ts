@@ -21,7 +21,7 @@ const ComponentB = declareMarkerComponent("B");
 
 const processEntity = jest.fn();
 
-@service("SubSystemA")
+@service()
 class SubSystemA extends SubSystem {
     public processEntity = processEntity;
 
@@ -30,7 +30,7 @@ class SubSystemA extends SubSystem {
     }
 }
 
-@service("SubSystemB")
+@service()
 class SubSystemB extends SubSystem {
     public processEntity = processEntity;
 
@@ -39,7 +39,7 @@ class SubSystemB extends SubSystem {
     }
 }
 
-@service("SubSystemC")
+@service()
 class SubSystemC extends SubSystem {
     public processEntity = processEntity;
 
@@ -48,7 +48,7 @@ class SubSystemC extends SubSystem {
     }
 }
 
-@service("TestSystem")
+@service()
 class TestSystem extends SortedSubIteratingSystem {
     public constructor(engine: Engine, subSystems: SubSystemManager) {
         super(

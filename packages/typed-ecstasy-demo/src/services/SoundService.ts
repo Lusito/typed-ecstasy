@@ -9,7 +9,7 @@ import { BallComponent } from "../components/BallComponent";
 const soundFamily = Family.all(SoundComponent).get();
 const ballFamily = Family.all(BallComponent).get();
 
-@service("game/SoundService", { hot: module.hot })
+@service({ hot: module.hot })
 export class SoundService {
     private readonly engine: Engine;
     private readonly connections = new SignalConnections();

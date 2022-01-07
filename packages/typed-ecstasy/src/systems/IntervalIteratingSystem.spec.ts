@@ -11,7 +11,7 @@ const IntervalComponentSpy = declareComponent("IntervalComponentSpy").withoutCon
     },
 });
 
-@service("IntervalIteratingSystemSpy")
+@service()
 class IntervalIteratingSystemSpy extends IntervalIteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(IntervalComponentSpy).get(), deltaTime * 2.0);

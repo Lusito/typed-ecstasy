@@ -31,6 +31,7 @@ export class Container {
      */
     public constructor(parent?: Container) {
         this.parent = parent;
+        this.set(Container, this);
     }
 
     /**
@@ -70,7 +71,7 @@ export class Container {
         );
     }
 
-    private getForMeta<T extends HotSwapType>(meta: ServiceMeta<string, T>) {
+    private getForMeta<T extends HotSwapType>(meta: ServiceMeta<T>) {
         let value = this.find(meta.id);
         if (!value) {
             value = this.create(meta);
@@ -106,7 +107,7 @@ export class Container {
      * @param meta The metadata to create a value for.
      * @returns The newly created value.
      */
-    private create(meta: ServiceMeta<string, HotSwapType>): HotSwapType {
+    private create(meta: ServiceMeta<HotSwapType>): HotSwapType {
         const params = meta.params.map(this.get);
         const Class = meta.constructor as { new (...args: any[]): HotSwapType };
         return new Class(...params);

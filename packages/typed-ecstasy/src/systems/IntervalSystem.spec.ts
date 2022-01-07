@@ -2,7 +2,7 @@ import { service, Engine, IntervalSystem } from "typed-ecstasy";
 
 const deltaTime = 0.1;
 
-@service("IntervalSystemSpy")
+@service()
 class IntervalSystemSpy extends IntervalSystem {
     public numUpdates = 0;
 

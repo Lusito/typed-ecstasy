@@ -8,7 +8,7 @@ import { InputComponent } from "../components/InputComponent";
 
 const family = Family.all(PositionComponent, ColorComponent, SizeComponent).get();
 
-@service("game/RenderSystem", { hot: module.hot })
+@service({ hot: module.hot })
 export class RenderSystem extends IteratingSystem {
     private readonly context2D: GameContext2D;
 

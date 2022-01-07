@@ -5,5 +5,5 @@ import { AbstractSystemManager } from "./AbstractSystemManager";
 /**
  * A manager for entity systems.
  */
-@service("typed-ecstasy/EntitySystemManager")
+@service()
 export class EntitySystemManager extends AbstractSystemManager<EntitySystem> {}

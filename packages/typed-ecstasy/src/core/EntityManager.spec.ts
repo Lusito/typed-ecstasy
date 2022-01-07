@@ -24,7 +24,7 @@ class EntityListenerMock {
     };
 }
 
-@service("EntitySystemMock")
+@service()
 class EntitySystemMock extends EntitySystem {
     public updates: number[] | null = [];
 
@@ -44,7 +44,7 @@ class EntitySystemMock extends EntitySystem {
     }
 }
 
-@service("UpdateSystem")
+@service()
 class UpdateSystem<T> extends EntitySystem {
     public result: T | null = null;
 
@@ -67,7 +67,7 @@ const PositionComponent = declareComponent("Position").withoutConfig<PositionDat
     },
 });
 
-@service("CombinedSystem")
+@service()
 class CombinedSystem extends EntitySystem {
     public entities: Entity[] | null = null;
 
@@ -83,7 +83,7 @@ class CombinedSystem extends EntitySystem {
     }
 }
 
-@service("RemoveEntityTwiceSystem")
+@service()
 class RemoveEntityTwiceSystem extends EntitySystem {
     private entities: Entity[] | null = null;
 
@@ -109,7 +109,7 @@ class RemoveEntityTwiceSystem extends EntitySystem {
     }
 }
 
-@service("EntityRemoverSystem")
+@service()
 class EntityRemoverSystem extends EntitySystem {
     public entity: Entity = 0 as any;
 

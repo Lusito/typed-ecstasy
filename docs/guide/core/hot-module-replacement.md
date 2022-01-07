@@ -22,13 +22,13 @@ Enabling HMR in typed-ecstasy is a two-step process.
 The first step is to supply the hot API to the `@service` decorator, so that the logic can be replaced:
 
 ```ts
-@service("MovementSystem", { hot: module.hot })
+@service({ hot: module.hot })
 ```
 
 Or if you are using webpack in strict ESM Mode:
 
 ```ts
-@service("MovementSystem", { hot: import.meta.webpackHot })
+@service({ hot: import.meta.webpackHot })
 ```
 
 Once you do that, special code will will be used to proxy all references to services. Note that this will only have effect while running the dev-server. Production build will **not** have any negative impacts if you leave it, so it's good practice to always specify it for all services.
@@ -89,7 +89,7 @@ Notice how we use symbols to avoid naming conflicts:
 ```ts
 import { service, PostConstruct, PreDestroy } from "typed-ecsasy";
 
-@service("MyService")
+@service()
 class MyService {
     // ...
     protected [PostConstruct](): void {

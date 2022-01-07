@@ -9,7 +9,7 @@ import { GameState } from "../services/GameState";
 
 const family = Family.all(InputComponent, PositionComponent, SizeComponent).get();
 
-@service("game/InputSystem", { hot: module.hot })
+@service({ hot: module.hot })
 export class InputSystem extends IteratingSystem {
     private readonly gameState: GameState;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

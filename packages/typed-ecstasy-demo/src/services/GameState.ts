@@ -9,7 +9,7 @@ import { TriggerComponent } from "../components/TriggerComponent";
 const ballsFamily = Family.all(BallComponent).get();
 const bricksFamily = Family.all(CollidableComponent, TriggerComponent, ColorComponent).get();
 
-@service("game/GameState", { hot: module.hot })
+@service({ hot: module.hot })
 export class GameState {
     private readonly engine: Engine;
     private readonly balls: readonly Entity[] = [];

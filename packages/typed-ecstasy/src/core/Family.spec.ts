@@ -9,7 +9,7 @@ const ComponentD = declareMarkerComponent("D");
 const ComponentE = declareMarkerComponent("E");
 const ComponentF = declareMarkerComponent("F");
 
-@service("TestSystemA")
+@service()
 class TestSystemA extends IteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(ComponentA).get());

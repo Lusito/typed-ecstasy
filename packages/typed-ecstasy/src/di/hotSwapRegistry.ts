@@ -4,7 +4,7 @@ import type { ServiceMeta } from "./metaRegistry";
 import { PostConstruct, PreDestroy, ServiceInstance } from "./symbols";
 
 interface ListEntry {
-    id: string;
+    id: symbol;
     proxyRef: WeakRef<HotSwapType>;
     containerRef: WeakRef<Container>;
 }
@@ -46,7 +46,7 @@ function restoreRetainableProps(
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
-export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, T>, oldMeta: ServiceMeta<string, T>) {
+export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<T>, oldMeta: ServiceMeta<T>) {
     list = list.filter(({ proxyRef, containerRef, id }) => {
         const proxy = proxyRef.deref();
         const container = containerRef.deref();
@@ -78,7 +78,7 @@ export function performHotSwap<T extends HotSwapType>(meta: ServiceMeta<string, 
 
 // eslint-disable-next-line jsdoc/require-returns, jsdoc/require-param
 /** @internal */
-export function registerHotSwapProxy(id: string, proxy: HotSwapType, container: Container) {
+export function registerHotSwapProxy(id: symbol, proxy: HotSwapType, container: Container) {
     list.push({
         id,
         proxyRef: new WeakRef(proxy),

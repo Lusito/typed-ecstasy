@@ -39,7 +39,7 @@ const factory: EntityFactory<EntityConfig> = engine.container.get(EntityFactory)
 In some situations, you'll want to allocate entities and components in your system. Use the engine property to do so:
 
 ```typescript
-@service("ExplosionSystem")
+@service()
 class ExplosionSystem extends EntitySystem {
     // ...
     protected onExplode(entity: Entity): void {

@@ -26,13 +26,13 @@ abstract class EntitySystemMockBase extends EntitySystem {
     }
 }
 
-@service("EntitySystemMock")
+@service()
 class EntitySystemMock extends EntitySystemMockBase {}
 
-@service("EntitySystemMockA")
+@service()
 class EntitySystemMockA extends EntitySystemMockBase {}
 
-@service("EntitySystemMockB")
+@service()
 class EntitySystemMockB extends EntitySystemMockBase {}
 
 type CounterData = {
@@ -44,7 +44,7 @@ const CounterComponent = declareComponent("Counter").withoutConfig<CounterData>(
     },
 });
 
-@service("CounterSystem")
+@service()
 class CounterSystem extends EntitySystem {
     public entities: Entity[] | null = null;
 
@@ -70,7 +70,7 @@ class CounterSystem extends EntitySystem {
     }
 }
 
-@service("UpdateSystem")
+@service()
 class UpdateSystem<T> extends EntitySystem {
     public result: T | null = null;
 

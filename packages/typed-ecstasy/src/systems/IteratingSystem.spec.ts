@@ -14,7 +14,7 @@ const ComponentA = declareMarkerComponent("A");
 const ComponentB = declareMarkerComponent("B");
 const ComponentC = declareMarkerComponent("C");
 
-@service("IteratingSystemMock")
+@service()
 class IteratingSystemMock extends IteratingSystem {
     public numUpdates = 0;
 
@@ -47,7 +47,7 @@ const IndexComponent = declareComponent("IndexComponent").withoutConfig<IndexCom
     },
 });
 
-@service("IteratingComponentRemovalSystem")
+@service()
 class IteratingComponentRemovalSystem extends IteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(SpyComponent, IndexComponent).get());
@@ -66,7 +66,7 @@ class IteratingComponentRemovalSystem extends IteratingSystem {
     }
 }
 
-@service("IteratingRemovalSystem")
+@service()
 class IteratingRemovalSystem extends IteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(SpyComponent, IndexComponent).get());

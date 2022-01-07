@@ -3,7 +3,7 @@ import { AbstractSystem, AbstractSystemManager, Engine, service, addMetaData } f
 
 class TestSystem extends AbstractSystem<TestSystem, any> {}
 
-@service("TestSystemManager")
+@service()
 class TestSystemManager extends AbstractSystemManager<TestSystem> {}
 
 @addMetaData
@@ -17,10 +17,10 @@ abstract class SystemMockBase extends TestSystem {
     public update() {}
 }
 
-@service("SystemMockA")
+@service()
 class SystemMockA extends SystemMockBase {}
 
-@service("SystemMockB")
+@service()
 class SystemMockB extends SystemMockBase {}
 
 describe("SystemManager", () => {

@@ -31,7 +31,7 @@ export type EntityConfigOverrides<T> = {
  *
  * @template TEntityConfig The entity configuration type.
  */
-@service("typed-ecstasy/EntityFactory")
+@service()
 export class EntityFactory<TEntityConfig> {
     private readonly entityBlueprints: Record<string, ComponentBlueprint[]> = {};
     private readonly engine: Engine;

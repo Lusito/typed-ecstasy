@@ -102,7 +102,7 @@ const family = Family.all(PositionComponent, SizeComponent, VelocityComponent).g
 const tempNormalA = { x: 0, y: 0 };
 const tempNormalB = { x: 0, y: 0 };
 
-@service("game/MovementSystem", { hot: module.hot })
+@service({ hot: module.hot })
 export class MovementSystem extends IteratingSystem {
     private readonly gameState: GameState;
     private readonly sounds: SoundService;

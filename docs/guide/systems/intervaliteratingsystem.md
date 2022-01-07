@@ -3,7 +3,7 @@
 It is also possible to combine the logic of [IteratingSystem](iteratingsystem.md) and [IntervalSystem](intervalsystem.md) thanks to [IntervalIteratingSystem](../../api/classes/intervaliteratingsystem.md). In this case, you will need to implement its [processEntity()](../../api/classes/intervaliteratingsystem.md#processentity) method.
 
 ```typescript
-@service("MovementSystem")
+@service()
 class MovementSystem extends IntervalSystem {
 	public constructor(engine: Engine) {
 		super(engine, Family.all(PositionComponent, VelocityComponent).get(), 0.016);

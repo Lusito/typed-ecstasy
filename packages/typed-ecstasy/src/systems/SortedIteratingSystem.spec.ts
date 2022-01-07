@@ -39,7 +39,7 @@ function comparator(a: Entity, b: Entity): number {
     return ac.zLayer - bc.zLayer;
 }
 
-@service("SortedIteratingSystemMock")
+@service()
 class SortedIteratingSystemMock extends SortedIteratingSystem {
     public receivedNames: string[] = [];
 
@@ -53,21 +53,21 @@ class SortedIteratingSystemMock extends SortedIteratingSystem {
     }
 }
 
-@service("SortedIteratingSystemMockA")
+@service()
 class SortedIteratingSystemMockA extends SortedIteratingSystemMock {
     public constructor(engine: Engine) {
         super(engine, Family.all(OrderComponent).get());
     }
 }
 
-@service("SortedIteratingSystemMockB")
+@service()
 class SortedIteratingSystemMockB extends SortedIteratingSystemMock {
     public constructor(engine: Engine) {
         super(engine, Family.all(OrderComponent, ComponentB).get());
     }
 }
 
-@service("IteratingComponentRemovalSystem")
+@service()
 class IteratingComponentRemovalSystem extends SortedIteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(SpyComponent, OrderComponent, IndexComponent).get(), comparator);
@@ -86,7 +86,7 @@ class IteratingComponentRemovalSystem extends SortedIteratingSystem {
     }
 }
 
-@service("IteratingRemovalSystem")
+@service()
 class IteratingRemovalSystem extends SortedIteratingSystem {
     public constructor(engine: Engine) {
         super(engine, Family.all(SpyComponent, IndexComponent).get(), comparator);

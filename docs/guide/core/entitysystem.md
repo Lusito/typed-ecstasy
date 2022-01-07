@@ -37,7 +37,7 @@ public abstract update(deltaTime: number): void;
 For instance, let us say we want to change our entities' position according to their velocity. We can create a `MovementSystem` that takes care of it.
 
 ```typescript
-@service("MovementSystem")
+@service()
 class MovementSystem extends EntitySystem {
 	private entities: Entity[] = [];
 	
