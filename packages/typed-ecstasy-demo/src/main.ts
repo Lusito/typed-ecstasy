@@ -1,8 +1,7 @@
 import "@abraham/reflection";
-import { PoolAllocator, Container, Engine } from "typed-ecstasy";
+import { PoolAllocator, Container, Engine, EntityFactory } from "typed-ecstasy";
 import { createAudioContext } from "sounts";
 
-import { setupEntityFactory } from "./entityFactory";
 import { defaultLevel } from "./levels/default";
 import { InputSystem } from "./systems/InputSystem";
 import { MovementSystem } from "./systems/MovementSystem";
@@ -10,6 +9,7 @@ import { RenderSystem } from "./systems/RenderSystem";
 import { GameContext2D, GameSounds } from "./types";
 import { SoundService } from "./services/SoundService";
 import { AssetService } from "./services/AssetService";
+import { BlueprintService } from "./services/BlueprintService";
 
 // This is a simplified example of how you would use an entity factory to assemble entities
 
@@ -31,11 +31,12 @@ async function init() {
     // some manual dependencies, which can be used by component factories and services
     container.set(GameContext2D, context2D);
     container.set(GameSounds, gameSounds);
-    // By getting the SoundService, we also create an instance of it.
+    // By getting the SoundService, we also create an instance of it (if it didn't exist already).
     container.get(SoundService);
+    container.get(BlueprintService);
 
-    // fixme: Need to re-setup entity factory when blueprints change.. create service for this?
-    const factory = setupEntityFactory(engine);
+    // fixme: How to handle level changes? reload?
+    const factory: EntityFactory<EntityConfig> = container.get(EntityFactory);
 
     for (const [type, x, y, width, height] of defaultLevel) {
         engine.entities.add(

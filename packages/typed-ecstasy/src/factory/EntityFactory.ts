@@ -33,7 +33,7 @@ export type EntityConfigOverrides<T> = {
  */
 @service()
 export class EntityFactory<TEntityConfig> {
-    private readonly entityBlueprints: Record<string, ComponentBlueprint[]> = {};
+    private entityBlueprints: Record<string, ComponentBlueprint[]> = {};
     private readonly engine: Engine;
 
     /**
@@ -51,6 +51,13 @@ export class EntityFactory<TEntityConfig> {
      */
     public addEntityBlueprint(name: string, blueprint: ComponentBlueprint[]) {
         this.entityBlueprints[name] = blueprint;
+    }
+
+    /**
+     * Remove all entity blueprints.
+     */
+    public reset() {
+        this.entityBlueprints = {};
     }
 
     /**
