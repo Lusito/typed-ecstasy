@@ -1,4 +1,6 @@
-import type { EntityName } from "../blueprints";
+import * as blueprints from "../blueprints";
+
+export type EntityName = keyof typeof blueprints;
 
 export type LevelEntity = [type: EntityName, x: number, y: number, width?: number, height?: number];
 
@@ -33,5 +35,5 @@ export const defaultLevel: LevelEntity[] = [
     ["wall", 620 - wallSize, 0, wallSize, 710],
     ["wall", wallSize, 0, 620 - 2 * wallSize, wallSize],
     ["wall", wallSize, 710 - wallSize, 620 - 2 * wallSize, wallSize],
-    ["void", wallSize, 710 - wallSize * 2, 620 - 2 * wallSize, wallSize],
+    ["deadZone", wallSize, 710 - wallSize * 2, 620 - 2 * wallSize, wallSize],
 ];

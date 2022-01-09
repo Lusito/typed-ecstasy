@@ -13,6 +13,7 @@ export * from "./core/SubSystem";
 export * from "./core/SubSystemManager";
 export * from "./di";
 export * from "./factory/ComponentBlueprint";
+export * from "./factory/EntityBlueprint";
 export * from "./factory/EntityFactory";
 export * from "./pooling/Pool";
 export * from "./pooling/PoolAllocator";

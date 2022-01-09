@@ -1,4 +1,6 @@
-export const ballBlueprint: EntityConfig = {
+import { createEntityBlueprint } from "typed-ecstasy";
+
+export const ball = createEntityBlueprint<EntityConfig>({
     Position: {},
     Size: {
         width: 12,
@@ -13,4 +15,4 @@ export const ballBlueprint: EntityConfig = {
     Sound: {
         create: "hitPaddle",
     },
-};
+});

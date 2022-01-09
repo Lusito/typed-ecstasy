@@ -1,4 +1,6 @@
-export const wallBlueprint: EntityConfig = {
+import { createEntityBlueprint } from "typed-ecstasy";
+
+export const wall = createEntityBlueprint<EntityConfig>({
     Position: {},
     Size: {},
     Collidable: {},
@@ -8,4 +10,4 @@ export const wallBlueprint: EntityConfig = {
     Sound: {
         hit: "hitWall",
     },
-};
+});

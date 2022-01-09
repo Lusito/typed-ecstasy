@@ -1,11 +1,8 @@
 /* eslint-disable dot-notation */
-import type { ComponentBlueprint } from "./ComponentBlueprint";
 import { Engine } from "../core/Engine";
 import type { ComponentType } from "../core/Component";
 import { service } from "../di";
-
-export type UnknownComponentConfig = Record<string, unknown> | true;
-export type UnknownEntityConfig = Record<string, UnknownComponentConfig>;
+import type { EntityBlueprint } from "./EntityBlueprint";
 
 export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T extends ComponentType<
     infer TName,
@@ -32,8 +29,10 @@ export type EntityConfigOverrides<T> = {
  * @template TEntityConfig The entity configuration type.
  */
 @service()
+// fixme: allow specification of valid entity names
+// maybe make this class abstract, so that the game can much easier implement the types?
 export class EntityFactory<TEntityConfig> {
-    private entityBlueprints: Record<string, ComponentBlueprint[]> = {};
+    private entityBlueprints: Record<string, EntityBlueprint> = {};
     private readonly engine: Engine;
 
     /**
@@ -46,18 +45,10 @@ export class EntityFactory<TEntityConfig> {
     }
 
     /**
-     * @param name The name used to identify the entity blueprint.
-     * @param blueprint The list of component blueprints for this entity.
+     * @param blueprints The blueprints to use.
      */
-    public addEntityBlueprint(name: string, blueprint: ComponentBlueprint[]) {
-        this.entityBlueprints[name] = blueprint;
-    }
-
-    /**
-     * Remove all entity blueprints.
-     */
-    public reset() {
-        this.entityBlueprints = {};
+    public setEntityBlueprints(blueprints: Record<string, EntityBlueprint>) {
+        this.entityBlueprints = blueprints;
     }
 
     /**
