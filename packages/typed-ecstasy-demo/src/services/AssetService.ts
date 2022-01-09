@@ -1,4 +1,4 @@
-import { PostConstruct, retainable, service } from "typed-ecstasy";
+import { InjectSymbol, PostConstruct, retainable, service } from "typed-ecstasy";
 /* eslint-disable import/no-unresolved, import/extensions */
 import yellowExplosionUrl from "url:../sounds/explosion_yellow.wav";
 import greenExplosionUrl from "url:../sounds/explosion_green.wav";
@@ -8,7 +8,31 @@ import hitPaddleUrl from "url:../sounds/hit_paddle.wav";
 import hitWallUrl from "url:../sounds/hit_wall.wav";
 /* eslint-enable import/no-unresolved, import/extensions */
 
-import type { GameSound, GameSoundKey, GameSounds } from "../types";
+export interface GameSound {
+    key: GameSoundKey;
+    path: string;
+    buffer: AudioBuffer;
+}
+
+/**
+ * GameSounds is just an example for a custom manually set dependency.
+ * You can add as many as you like.
+ */
+export type GameSounds = {
+    hitPaddle: GameSound;
+    hitWall: GameSound;
+    yellowExplosion: GameSound;
+    greenExplosion: GameSound;
+    orangeExplosion: GameSound;
+    redExplosion: GameSound;
+};
+
+// Notice how we also create and export a value here (with the same name as the type above).
+// This is required, so that it can be used in the dependency injection.
+// If you have a class, this hack is not needed, since classes already have a type and a value.
+export const GameSounds = InjectSymbol<GameSounds>("GameSounds");
+
+export type GameSoundKey = keyof GameSounds;
 
 type GameSoundPaths = { [P in GameSoundKey]: string };
 
@@ -68,6 +92,7 @@ export class AssetService {
     protected [PostConstruct]() {
         const { sounds } = this;
         if (sounds) {
+            // fixme: new and removed sounds
             (Object.keys(paths) as GameSoundKey[]).map(async (key) => {
                 const sound = sounds[key];
                 const path = paths[key];

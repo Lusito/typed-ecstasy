@@ -1,6 +1,6 @@
 import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
 
-import { GameSound, GameSoundKey, GameSounds } from "../types";
+import { GameSound, GameSoundKey, GameSounds } from "../services/AssetService";
 
 // First of all, we need the component data type. This is what you will interact with in your entity systems.
 export type SoundData = {

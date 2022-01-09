@@ -96,7 +96,7 @@ When you don't have a class, it's a little tricker, but possible nonetheless.
 export type GameContext2D = CanvasRenderingContext2D;
 // Then we create a value, which must have the same name as the type.
 export const GameContext2D = InjectSymbol<GameContext2D>("GameContext2D");
-// The string parameter to InjectSymbol helps identify problems when debugging.
+// The string parameter to InjectSymbol must be unique, so that we always get the same symbol.
 
 // At initialization, set the value on your container:
 engine.container.set(GameContext2D, canvas.getContext("2d"));

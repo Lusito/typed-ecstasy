@@ -1,21 +1,22 @@
-import { Engine, Entity, Family, IteratingSystem, retainable, service } from "typed-ecstasy";
+import { Engine, Entity, Family, InjectSymbol, IteratingSystem, retainable, service } from "typed-ecstasy";
 
 import { PositionComponent } from "../components/PositionComponent";
 import { ColorComponent } from "../components/ColorComponent";
-import { GameContext2D } from "../types";
 import { SizeComponent } from "../components/SizeComponent";
 import { InputComponent } from "../components/InputComponent";
+
+export const CanvasRenderingContext2D = InjectSymbol<CanvasRenderingContext2D>("CanvasRenderingContext2D");
 
 const family = Family.all(PositionComponent, ColorComponent, SizeComponent).get();
 
 @service({ hot: module.hot })
 export class RenderSystem extends IteratingSystem {
-    private readonly context2D: GameContext2D;
+    private readonly context2D: CanvasRenderingContext2D;
 
     @retainable
     private accumulator = 0;
 
-    public constructor(engine: Engine, context2D: GameContext2D) {
+    public constructor(engine: Engine, context2D: CanvasRenderingContext2D) {
         super(engine, family);
         this.context2D = context2D;
     }
