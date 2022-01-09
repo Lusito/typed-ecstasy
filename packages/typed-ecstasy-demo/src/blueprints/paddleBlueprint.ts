@@ -1,3 +1,5 @@
+import { EntityConfig } from "typed-ecstasy";
+
 export const paddle: EntityConfig = {
     Position: {},
     Size: {

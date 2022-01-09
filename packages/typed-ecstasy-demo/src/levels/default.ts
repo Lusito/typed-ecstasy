@@ -1,6 +1,4 @@
-import * as blueprints from "../blueprints";
-
-export type EntityName = keyof typeof blueprints;
+import type { EntityName } from "../services/EntityFactory";
 
 export type LevelEntity = [type: EntityName, x: number, y: number, width?: number, height?: number];
 

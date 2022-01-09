@@ -18,6 +18,6 @@ export const ColorComponent = declareComponent("Color").withConfig<ColorData, Co
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof ColorComponent> {}
 }

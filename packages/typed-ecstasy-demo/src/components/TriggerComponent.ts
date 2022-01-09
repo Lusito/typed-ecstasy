@@ -24,6 +24,6 @@ export const TriggerComponent = declareComponent("Trigger").withConfig<TriggerDa
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof TriggerComponent> {}
 }

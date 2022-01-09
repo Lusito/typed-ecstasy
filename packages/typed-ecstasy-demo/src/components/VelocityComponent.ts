@@ -18,6 +18,6 @@ export const VelocityComponent = declareComponent("Velocity").withConfig<Velocit
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof VelocityComponent> {}
 }

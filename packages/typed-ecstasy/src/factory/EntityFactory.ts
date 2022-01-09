@@ -4,6 +4,10 @@ import type { ComponentType } from "../core/Component";
 import { addMetaData } from "../di";
 import { ComponentBlueprint } from "./ComponentBlueprint";
 
+/** Used for declaration merging. */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface EntityConfig {}
+
 export type EntityBlueprint = ComponentBlueprint[];
 
 export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T extends ComponentType<
@@ -18,21 +22,18 @@ export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T exte
 
 /**
  * An object with overrides for each component.
- *
- * @template T The EntityConfig to override.
  */
-export type EntityConfigOverrides<T> = {
-    [P in keyof T]?: Partial<T[P]>;
+export type EntityConfigOverrides = {
+    [P in keyof EntityConfig]?: Partial<EntityConfig[P]>;
 };
 
 /**
  * A factory to assemble {@link Entity entities} from blueprints.
  *
  * @template TName The possible entity names.
- * @template TEntityConfig The entity configuration type.
  */
 @addMetaData
-export abstract class AbstractEntityFactory<TName extends string, TEntityConfig> {
+export abstract class AbstractEntityFactory<TName extends string> {
     private entityBlueprints: Record<string, EntityBlueprint> = {};
     private readonly engine: Engine;
 
@@ -48,7 +49,7 @@ export abstract class AbstractEntityFactory<TName extends string, TEntityConfig>
      *
      * @param blueprints The blueprints to use.
      */
-    protected setBlueprints(blueprints: Record<string, TEntityConfig>) {
+    protected setBlueprints(blueprints: Record<string, EntityConfig>) {
         this.entityBlueprints = {};
         for (const name of Object.keys(blueprints)) {
             const config = blueprints[name];
@@ -68,7 +69,7 @@ export abstract class AbstractEntityFactory<TName extends string, TEntityConfig>
      * @returns A fully assembled Entity or null if the assembly failed.
      * @throws An exception if the entity could not be assembled.
      */
-    public assemble(blueprintName: TName, overrides?: EntityConfigOverrides<TEntityConfig>) {
+    public assemble(blueprintName: TName, overrides?: EntityConfigOverrides) {
         const entity = this.engine.obtainEntity();
         try {
             const blueprint = this.entityBlueprints[blueprintName];
@@ -80,9 +81,7 @@ export abstract class AbstractEntityFactory<TName extends string, TEntityConfig>
                 // Skip blueprints, where the component is not used in code
                 if (!type) continue;
 
-                componentBlueprint["setOverrides"](
-                    overrides?.[type.name as keyof EntityConfigOverrides<TEntityConfig>]
-                );
+                componentBlueprint["setOverrides"](overrides?.[type.name as keyof EntityConfigOverrides]);
                 const component = this.engine.obtainComponent(type, componentBlueprint.get);
                 if (component) entity.add(component);
                 componentBlueprint["setOverrides"]();

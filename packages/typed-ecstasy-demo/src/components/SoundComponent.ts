@@ -56,6 +56,6 @@ export const SoundComponent = declareComponent("Sound").withConfig<SoundData, So
 
 // You can declare a component without using a config. See FIXME
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof SoundComponent> {}
 }

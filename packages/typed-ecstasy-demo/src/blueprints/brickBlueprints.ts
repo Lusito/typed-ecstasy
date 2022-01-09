@@ -1,3 +1,5 @@
+import { EntityConfig } from "typed-ecstasy";
+
 const baseConfig: EntityConfig = {
     Position: {},
     Size: {

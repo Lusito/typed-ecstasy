@@ -18,6 +18,6 @@ export const CollidableComponent = declareComponent("Collidable").withConfig<Col
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof CollidableComponent> {}
 }

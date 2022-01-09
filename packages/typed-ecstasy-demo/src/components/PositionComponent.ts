@@ -15,6 +15,6 @@ export const PositionComponent = declareComponent("Position").withConfig<Positio
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof PositionComponent> {}
 }

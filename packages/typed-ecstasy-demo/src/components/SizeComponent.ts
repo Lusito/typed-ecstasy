@@ -15,6 +15,6 @@ export const SizeComponent = declareComponent("Size").withConfig<SizeData, SizeC
     },
 });
 
-declare global {
+declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof SizeComponent> {}
 }
