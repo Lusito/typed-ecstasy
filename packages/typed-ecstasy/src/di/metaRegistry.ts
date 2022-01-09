@@ -16,7 +16,8 @@ const serviceMetaById = new Map<symbol, ServiceMeta<HotSwapType>>();
 
 /** @internal */
 export const metaRegistry = {
-    registerService(constructor: Constructor<HotSwapType>, id: symbol, transient?: boolean) {
+    registerService(constructor: Constructor<HotSwapType>, transient?: boolean, oldMeta?: ServiceMeta<HotSwapType>) {
+        const id = oldMeta?.id ?? Symbol(constructor.name);
         const params = metaData.paramTypes.get(constructor);
         if (!params) throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
         params.forEach((param, index) => {

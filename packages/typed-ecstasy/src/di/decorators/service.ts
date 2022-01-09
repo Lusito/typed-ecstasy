@@ -34,20 +34,20 @@ export function service(config: ServiceConfig = {}) {
     return (target: Constructor<HotSwapType>) => {
         const { hot, transient } = config;
         if (hot) {
-            const oldData = hot.data as ImportHotData | undefined;
-            const id: symbol = oldData?.meta.id ?? Symbol(target.name);
-            const meta = metaRegistry.registerService(target, id, transient);
-
             enableHotSwapProxying();
-            if (oldData?.meta) {
-                performHotSwap(meta, oldData.meta);
+
+            const oldMeta = (hot.data as ImportHotData | undefined)?.meta;
+            const meta = metaRegistry.registerService(target, transient, oldMeta);
+
+            if (oldMeta) {
+                performHotSwap(meta, oldMeta);
             }
             hot.accept();
             hot.dispose((data: ImportHotData) => {
                 data.meta = meta;
             });
         } else {
-            metaRegistry.registerService(target, Symbol(target.name), transient);
+            metaRegistry.registerService(target, transient);
         }
     };
 }
