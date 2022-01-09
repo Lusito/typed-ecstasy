@@ -96,7 +96,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
             this.instancesByClass.delete(clazz);
             system.setEnabled(false);
             system["manager"] = null;
-            // fixme: remove from container? (what happens if it's references in other places?)
+            // fixme: remove from container? (what happens if it's referenced in other places?)
         }
     }
 
@@ -108,7 +108,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
     }
 
     private removeAllInternal() {
-        // fixme: remove from container? (what happens if it's references in other places?)
+        // fixme: remove from container? (what happens if it's referenced in other places?)
         this.instancesByClass.forEach((system) => {
             if (system.isEnabled()) system["onDisable"]();
             system["manager"] = null;
