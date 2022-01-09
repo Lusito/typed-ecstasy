@@ -3,14 +3,23 @@ import { PoolAllocator, Container, Engine } from "typed-ecstasy";
 import { createAudioContext } from "sounts";
 
 import { defaultLevel } from "./levels/default";
-import { InputSystem } from "./systems/InputSystem";
-import { MovementSystem } from "./systems/MovementSystem";
-import { RenderSystem, CanvasRenderingContext2D } from "./systems/RenderSystem";
+import { CanvasRenderingContext2D } from "./systems/RenderSystem";
 import { SoundService } from "./services/SoundService";
 import { AssetService, GameSounds } from "./services/AssetService";
 import { EntityFactory } from "./services/EntityFactory";
+import { SystemsService } from "./services/SystemsService";
 
-// This is a simplified example of how you would use an entity factory to assemble entities
+// Any changes that affect this file will cause a reload.
+// Otherwise the game might be created twice
+if (module.hot) {
+    // fixme: reuse old game instead of reloading
+    module.hot.dispose(() => {
+        window.location.reload();
+    });
+}
+
+// Anything that only affects services and systems can make use of Hot Module Replacement.
+// So try to keep this entry file as small as possible.
 
 const audioContext = createAudioContext();
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -30,12 +39,17 @@ async function init() {
     // some manual dependencies, which can be used by component factories and services
     container.set(CanvasRenderingContext2D, context2D);
     container.set(GameSounds, gameSounds);
-    // By getting the SoundService, we also create an instance of it (if it didn't exist already).
+    // By getting these services, we also create an instance of them (if they didn't exist already).
     container.get(SoundService);
     container.get(EntityFactory);
+    container.get(SystemsService);
 
-    // fixme: How to handle level changes? reload?
-    const factory = container.get(EntityFactory);
+    loadLevel(engine);
+    startRendering(engine);
+}
+
+function loadLevel(engine: Engine) {
+    const factory = engine.container.get(EntityFactory);
 
     for (const [type, x, y, width, height] of defaultLevel) {
         engine.entities.add(
@@ -51,12 +65,9 @@ async function init() {
             })
         );
     }
+}
 
-    // fixme: create service for engine code?
-    engine.systems.add(MovementSystem);
-    engine.systems.add(RenderSystem);
-    engine.systems.add(InputSystem);
-
+function startRendering(engine: Engine) {
     let lastTime = 0;
     let hasError = false;
     function render(time: number) {
@@ -79,12 +90,3 @@ async function init() {
 }
 
 init();
-
-// Anything that isn't explicitly handled needs a forced reload.
-// Otherwise the game might be created twice
-if (module.hot) {
-    // fixme: reuse old game instead of reloading
-    module.hot.dispose(() => {
-        window.location.reload();
-    });
-}

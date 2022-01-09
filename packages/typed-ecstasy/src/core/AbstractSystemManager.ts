@@ -110,7 +110,7 @@ export abstract class AbstractSystemManager<TSystem extends AbstractSystem<any, 
     private removeAllInternal() {
         // fixme: remove from container? (what happens if it's referenced in other places?)
         this.instancesByClass.forEach((system) => {
-            if (system.isEnabled()) system["onDisable"]();
+            system.setEnabled(false);
             system["manager"] = null;
         });
         this.instances.length = 0;
