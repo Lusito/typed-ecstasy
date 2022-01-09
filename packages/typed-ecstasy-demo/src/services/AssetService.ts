@@ -45,6 +45,8 @@ const paths: GameSoundPaths = {
     redExplosion: redExplosionUrl,
 };
 
+const pathKeys = Object.keys(paths) as GameSoundKey[];
+
 /**
  * By using the import "url:..."" feature from parcel, we can actually use HMR for binary file updates as well!
  *
@@ -53,6 +55,9 @@ const paths: GameSoundPaths = {
 @service({ hot: module.hot })
 export class AssetService {
     private readonly audioContext: AudioContext;
+    @retainable
+    private instance = 0;
+
     @retainable
     private sounds?: GameSounds;
 
@@ -69,9 +74,9 @@ export class AssetService {
     public async loadSounds() {
         if (!this.sounds) {
             const list = await Promise.all(
-                (Object.keys(paths) as GameSoundKey[]).map(async (key): Promise<GameSound> => {
+                pathKeys.map(async (key): Promise<GameSound> => {
                     const path = paths[key];
-                    const buffer = await this.loadAudioBuffer(hitPaddleUrl);
+                    const buffer = await this.loadAudioBuffer(path);
                     return {
                         key,
                         buffer,
@@ -90,15 +95,38 @@ export class AssetService {
     }
 
     protected [PostConstruct]() {
+        const instance = ++this.instance;
         const { sounds } = this;
         if (sounds) {
-            // fixme: new and removed sounds
-            (Object.keys(paths) as GameSoundKey[]).map(async (key) => {
-                const sound = sounds[key];
-                const path = paths[key];
-                // Path changes when the file content changes, since parcel adds a hash to the path
-                if (sound.path !== path) {
-                    sound.buffer = await this.loadAudioBuffer(hitPaddleUrl);
+            // Remove old sounds
+            for (const key of Object.keys(sounds) as GameSoundKey[]) {
+                if (!pathKeys.includes(key)) delete sounds[key];
+            }
+
+            pathKeys.map(async (key) => {
+                try {
+                    const path = paths[key];
+                    const buffer = await this.loadAudioBuffer(path);
+                    // Do not continue if loadAudioBuffer started before a HMR and finished after
+                    if (instance !== this.instance) return;
+
+                    const sound = sounds[key];
+                    if (sound) {
+                        // Existing sound
+                        // Path changes when the file content changes, since parcel adds a hash to the path
+                        if (sound.path !== path) {
+                            sound.buffer = buffer;
+                        }
+                    } else {
+                        // New sound
+                        sounds[key] = {
+                            key,
+                            buffer,
+                            path,
+                        };
+                    }
+                } catch (e) {
+                    console.error(`Failed updating sound "${key}"!`, e);
                 }
             });
         }
