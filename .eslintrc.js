@@ -2,7 +2,8 @@ module.exports = {
     plugins: ["jsdoc"],
     extends: ["@lusito/eslint-config", "plugin:jest/recommended", "plugin:jsdoc/recommended"],
     rules: {
-        "import/no-unresolved": ["error", { ignore: ["typed-ecstasy"] }],
+        "import/no-unresolved": ["error", { ignore: ["typed-ecstasy", "^url:.+"] }],
+        "import/extensions": ["error", "never", { wav: "always" }],
         "no-bitwise": "off",
         "jest/no-conditional-expect": "off",
         "lines-between-class-members": "off",
@@ -42,6 +43,12 @@ module.exports = {
         },
     },
     overrides: [
+        {
+            files: ["packages/typed-ecstasy-demo/src/components/*.*"],
+            rules: {
+                "@typescript-eslint/no-empty-interface": "off",
+            },
+        },
         {
             files: ["packages/typed-ecstasy-demo/**/*.*"],
             rules: {

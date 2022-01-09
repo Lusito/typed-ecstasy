@@ -1,12 +1,10 @@
 import { InjectSymbol, PostConstruct, retainable, service } from "typed-ecstasy";
-/* eslint-disable import/no-unresolved, import/extensions */
 import yellowExplosionUrl from "url:../sounds/explosion_yellow.wav";
 import greenExplosionUrl from "url:../sounds/explosion_green.wav";
 import orangeExplosionUrl from "url:../sounds/explosion_orange.wav";
 import redExplosionUrl from "url:../sounds/explosion_red.wav";
 import hitPaddleUrl from "url:../sounds/hit_paddle.wav";
 import hitWallUrl from "url:../sounds/hit_wall.wav";
-/* eslint-enable import/no-unresolved, import/extensions */
 
 export interface GameSound {
     key: GameSoundKey;

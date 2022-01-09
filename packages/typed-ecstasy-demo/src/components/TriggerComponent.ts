@@ -25,6 +25,5 @@ export const TriggerComponent = declareComponent("Trigger").withConfig<TriggerDa
 });
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface EntityConfig extends PartialEntityConfig<typeof TriggerComponent> {}
 }

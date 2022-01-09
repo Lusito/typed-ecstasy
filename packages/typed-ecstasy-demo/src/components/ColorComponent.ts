@@ -19,6 +19,5 @@ export const ColorComponent = declareComponent("Color").withConfig<ColorData, Co
 });
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface EntityConfig extends PartialEntityConfig<typeof ColorComponent> {}
 }

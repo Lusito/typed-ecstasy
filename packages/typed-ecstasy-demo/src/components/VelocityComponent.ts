@@ -19,6 +19,5 @@ export const VelocityComponent = declareComponent("Velocity").withConfig<Velocit
 });
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface EntityConfig extends PartialEntityConfig<typeof VelocityComponent> {}
 }

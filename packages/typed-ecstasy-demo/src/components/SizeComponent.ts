@@ -16,6 +16,5 @@ export const SizeComponent = declareComponent("Size").withConfig<SizeData, SizeC
 });
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface EntityConfig extends PartialEntityConfig<typeof SizeComponent> {}
 }
