@@ -17,9 +17,10 @@ export class Allocator {
     /**
      * Free an entity (possibly marking it for reuse).
      *
-     * @param _entity The entity to free.
+     * @param entity The entity to free.
      */
-    public freeEntity(_entity: Entity) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public freeEntity(entity: Entity) {
         // override this
     }
 

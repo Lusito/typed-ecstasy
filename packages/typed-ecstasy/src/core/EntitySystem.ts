@@ -12,5 +12,8 @@ export abstract class EntitySystem extends AbstractSystem<EntitySystem, EntitySy
      *
      * @param deltaTime The time passed since last frame in seconds.
      */
-    public abstract update(deltaTime: number): void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public update(deltaTime: number): void {
+        // do nothing by default
+    }
 }

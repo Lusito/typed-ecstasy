@@ -2,7 +2,7 @@
 import { Engine, EntitySystem, service } from "typed-ecstasy";
 
 abstract class SystemMockBase extends EntitySystem {
-    public update(): void {}
+    public override update(): void {}
 }
 
 @service()
