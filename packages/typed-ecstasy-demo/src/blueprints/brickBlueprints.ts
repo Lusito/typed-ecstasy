@@ -1,5 +1,3 @@
-import { createEntityBlueprint } from "typed-ecstasy";
-
 const baseConfig: EntityConfig = {
     Position: {},
     Size: {
@@ -11,7 +9,7 @@ const baseConfig: EntityConfig = {
     },
 };
 
-export const redBrick = createEntityBlueprint<EntityConfig>({
+export const redBrick: EntityConfig = {
     ...baseConfig,
     Color: {
         color: "#A51E0A",
@@ -30,9 +28,9 @@ export const redBrick = createEntityBlueprint<EntityConfig>({
     Sound: {
         remove: "redExplosion",
     },
-});
+};
 
-export const orangeBrick = createEntityBlueprint<EntityConfig>({
+export const orangeBrick: EntityConfig = {
     ...baseConfig,
     Color: {
         color: "#C8890A",
@@ -51,9 +49,9 @@ export const orangeBrick = createEntityBlueprint<EntityConfig>({
     Sound: {
         remove: "orangeExplosion",
     },
-});
+};
 
-export const greenBrick = createEntityBlueprint<EntityConfig>({
+export const greenBrick: EntityConfig = {
     ...baseConfig,
     Color: {
         color: "#0A8633",
@@ -72,9 +70,9 @@ export const greenBrick = createEntityBlueprint<EntityConfig>({
     Sound: {
         remove: "greenExplosion",
     },
-});
+};
 
-export const yellowBrick = createEntityBlueprint<EntityConfig>({
+export const yellowBrick: EntityConfig = {
     ...baseConfig,
     Color: {
         color: "#C7C72A",
@@ -93,4 +91,4 @@ export const yellowBrick = createEntityBlueprint<EntityConfig>({
     Sound: {
         remove: "yellowExplosion",
     },
-});
+};

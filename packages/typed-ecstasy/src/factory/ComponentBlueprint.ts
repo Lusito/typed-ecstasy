@@ -6,7 +6,7 @@ const emptyOverrides = {};
 /**
  * Stores the name of a component and key/value pairs to construct the component.
  *
- * @see {@link EntityFactory}
+ * @see {@link AbstractEntityFactory}
  */
 export class ComponentBlueprint {
     /** The component type of this blueprint. */

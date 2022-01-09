@@ -33,7 +33,7 @@ describe("PoolAllocator", () => {
                 [ComponentB, 4],
             ],
         });
-        const engine = new Engine(allocator);
+        const engine = new Engine({ allocator });
         expect(allocator["entityPool"]["max"]).toBe(1);
         allocator.freeComponent(engine.obtainComponent(ComponentA)!);
         allocator.freeComponent(engine.obtainComponent(ComponentB)!);
@@ -55,7 +55,7 @@ describe("PoolAllocator", () => {
 
     it("works for entities", () => {
         const allocator = new PoolAllocator();
-        const engine = new Engine(allocator);
+        const engine = new Engine({ allocator });
         const a = engine.obtainComponent(ComponentA)!;
         const b = engine.obtainComponent(ComponentB)!;
         const c = engine.obtainComponent(ComponentC)!;

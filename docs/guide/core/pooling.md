@@ -16,7 +16,7 @@ A [PoolAllocator](../../api/classes/poolallocator.md) is the class to use if you
 
 Simple usage might look like this:
 ```typescript
-const engine = new Engine(new PoolAllocator());
+const engine = new Engine({ allocator: new PoolAllocator() });
 const entity = engine.obtainEntity();
 entity.add(engine.obtainComponent(PositionComponent));
 entity.remove(PositionComponent);
@@ -25,18 +25,10 @@ entity.destroy();
 
 As long as you use the built-in methods to remove entities and components, you won't have to manually add them back to the pool.
 
-The [data-driven approach](../data-driven/README.md) works with PoolAllocator as well:
-
-```typescript
-const engine = new Engine(new PoolAllocator());
-const context: SampleContext = { /*...*/ };
-// The EntityFactory generic type parameter must be explicitly set since the container can't detect it:
-const factory: EntityFactory<EntityConfig> = engine.container.get(EntityFactory);
-```
-
 ## Obtaining Entities and Components
 
-In some situations, you'll want to allocate entities and components in your system. Use the engine property to do so:
+In some situations, you'll want to allocate entities and components in your system.
+You can either use the [data-driven approach](../data-driven/README.md) or use the engine to do it manually:
 
 ```typescript
 @service()

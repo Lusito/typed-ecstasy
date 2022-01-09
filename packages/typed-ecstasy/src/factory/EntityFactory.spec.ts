@@ -1,11 +1,12 @@
 import {
-    ComponentBlueprint,
     Container,
     Engine,
-    EntityFactory,
+    AbstractEntityFactory,
     PartialEntityConfig,
     InjectSymbol,
     declareComponent,
+    service,
+    PostConstruct,
 } from "typed-ecstasy";
 
 /**
@@ -142,20 +143,18 @@ const blueprints: Record<string, EntityConfig> = {
     void: {
         Position: {},
     },
+    missing_component: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        Missing: {},
+    },
 };
 
-function setupEntityFactory(engine: Engine) {
-    const factory: EntityFactory<EntityConfig> = engine.container.get(EntityFactory);
-
-    for (const name of Object.keys(blueprints)) {
-        const entityConfig = blueprints[name];
-        const entityBlueprint = Object.keys(entityConfig).map(
-            (key) => new ComponentBlueprint(key, entityConfig[key as keyof EntityConfig]!)
-        );
-        factory.addEntityBlueprint(name, entityBlueprint);
+@service()
+class EntityFactory extends AbstractEntityFactory<keyof typeof blueprints, EntityConfig> {
+    protected [PostConstruct]() {
+        this.setBlueprints(blueprints);
     }
-
-    return factory;
 }
 
 describe("EntityFactory", () => {
@@ -163,19 +162,21 @@ describe("EntityFactory", () => {
     engine.container.set(GameConfig, {
         defaultCameraFocusWeight: 42,
     });
-    const factory = setupEntityFactory(engine);
+    const warnSpy = jest.spyOn(console, "warn").mockImplementationOnce(() => undefined);
+    const factory = engine.container.get(EntityFactory);
 
-    it("throws an error if an entity blueprint is missing", () => {
-        expect(() => factory.assemble("whoops")).toThrow("Could not find entity blueprint for 'whoops'");
-    });
-
-    it("ignores components that have not been registered", () => {
-        const warnSpy = jest.spyOn(console, "warn").mockImplementationOnce(() => undefined);
-        factory.addEntityBlueprint("missing_component", [new ComponentBlueprint("Missing", {})]);
-        expect(() => factory.assemble("missing_component")).not.toThrow();
+    it("shows a warning for components that have not been registered", () => {
         expect(warnSpy).toHaveBeenCalledWith(
             `Can't find metadata for component "Missing". This component will not be added!`
         );
+    });
+
+    it("ignores components that have not been registered", () => {
+        expect(() => factory.assemble("missing_component")).not.toThrow();
+    });
+
+    it("throws an error if an entity blueprint is missing", () => {
+        expect(() => factory.assemble("whoops")).toThrow("Could not find entity blueprint for 'whoops'");
     });
 
     it("uses override properties if given", () => {

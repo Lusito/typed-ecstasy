@@ -19,7 +19,7 @@ const ComponentB = declareComponent("B").withoutConfig<Data>({
 
 describe("PooledEntity", () => {
     it("should reset correctly", () => {
-        const engine = new Engine(new PoolAllocator());
+        const engine = new Engine({ allocator: new PoolAllocator() });
         const entity = engine.obtainEntity();
         const a = entity.add(engine.obtainComponent(ComponentA)!);
         const b = entity.add(engine.obtainComponent(ComponentB)!);
@@ -52,7 +52,7 @@ describe("PooledEntity", () => {
     });
 
     it("should reset correctly for a single component", () => {
-        const engine = new Engine(new PoolAllocator());
+        const engine = new Engine({ allocator: new PoolAllocator() });
         const entity = engine.obtainEntity();
         const a = entity.add(engine.obtainComponent(ComponentA)!);
         entity.remove(ComponentA);

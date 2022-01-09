@@ -1,23 +1,24 @@
-import { Engine, Entity, EntityFactory, EntitySystem, Family, service } from "typed-ecstasy";
+import { Engine, Entity, EntitySystem, Family, service } from "typed-ecstasy";
 
 import { BallComponent } from "../components/BallComponent";
 import { InputComponent } from "../components/InputComponent";
 import { PositionComponent } from "../components/PositionComponent";
 import { SizeComponent } from "../components/SizeComponent";
 import { wallSize } from "../levels/default";
+import { EntityFactory } from "../services/EntityFactory";
 import { GameState } from "../services/GameState";
 
 @service({ hot: module.hot })
 export class InputSystem extends EntitySystem {
     private readonly gameState: GameState;
-    private readonly factory: EntityFactory<EntityConfig>;
+    private readonly factory: EntityFactory;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     private readonly canvas = document.getElementById("canvas")!;
     /** The list of entities processed by the system. */
     private readonly paddles: readonly Entity[];
     private readonly balls: Entity[] = [];
 
-    public constructor(engine: Engine, gameState: GameState, factory: EntityFactory<EntityConfig>) {
+    public constructor(engine: Engine, gameState: GameState, factory: EntityFactory) {
         super(engine);
         this.gameState = gameState;
         this.factory = factory;

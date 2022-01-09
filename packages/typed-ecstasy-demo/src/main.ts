@@ -1,5 +1,5 @@
 import "@abraham/reflection";
-import { PoolAllocator, Container, Engine, EntityFactory } from "typed-ecstasy";
+import { PoolAllocator, Container, Engine } from "typed-ecstasy";
 import { createAudioContext } from "sounts";
 
 import { defaultLevel } from "./levels/default";
@@ -8,7 +8,7 @@ import { MovementSystem } from "./systems/MovementSystem";
 import { RenderSystem, CanvasRenderingContext2D } from "./systems/RenderSystem";
 import { SoundService } from "./services/SoundService";
 import { AssetService, GameSounds } from "./services/AssetService";
-import { BlueprintService } from "./services/BlueprintService";
+import { EntityFactory } from "./services/EntityFactory";
 
 // This is a simplified example of how you would use an entity factory to assemble entities
 
@@ -32,10 +32,10 @@ async function init() {
     container.set(GameSounds, gameSounds);
     // By getting the SoundService, we also create an instance of it (if it didn't exist already).
     container.get(SoundService);
-    container.get(BlueprintService);
+    container.get(EntityFactory);
 
     // fixme: How to handle level changes? reload?
-    const factory: EntityFactory<EntityConfig> = container.get(EntityFactory);
+    const factory = container.get(EntityFactory);
 
     for (const [type, x, y, width, height] of defaultLevel) {
         engine.entities.add(

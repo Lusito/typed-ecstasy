@@ -1,8 +1,10 @@
 /* eslint-disable dot-notation */
 import { Engine } from "../core/Engine";
 import type { ComponentType } from "../core/Component";
-import { service } from "../di";
-import type { EntityBlueprint } from "./EntityBlueprint";
+import { addMetaData } from "../di";
+import { ComponentBlueprint } from "./ComponentBlueprint";
+
+export type EntityBlueprint = ComponentBlueprint[];
 
 export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T extends ComponentType<
     infer TName,
@@ -26,29 +28,36 @@ export type EntityConfigOverrides<T> = {
 /**
  * A factory to assemble {@link Entity entities} from blueprints.
  *
+ * @template TName The possible entity names.
  * @template TEntityConfig The entity configuration type.
  */
-@service()
-// fixme: allow specification of valid entity names
-// maybe make this class abstract, so that the game can much easier implement the types?
-export class EntityFactory<TEntityConfig> {
+@addMetaData
+export abstract class AbstractEntityFactory<TName extends string, TEntityConfig> {
     private entityBlueprints: Record<string, EntityBlueprint> = {};
     private readonly engine: Engine;
 
     /**
-     * Creates a new EntityFactory.
-     *
      * @param engine The engine to use.
      */
-    public constructor(engine: Engine) {
+    protected constructor(engine: Engine) {
         this.engine = engine;
     }
 
     /**
+     * Set the new blueprints to use.
+     *
      * @param blueprints The blueprints to use.
      */
-    public setEntityBlueprints(blueprints: Record<string, EntityBlueprint>) {
-        this.entityBlueprints = blueprints;
+    protected setBlueprints(blueprints: Record<string, TEntityConfig>) {
+        this.entityBlueprints = {};
+        for (const name of Object.keys(blueprints)) {
+            const config = blueprints[name];
+            this.entityBlueprints[name] = Object.keys(config).map((key) => {
+                let defaultValues = (config as Record<string, unknown>)[key];
+                if (defaultValues === true) defaultValues = {};
+                return new ComponentBlueprint(key, defaultValues as Record<string, unknown>);
+            });
+        }
     }
 
     /**
@@ -59,7 +68,7 @@ export class EntityFactory<TEntityConfig> {
      * @returns A fully assembled Entity or null if the assembly failed.
      * @throws An exception if the entity could not be assembled.
      */
-    public assemble(blueprintName: string, overrides?: EntityConfigOverrides<TEntityConfig>) {
+    public assemble(blueprintName: TName, overrides?: EntityConfigOverrides<TEntityConfig>) {
         const entity = this.engine.obtainEntity();
         try {
             const blueprint = this.entityBlueprints[blueprintName];

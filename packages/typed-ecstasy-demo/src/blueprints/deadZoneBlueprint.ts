@@ -1,6 +1,4 @@
-import { createEntityBlueprint } from "typed-ecstasy";
-
-export const deadZone = createEntityBlueprint<EntityConfig>({
+export const deadZone: EntityConfig = {
     Position: {},
     Size: {},
     Collidable: {},
@@ -11,4 +9,4 @@ export const deadZone = createEntityBlueprint<EntityConfig>({
             },
         ],
     },
-});
+};
