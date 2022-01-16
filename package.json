@@ -23,6 +23,7 @@
     "lint:style:base": "prettier \"packages/*/src/**/*.{ts,tsx,js,json,scss}\" \"packages/*/*.{ts,tsx,js,json,scss}\"",
     "lint:style:fix": "yarn run lint:style:base --write",
     "release": "lerna publish",
+    "release:next": "lerna publish --npm-tag next",
     "start": "yarn workspace typed-ecstasy-demo start",
     "start:fresh": "yarn run build:lib && yarn start",
     "test": "yarn workspace typed-ecstasy test",
