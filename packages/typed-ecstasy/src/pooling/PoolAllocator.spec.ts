@@ -1,23 +1,31 @@
 /* eslint-disable dot-notation */
-import { Engine, PoolAllocator, Entity, declareComponent } from "typed-ecstasy";
+import { Engine, PoolAllocator, Entity, Component, registerComponent } from "typed-ecstasy";
 
-interface Data {
-    value: string;
+class ComponentA extends Component {
+    public static readonly key = "A";
+    public value!: string;
 }
-
-const ComponentA = declareComponent("A").withoutConfig<Data>({
+registerComponent(ComponentA, {
     reset(comp) {
         comp.value = comp.value ? "resettedA" : "initialA";
     },
 });
 
-const ComponentB = declareComponent("B").withoutConfig<Data>({
+class ComponentB extends Component {
+    public static readonly key = "B";
+    public value!: string;
+}
+registerComponent(ComponentB, {
     reset(comp) {
         comp.value = comp.value ? "resettedB" : "initialB";
     },
 });
 
-const ComponentC = declareComponent("C").withoutConfig<Data>({
+class ComponentC extends Component {
+    public static readonly key = "C";
+    public value!: string;
+}
+registerComponent(ComponentC, {
     reset(comp) {
         comp.value = comp.value ? "resettedC" : "initialC";
     },
@@ -29,8 +37,8 @@ describe("PoolAllocator", () => {
             maxEntities: 1,
             maxComponentsDefault: 2,
             maxComponentPerType: [
-                [ComponentA, 3],
-                [ComponentB, 4],
+                [ComponentA.id, 3],
+                [ComponentB.id, 4],
             ],
         });
         const engine = new Engine({ allocator });

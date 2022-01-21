@@ -1,4 +1,4 @@
-import type { ComponentBuilder, ComponentData, ComponentType } from "./Component";
+import { Component, ComponentBuilder, ComponentClass } from "./Component";
 import { Entity } from "./Entity";
 
 // fixme: utils?
@@ -26,20 +26,18 @@ export class Allocator {
 
     /**
      * @template T The component data type, do not specify manually!
-     * @param type The component type to get.
-     * @param factory The factory to use.
+     * @param Class The component type to get.
+     * @param builder The builder to use.
      * @returns A new or reused component of the specified type.
      */
-    public obtainComponent<T>(
-        type: ComponentType<string, T, unknown>,
-        factory: ComponentBuilder<T, unknown>
-    ): ComponentData<T> {
-        const comp = {
-            componentId: type.id,
-            componentName: type.name,
-            componentFactory: factory,
-        } as ComponentData<T>;
-        factory.reset?.(comp);
+    public obtainComponent<T extends Component>(
+        Class: ComponentClass<any, T>,
+        builder: ComponentBuilder<T, unknown>
+    ): T {
+        const comp = new Class();
+        // eslint-disable-next-line dot-notation
+        (comp["componentBuilder"] as ComponentBuilder<unknown, unknown>) = builder;
+        builder.reset?.(comp);
         return comp;
     }
 
@@ -48,8 +46,9 @@ export class Allocator {
      *
      * @param component The component data to free.
      */
-    public freeComponent(component: ComponentData<unknown>) {
-        component.componentFactory.reset?.(component);
+    public freeComponent(component: Component) {
         // override this
+        // eslint-disable-next-line dot-notation
+        (component["componentBuilder"] as ComponentBuilder<unknown, unknown>).reset?.(component);
     }
 }

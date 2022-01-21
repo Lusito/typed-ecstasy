@@ -3,8 +3,14 @@ import { Container } from "../di";
 import { EntitySystemManager } from "./EntitySystemManager";
 import { EntityManager } from "./EntityManager";
 import { Allocator } from "./Allocator";
-import { ComponentBuilder, ComponentConfigGetter, ComponentData, ComponentType } from "./Component";
-import { componentMetaRegistry } from "./componentMetaRegistry";
+import {
+    Component,
+    ComponentBuilder,
+    ComponentClass,
+    ComponentClassWithConfig,
+    ComponentConfigGetter,
+} from "./Component";
+import { addComponentMetaListener, getComponentMeta } from "./componentMetaRegistry";
 
 const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 
@@ -18,7 +24,7 @@ export interface EngineOptions {
  * The engine should be updated every tick via the {@link update} method.
  */
 export class Engine {
-    private readonly factories: Array<ComponentBuilder<unknown, unknown>> = [];
+    private readonly builders: Array<ComponentBuilder<unknown, unknown>> = [];
 
     private readonly allocator: Allocator;
 
@@ -43,8 +49,8 @@ export class Engine {
         this.systems = this.container.get(EntitySystemManager);
 
         // When the meta changes, just delete the factory and wait for it to be recreated on demand
-        componentMetaRegistry.addListener((type) => {
-            delete this.factories[type.id];
+        addComponentMetaListener((id) => {
+            delete this.builders[id];
         });
     }
 
@@ -86,36 +92,36 @@ export class Engine {
 
     /**
      * @param type The component type to obtain.
-     * @returns The new or recycled component or undefined.
-     */
-    public obtainComponent<TData>(type: ComponentType<string, TData, never>): ComponentData<TData> | undefined;
-    /**
-     * @param type The component type to obtain.
      * @param config The configuration to use.
      * @returns The new or recycled component or undefined.
      */
-    public obtainComponent<TData, TConfig>(
-        type: ComponentType<string, TData, TConfig>,
+    public obtainComponent<TType extends Component, TConfig>(
+        Class: ComponentClassWithConfig<any, TType, TConfig>,
         config: ComponentConfigGetter<TConfig>
-    ): ComponentData<TData> | undefined;
+    ): TType | undefined;
+    /**
+     * @param type The component type to obtain.
+     * @returns The new or recycled component or undefined.
+     */
+    public obtainComponent<TType extends Component>(Class: ComponentClass<any, TType>): TType | undefined;
     // eslint-disable-next-line jsdoc/require-jsdoc
-    public obtainComponent<TData, TConfig>(
-        type: ComponentType<string, TData> | ComponentType<string, TData, TConfig>,
+    public obtainComponent<TType extends Component, TConfig>(
+        Class: ComponentClass<any, TType> | ComponentClassWithConfig<any, TType, TConfig>,
         config?: ComponentConfigGetter<TConfig>
     ) {
-        let factory = this.factories[type.id];
-        if (!factory) {
-            factory = this.createComponentFactory(type.name);
-            this.factories[type.id] = factory;
+        let builder = this.builders[Class.id];
+        if (!builder) {
+            builder = this.createComponentBuilder(Class.key);
+            this.builders[Class.key] = builder;
         }
-        const comp = this.allocator.obtainComponent(type, factory);
-        if (factory.build && factory.build(comp, config || noopConfig) === false) return undefined;
+        const comp = this.allocator.obtainComponent(Class, builder);
+        if (builder.build && builder.build(comp, config || noopConfig) === false) return undefined;
         return comp;
     }
 
-    private createComponentFactory(name: string) {
-        const meta = componentMetaRegistry.get(name);
-        if (!meta) throw new Error(`Could not find component factory for "${name}"`);
+    private createComponentBuilder(key: string) {
+        const meta = getComponentMeta(key);
+        if (!meta) throw new Error(`Could not find component meta for "${key}"`);
         if (typeof meta.factory === "function") {
             return meta.factory(this.container);
         }

@@ -1,13 +1,34 @@
-import { Engine, Family, IteratingSystem, Entity, service } from "typed-ecstasy";
+import { Engine, Family, IteratingSystem, Entity, service, Component, registerComponent } from "typed-ecstasy";
 
-import { declareMarkerComponent } from "./Component";
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
 
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
-const ComponentC = declareMarkerComponent("C");
-const ComponentD = declareMarkerComponent("D");
-const ComponentE = declareMarkerComponent("E");
-const ComponentF = declareMarkerComponent("F");
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
+
+class ComponentC extends Component {
+    public static readonly key = "C";
+}
+registerComponent(ComponentC, {});
+
+class ComponentD extends Component {
+    public static readonly key = "D";
+}
+registerComponent(ComponentD, {});
+
+class ComponentE extends Component {
+    public static readonly key = "E";
+}
+registerComponent(ComponentE, {});
+
+class ComponentF extends Component {
+    public static readonly key = "F";
+}
+registerComponent(ComponentF, {});
 
 @service()
 class TestSystemA extends IteratingSystem {

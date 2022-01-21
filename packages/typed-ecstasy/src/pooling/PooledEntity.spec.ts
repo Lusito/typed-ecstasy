@@ -1,17 +1,21 @@
 /* eslint-disable dot-notation */
-import { declareComponent, Engine, PoolAllocator } from "typed-ecstasy";
+import { Component, Engine, PoolAllocator, registerComponent } from "typed-ecstasy";
 
-interface Data {
-    value: string;
+class ComponentA extends Component {
+    public static readonly key = "A";
+    public value!: string;
 }
-
-const ComponentA = declareComponent("A").withoutConfig<Data>({
+registerComponent(ComponentA, {
     reset(comp) {
         comp.value = comp.value ? "resettedA" : "initialA";
     },
 });
 
-const ComponentB = declareComponent("B").withoutConfig<Data>({
+class ComponentB extends Component {
+    public static readonly key = "B";
+    public value!: string;
+}
+registerComponent(ComponentB, {
     reset(comp) {
         comp.value = comp.value ? "resettedB" : "initialB";
     },

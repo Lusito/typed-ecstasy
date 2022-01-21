@@ -1,10 +1,13 @@
-import { ComponentBlueprint, declareMarkerComponent } from "typed-ecstasy";
+import { Component, ComponentBlueprint, registerComponent } from "typed-ecstasy";
 
-const ComponentA = declareMarkerComponent("A");
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
 
 describe("Blueprint", () => {
     it("should return the fallback parameter if no default values are provided", () => {
-        const blueprint = new ComponentBlueprint(ComponentA.name, {
+        const blueprint = new ComponentBlueprint(ComponentA.key, {
             undefined: undefined as any,
             any: undefined as any,
         });
@@ -17,7 +20,7 @@ describe("Blueprint", () => {
     });
 
     it("should ignore the fallback parameter if default values are provided", () => {
-        const blueprint = new ComponentBlueprint(ComponentA.name, {
+        const blueprint = new ComponentBlueprint(ComponentA.key, {
             bool: true,
             int: 12345,
             float: 0.12345,
@@ -32,7 +35,7 @@ describe("Blueprint", () => {
     });
 
     it("should ignore the fallback parameter and default values if overrides are provides", () => {
-        const blueprint = new ComponentBlueprint(ComponentA.name, {
+        const blueprint = new ComponentBlueprint(ComponentA.key, {
             bool: true,
             int: 12345,
             float: 0.12345,

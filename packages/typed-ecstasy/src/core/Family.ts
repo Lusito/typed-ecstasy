@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
+import { ComponentClass } from "./Component";
 import type { Entity } from "./Entity";
-import type { ComponentType } from "./Component";
 
 function getFamilyHash(all: readonly number[], one: readonly number[], exclude: readonly number[]) {
     return `${all.join(",")};${one.join(",")};${exclude.join(",")}`;
@@ -21,33 +21,33 @@ export interface FamilyBuilder {
     /**
      * Entities of the family will have to contain all of the specified components.
      *
-     * @param types All of these component types must be on an entity for it to belong to this family.
+     * @param classes All of these component types must be on an entity for it to belong to this family.
      * @returns This for chaining.
      */
-    all: (...types: ComponentType[]) => FamilyBuilder;
+    all(...classes: ComponentClass[]): FamilyBuilder;
 
     /**
      * Entities of the family will have to contain at least one of the specified components.
      *
-     * @param types One of these component types must be on an entity for it to belong to this family.
+     * @param classes One of these component types must be on an entity for it to belong to this family.
      * @returns This for chaining.
      */
-    one: (...types: ComponentType[]) => FamilyBuilder;
+    one(...classes: ComponentClass[]): FamilyBuilder;
 
     /**
      * Entities of the family cannot contain any of the specified components.
      *
-     * @param types If any one of these component types is on an entity, it will not belong to this family.
+     * @param classes If any one of these component types is on an entity, it will not belong to this family.
      * @returns This for chaining.
      */
-    exclude: (...types: ComponentType[]) => FamilyBuilder;
+    exclude(...classes: ComponentClass[]): FamilyBuilder;
 
     /** @returns A Family for the configured component types. */
-    get: () => Family;
+    get(): Family;
 }
 
-function addIdsForTypes(destination: number[], ...types: ComponentType[]) {
-    for (const { id } of types) {
+function addIdsFor(destination: number[], ...classes: ComponentClass[]) {
+    for (const { id } of classes) {
         if (!destination.includes(id)) destination.push(id);
     }
 }
@@ -58,16 +58,16 @@ function createBuilder() {
     const exclude: number[] = [];
 
     const builder: FamilyBuilder = {
-        all(...types) {
-            addIdsForTypes(all, ...types);
+        all(...classes) {
+            addIdsFor(all, ...classes);
             return builder;
         },
-        one(...types) {
-            addIdsForTypes(one, ...types);
+        one(...classes) {
+            addIdsFor(one, ...classes);
             return builder;
         },
-        exclude(...types) {
-            addIdsForTypes(exclude, ...types);
+        exclude(...classes) {
+            addIdsFor(exclude, ...classes);
             return builder;
         },
         get() {
@@ -147,30 +147,30 @@ export class Family {
     /**
      * Entities of the family will have to contain all of the specified components.
      *
-     * @param types All of these component types must be on an entity for it to belong to this family.
+     * @param classes All of these component types must be on an entity for it to belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static all(...types: ComponentType[]) {
-        return createBuilder().all(...types);
+    public static all(...classes: ComponentClass[]) {
+        return createBuilder().all(...classes);
     }
 
     /**
      * Entities of the family will have to contain at least one of the specified components.
      *
-     * @param types One of these component types must be on an entity for it to belong to this family.
+     * @param classes One of these component types must be on an entity for it to belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static one(...types: ComponentType[]) {
-        return createBuilder().one(...types);
+    public static one(...classes: ComponentClass[]) {
+        return createBuilder().one(...classes);
     }
 
     /**
      * Entities of the family cannot contain any of the specified components.
      *
-     * @param types If any one of these component types is on an entity, it will not belong to this family.
+     * @param classes If any one of these component types is on an entity, it will not belong to this family.
      * @returns A builder singleton instance to get a Family.
      */
-    public static exclude(...types: ComponentType[]) {
-        return createBuilder().exclude(...types);
+    public static exclude(...classes: ComponentClass[]) {
+        return createBuilder().exclude(...classes);
     }
 }

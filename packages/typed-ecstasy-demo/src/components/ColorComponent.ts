@@ -1,17 +1,20 @@
-import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
+import { Component, PartialEntityConfig, registerComponent } from "typed-ecstasy";
 
 // Check out SoundComponent for a more detailed explanation of how to declare components
-export type ColorData = {
-    color: string;
-    layer: number;
-};
-
 export type ColorConfig = {
     color: string;
     layer?: number;
 };
 
-export const ColorComponent = declareComponent("Color").withConfig<ColorData, ColorConfig>({
+export class ColorComponent extends Component {
+    public static readonly key = "Color";
+    public static readonly unusedConfig: ColorConfig;
+
+    public color!: string;
+    public layer!: number;
+}
+
+registerComponent(ColorComponent, {
     build(comp, config) {
         comp.color = config("color", "pink");
         comp.layer = config("layer", 1);

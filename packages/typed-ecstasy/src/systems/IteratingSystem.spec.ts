@@ -1,18 +1,21 @@
-import {
-    Entity,
-    Engine,
-    Family,
-    IteratingSystem,
-    service,
-    declareMarkerComponent,
-    declareComponent,
-} from "typed-ecstasy";
+import { Entity, Engine, Family, IteratingSystem, service, Component, registerComponent } from "typed-ecstasy";
 
 const deltaTime = 0.16;
 
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
-const ComponentC = declareMarkerComponent("C");
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
+
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
+
+class ComponentC extends Component {
+    public static readonly key = "C";
+}
+registerComponent(ComponentC, {});
 
 @service()
 class IteratingSystemMock extends IteratingSystem {
@@ -27,21 +30,21 @@ class IteratingSystemMock extends IteratingSystem {
     }
 }
 
-interface SpyComponentData {
-    updates: number;
+class SpyComponent extends Component {
+    public static readonly key = "Spy";
+    public updates!: number;
 }
-
-const SpyComponent = declareComponent("SpyComponent").withoutConfig<SpyComponentData>({
+registerComponent(SpyComponent, {
     reset(comp) {
         comp.updates = 0;
     },
 });
 
-interface IndexComponentData {
-    index: number;
+class IndexComponent extends Component {
+    public static readonly key = "Index";
+    public index!: number;
 }
-
-const IndexComponent = declareComponent("IndexComponent").withoutConfig<IndexComponentData>({
+registerComponent(IndexComponent, {
     reset(comp) {
         comp.index = 0;
     },

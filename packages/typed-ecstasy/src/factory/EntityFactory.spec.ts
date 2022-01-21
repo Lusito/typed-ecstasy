@@ -1,12 +1,12 @@
 import {
-    Container,
     Engine,
     AbstractEntityFactory,
     PartialEntityConfig,
     InjectSymbol,
-    declareComponent,
     service,
     PostConstruct,
+    registerComponent,
+    Component,
 } from "typed-ecstasy";
 
 /**
@@ -24,88 +24,100 @@ type GameConfig = {
 const GameConfig = InjectSymbol<GameConfig>("GameConfig");
 
 // Check out CameraFocusComponent for a more detailed explanation of how to declare components
-type PositionData = {
-    x: number;
-    y: number;
-};
-
 type PositionConfig = {
     x?: number;
     y?: number;
 };
 
-const PositionComponent = declareComponent("Position").withConfig<PositionData, PositionConfig>({
+class PositionComponent extends Component {
+    public static readonly key = "Position";
+    public static readonly unusedConfig: PositionConfig;
+
+    public x!: number;
+    public y!: number;
+}
+
+registerComponent(PositionComponent, {
     build(comp, config) {
         comp.x = config("x", 1);
         comp.y = config("y", 2);
     },
 });
 
-type SpriteData = {
-    image: string;
-    layer: number;
-};
-
 type SpriteConfig = {
     image: string;
     layer?: number;
 };
 
-const SpriteComponent = declareComponent("Sprite").withConfig<SpriteData, SpriteConfig>({
+class SpriteComponent extends Component {
+    public static readonly key = "Sprite";
+    public static readonly unusedConfig: SpriteConfig;
+
+    public image!: string;
+    public layer!: number;
+}
+
+registerComponent(SpriteComponent, {
     build(comp, config) {
         comp.image = config("image", "notfound.png");
         comp.layer = config("layer", 1);
     },
 });
 
-type PickupData = {
-    componentType: "Pickup";
-    material: "stone" | "wood";
-    amount: number;
-};
-
 type PickupConfig = {
     material: "stone" | "wood";
     amount: number;
 };
 
-const PickupComponent = declareComponent("Pickup").withConfig<PickupData, PickupConfig>({
+class PickupComponent extends Component {
+    public static readonly key = "Pickup";
+    public static readonly unusedConfig: PickupConfig;
+
+    public material!: "stone" | "wood";
+    public amount!: number;
+}
+
+registerComponent(PickupComponent, {
     build(comp, config) {
         comp.material = config("material", "wood");
         comp.amount = config("amount", 1);
     },
 });
 
-type CameraFocusData = {
-    weight: number;
-};
-
 type CameraFocusConfig = {
     weight?: number;
 };
 
-const CameraFocusComponent = declareComponent("CameraFocus").withConfig<CameraFocusData, CameraFocusConfig>(
-    (container: Container) => {
-        const { defaultCameraFocusWeight } = container.get(GameConfig);
-        return {
-            build(comp, config) {
-                comp.weight = config("weight", defaultCameraFocusWeight);
-            },
-        };
-    }
-);
+class CameraFocusComponent extends Component {
+    public static readonly key = "CameraFocus";
+    public static readonly unusedConfig: CameraFocusConfig;
 
-type VelocityData = {
-    x: number;
-    y: number;
-};
+    public weight!: number;
+}
+
+registerComponent(CameraFocusComponent, (container) => {
+    const { defaultCameraFocusWeight } = container.get(GameConfig);
+    return {
+        build(comp, config) {
+            comp.weight = config("weight", defaultCameraFocusWeight);
+        },
+    };
+});
 
 type VelocityConfig = {
     x?: number;
     y?: number;
 };
 
-const VelocityComponent = declareComponent("Velocity").withConfig<VelocityData, VelocityConfig>({
+class VelocityComponent extends Component {
+    public static readonly key = "Velocity";
+    public static readonly unusedConfig: VelocityConfig;
+
+    public x!: number;
+    public y!: number;
+}
+
+registerComponent(VelocityComponent, {
     build(comp, config) {
         comp.x = config("x", 1);
         comp.y = config("y", 2);
@@ -151,7 +163,7 @@ const blueprints: Record<string, EntityConfig> = {
 };
 
 @service()
-class EntityFactory extends AbstractEntityFactory<keyof typeof blueprints, EntityConfig> {
+class EntityFactory extends AbstractEntityFactory<keyof typeof blueprints> {
     protected [PostConstruct]() {
         this.setBlueprints(blueprints);
     }

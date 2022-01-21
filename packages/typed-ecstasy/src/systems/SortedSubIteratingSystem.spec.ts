@@ -5,19 +5,31 @@ import {
     Family,
     SortedSubIteratingSystem,
     SubSystem,
-    declareComponent,
-    declareMarkerComponent,
     SubSystemManager,
+    registerComponent,
+    Component,
 } from "typed-ecstasy";
 
-const ComponentX = declareComponent("X").withoutConfig<{ id: number }>({
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
+
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
+
+class ComponentX extends Component {
+    public static readonly key = "X";
+
+    public id!: number;
+}
+registerComponent(ComponentX, {
     reset(comp) {
         comp.id = 0;
     },
 });
-
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
 
 const processEntity = jest.fn();
 

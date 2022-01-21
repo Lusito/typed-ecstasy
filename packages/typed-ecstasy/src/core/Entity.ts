@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import type { ComponentData, ComponentType } from "./Component";
+import { Component, ComponentClass } from "./Component";
 import type { EntityManager, FamilyMeta } from "./EntityManager";
 
 /**
@@ -21,7 +21,7 @@ export class Entity {
 
     protected scheduledForRemoval = false;
 
-    private readonly componentsById: Array<ComponentData<unknown> | undefined> = [];
+    private readonly componentsById: Array<Component | undefined> = [];
 
     protected readonly familyMeta = new Set<FamilyMeta>();
 
@@ -49,7 +49,7 @@ export class Entity {
      * @param component The component to add.
      * @returns The added component.
      */
-    public add<T extends ComponentData<unknown>>(component: T) {
+    public add<T extends Component>(component: T) {
         if (this.manager) this.manager["delayedOperations"].addComponent(this, component);
         else this.addInternal(component);
         return component;
@@ -59,11 +59,11 @@ export class Entity {
      * Removes the Component of the specified type. Since there is only ever one Component of one type, we don't
      * need an instance reference.
      *
-     * @param type The Component type.
+     * @param Class The Component class.
      */
-    public remove(type: ComponentType) {
-        if (this.manager) this.manager["delayedOperations"].removeComponent(this, type);
-        else this.removeInternal(type.id);
+    public remove(Class: ComponentClass) {
+        if (this.manager) this.manager["delayedOperations"].removeComponent(this, Class.id);
+        else this.removeInternal(Class.id);
     }
 
     /** Removes all the {@link Component Components} from the Entity. */
@@ -81,41 +81,41 @@ export class Entity {
      * Retrieve a Component from this Entity by class.
      *
      * @template T The component data type. Do not specify manually.
-     * @param type The Component type.
+     * @param Class The Component class.
      * @returns The instance of the specified Component attached to this Entity, or undefined if no such Component exists.
      */
-    public get<T>(type: ComponentType<string, T>) {
-        return this.componentsById[type.id] as ComponentData<T> | undefined;
+    public get<T extends Component>(Class: ComponentClass<any, T>) {
+        return this.componentsById[Class.id] as T | undefined;
     }
 
     /**
      * Require a Component from this Entity by class.
      *
-     * @template T The component data type. Do not specify manually.
-     * @param type The Component type.
+     * @template T The component class type. Do not specify manually.
+     * @param Class The Component class.
      * @returns The instance of the specified Component attached to this Entity.
      * @throws If the component doesn't exist on this entity.
      */
-    public require<T>(type: ComponentType<string, T>) {
-        const component = this.componentsById[type.id];
-        if (!component) throw new Error(`Component ${type.name} does not exist on entity ${this.uuid}`);
-        return component as ComponentData<T>;
+    public require<T extends Component>(Class: ComponentClass<any, T>) {
+        const component = this.componentsById[Class.id];
+        if (!component) throw new Error(`Component ${Class.key} does not exist on entity ${this.uuid}`);
+        return component as T;
     }
 
     /**
-     * @param type The Component type.
+     * @param Class The Component class.
      * @returns Whether or not the Entity has a Component for the specified class.
      */
-    public has(type: ComponentType) {
-        return !!this.componentsById[type.id];
+    public has(Class: ComponentClass) {
+        return !!this.componentsById[Class.id];
     }
 
     /**
      * @internal
      * @param component The component data to add.
      */
-    protected addInternal(component: ComponentData<unknown>) {
-        const id = component.componentId;
+    protected addInternal(component: Component) {
+        const { id } = component.constructor as ComponentClass;
         const oldComponent = this.componentsById[id];
         if (component !== oldComponent) {
             if (oldComponent) this.removeInternal(id);

@@ -1,37 +1,43 @@
-import {
-    service,
-    Entity,
-    Engine,
-    Family,
-    SortedIteratingSystem,
-    declareComponent,
-    declareMarkerComponent,
-} from "typed-ecstasy";
+import { service, Entity, Engine, Family, SortedIteratingSystem, Component, registerComponent } from "typed-ecstasy";
 
 const deltaTime = 0.16;
 
-const ComponentB = declareMarkerComponent("B");
-const ComponentC = declareMarkerComponent("C");
-
-interface OrderData {
-    name: string;
-    zLayer: number;
+class ComponentB extends Component {
+    public static readonly key = "B";
 }
-const OrderComponent = declareComponent("OrderComponent").withoutConfig<OrderData>({});
+registerComponent(ComponentB, {});
 
-interface SpyData {
-    updates: number;
+class ComponentC extends Component {
+    public static readonly key = "C";
 }
-const SpyComponent = declareComponent("SpyComponent").withoutConfig<SpyData>({
+registerComponent(ComponentC, {});
+
+class OrderComponent extends Component {
+    public static readonly key = "Order";
+    public name!: string;
+    public zLayer!: number;
+}
+registerComponent(OrderComponent, {});
+
+class SpyComponent extends Component {
+    public static readonly key = "Spy";
+    public updates!: number;
+}
+registerComponent(SpyComponent, {
     reset(comp) {
         comp.updates = 0;
     },
 });
 
-interface IndexData {
-    index: number;
+class IndexComponent extends Component {
+    public static readonly key = "Index";
+    public index!: number;
 }
-const IndexComponent = declareComponent("IndexComponent").withoutConfig<IndexData>({});
+registerComponent(IndexComponent, {
+    reset(comp) {
+        comp.index = 0;
+    },
+});
 
 function comparator(a: Entity, b: Entity): number {
     const ac = a.require(OrderComponent);

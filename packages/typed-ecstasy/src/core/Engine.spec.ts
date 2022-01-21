@@ -1,10 +1,21 @@
 /* eslint-disable dot-notation */
-import { Entity, Engine, Family, EntitySystem, service, addMetaData } from "typed-ecstasy";
-
-import { declareComponent, declareMarkerComponent } from "./Component";
+import {
+    Entity,
+    Engine,
+    Family,
+    EntitySystem,
+    service,
+    addMetaData,
+    registerComponent,
+    Component,
+} from "typed-ecstasy";
 
 const deltaTime = 0.16;
-const ComponentA = declareMarkerComponent("Counter");
+
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
 
 @addMetaData
 abstract class EntitySystemMockBase extends EntitySystem {
@@ -35,10 +46,11 @@ class EntitySystemMockA extends EntitySystemMockBase {}
 @service()
 class EntitySystemMockB extends EntitySystemMockBase {}
 
-type CounterData = {
-    counter: number;
-};
-const CounterComponent = declareComponent("Counter").withoutConfig<CounterData>({
+class CounterComponent extends Component {
+    public static readonly key = "Counter";
+    public counter!: number;
+}
+registerComponent(CounterComponent, {
     reset(comp) {
         comp.counter = 0;
     },

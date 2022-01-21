@@ -4,7 +4,7 @@ import type { Family } from "./Family";
 import { createDelayedOperations } from "../utils/DelayedOperations";
 import { EntitySignal } from "./EntitySignal";
 import type { Allocator } from "./Allocator";
-import type { ComponentData, ComponentType } from "./Component";
+import { Component } from "./Component";
 
 export interface FamilyMeta {
     family: Family;
@@ -39,12 +39,12 @@ export class EntityManager {
         remove: (e: Entity) => this.removeInternal(e),
         removeAll: () => this.removeAllInternal(),
         updateFamily: (e: Entity) => this.updateFamilyInternal(e),
-        addComponent: <T extends ComponentData<unknown>>(e: Entity, component: T) => {
+        addComponent: <T extends Component>(e: Entity, component: T) => {
             e["addInternal"](component);
             this.updateFamily(e);
         },
-        removeComponent: (e: Entity, type: ComponentType) => {
-            e["removeInternal"](type.id);
+        removeComponent: (e: Entity, id: number) => {
+            e["removeInternal"](id);
             this.updateFamily(e);
         },
         removeAllComponents: (e: Entity) => {

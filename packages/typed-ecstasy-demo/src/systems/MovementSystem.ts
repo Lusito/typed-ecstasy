@@ -1,22 +1,22 @@
 import { Engine, Entity, Family, IteratingSystem, service } from "typed-ecstasy";
 
 import { CollidableComponent } from "../components/CollidableComponent";
-import { PositionComponent, PositionData } from "../components/PositionComponent";
-import { SizeComponent, SizeData } from "../components/SizeComponent";
+import { PositionComponent } from "../components/PositionComponent";
+import { SizeComponent } from "../components/SizeComponent";
 import { SoundComponent } from "../components/SoundComponent";
 import { TriggerComponent } from "../components/TriggerComponent";
-import { VelocityComponent, VelocityData } from "../components/VelocityComponent";
+import { VelocityComponent } from "../components/VelocityComponent";
 import { GameState } from "../services/GameState";
 import { SoundService } from "../services/SoundService";
 
 // Adjusted from: https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
 function sweptAABB(
-    vel: VelocityData,
+    vel: VelocityComponent,
     deltaTime: number,
-    p1: PositionData,
-    s1: SizeData,
-    p2: PositionData,
-    s2: SizeData,
+    p1: PositionComponent,
+    s1: SizeComponent,
+    p2: PositionComponent,
+    s2: SizeComponent,
     normal: { x: number; y: number }
 ) {
     const dx = vel.x * deltaTime;

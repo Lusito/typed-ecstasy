@@ -1,5 +1,5 @@
-import { ComponentConfigGetter, ComponentType } from "../core/Component";
-import { componentMetaRegistry } from "../core/componentMetaRegistry";
+import { ComponentConfigGetter } from "../core/Component";
+import { ComponentMeta, getComponentMeta } from "../core/componentMetaRegistry";
 
 const emptyOverrides = {};
 
@@ -9,8 +9,8 @@ const emptyOverrides = {};
  * @see {@link AbstractEntityFactory}
  */
 export class ComponentBlueprint {
-    /** The component type of this blueprint. */
-    public readonly type?: ComponentType;
+    /** The component meta. */
+    protected readonly meta?: ComponentMeta;
 
     private overrides: Record<string, unknown> = emptyOverrides;
 
@@ -19,13 +19,12 @@ export class ComponentBlueprint {
     /**
      * Creates a new blueprint with the specified component name.
      *
-     * @param name The name of the component.
+     * @param key The key of the component.
      * @param defaultValues The default values to use.
      */
-    public constructor(name: string, defaultValues: Record<string, unknown> = {}) {
-        const meta = componentMetaRegistry.get(name);
-        if (meta) this.type = meta.type;
-        else console.warn(`Can't find metadata for component "${name}". This component will not be added!`);
+    public constructor(key: string, defaultValues: Record<string, unknown> = {}) {
+        this.meta = getComponentMeta(key);
+        if (!this.meta) console.warn(`Can't find metadata for component "${key}". This component will not be added!`);
         this.defaultValues = defaultValues;
     }
 

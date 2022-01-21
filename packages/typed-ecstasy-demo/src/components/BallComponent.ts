@@ -1,6 +1,10 @@
-import { declareMarkerComponent, PartialEntityConfig } from "typed-ecstasy";
+import { Component, PartialEntityConfig, registerComponent } from "typed-ecstasy";
 
-export const BallComponent = declareMarkerComponent("Ball");
+export class BallComponent extends Component {
+    public static readonly key = "Ball";
+}
+
+registerComponent(BallComponent, {});
 
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof BallComponent> {}

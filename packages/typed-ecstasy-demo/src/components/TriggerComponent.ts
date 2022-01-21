@@ -1,4 +1,4 @@
-import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
+import { Component, registerComponent, PartialEntityConfig } from "typed-ecstasy";
 
 // Check out SoundComponent for a more detailed explanation of how to declare components
 export type TriggerAction =
@@ -12,13 +12,19 @@ export type TriggerAction =
     | {
           type: "removeOther";
       };
-export type TriggerData = {
+
+export type TriggerConfig = {
     actions: TriggerAction[];
 };
 
-export type TriggerConfig = TriggerData;
+export class TriggerComponent extends Component {
+    public static readonly key = "Trigger";
+    public static readonly unusedConfig: TriggerConfig;
 
-export const TriggerComponent = declareComponent("Trigger").withConfig<TriggerData, TriggerConfig>({
+    public actions!: TriggerAction[];
+}
+
+registerComponent(TriggerComponent, {
     build(comp, config) {
         comp.actions = config("actions", []);
     },

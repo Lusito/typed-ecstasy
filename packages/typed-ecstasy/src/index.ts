@@ -2,6 +2,7 @@ export * from "./core/AbstractSystem";
 export * from "./core/AbstractSystemManager";
 export * from "./core/Allocator";
 export * from "./core/Component";
+export { registerComponent, FactoryForClass } from "./core/componentMetaRegistry";
 export * from "./core/Engine";
 export * from "./core/Entity";
 export * from "./core/EntitySignal";
@@ -22,3 +23,7 @@ export * from "./systems/IteratingSystem";
 export * from "./systems/SortedIteratingSystem";
 export * from "./systems/SortedSubIteratingSystem";
 export * from "./utils/DelayedOperations";
+
+// Must be here for easy declaration merging:
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface EntityConfig {}

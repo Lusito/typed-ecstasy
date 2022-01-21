@@ -1,15 +1,8 @@
-import { declareComponent, PartialEntityConfig } from "typed-ecstasy";
+import { Component, registerComponent, PartialEntityConfig } from "typed-ecstasy";
 
 import { GameSound, GameSoundKey, GameSounds } from "../services/AssetService";
 
-// First of all, we need the component data type. This is what you will interact with in your entity systems.
-export type SoundData = {
-    create?: GameSound;
-    remove?: GameSound;
-    hit?: GameSound;
-};
-
-// Then we need a configuration type, i.e. the data that is needed to assemble your entity correctly
+// First of all, we need a configuration type, i.e. the data that is needed to assemble your entity correctly
 // To be able to configure the above component using a data-driven approach,
 // we need to first define, what properties can be configured using that data.
 // The following interface represent your json data:
@@ -19,7 +12,18 @@ export type SoundConfig = {
     hit?: GameSoundKey | null;
 };
 
-export const SoundComponent = declareComponent("Sound").withConfig<SoundData, SoundConfig>((container) => {
+// Then we need the component class. This is what you will interact with in your entity systems.
+export class SoundComponent extends Component {
+    public static readonly key = "Sound";
+    public static readonly unusedConfig: SoundConfig;
+
+    public create?: GameSound;
+    public remove?: GameSound;
+    public hit?: GameSound;
+}
+
+// You can register a component without using a config. See FIXME
+registerComponent(SoundComponent, (container) => {
     // In this place, you can store some context information supplied by your game
     const sounds = container.get(GameSounds);
     return {
@@ -53,8 +57,6 @@ export const SoundComponent = declareComponent("Sound").withConfig<SoundData, So
         },
     };
 });
-
-// You can declare a component without using a config. See FIXME
 
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof SoundComponent> {}

@@ -1,5 +1,5 @@
 import { Allocator } from "../core/Allocator";
-import type { ComponentBuilder, ComponentData, ComponentType } from "../core/Component";
+import type { Component, ComponentBuilder, ComponentClass } from "../core/Component";
 import type { Entity } from "../core/Entity";
 import { Pool } from "./Pool";
 import { PooledEntity } from "./PooledEntity";
@@ -13,7 +13,7 @@ export interface PoolAllocatorConfig {
     /** The default maximum number of free components per type to store. */
     maxComponentsDefault?: number;
     /** The maximum number of free components per type to store. */
-    maxComponentPerType?: Array<[type: ComponentType<string, unknown>, max: number]>;
+    maxComponentPerType?: Array<[id: number, max: number]>;
 }
 
 /**
@@ -21,7 +21,7 @@ export interface PoolAllocatorConfig {
  */
 export class PoolAllocator extends Allocator {
     private readonly entityPool: Pool<PooledEntity>;
-    private readonly componentPools: Array<Pool<ComponentData<unknown>>> = [];
+    private readonly componentPools: Array<Pool<Component>> = [];
     private readonly maxComponentsDefault?: number;
     private readonly maxComponentPerType: number[] = [];
 
@@ -36,8 +36,8 @@ export class PoolAllocator extends Allocator {
         this.maxComponentsDefault = config?.maxComponentsDefault;
 
         const overrides = config?.maxComponentPerType ?? [];
-        for (const [type, max] of overrides) {
-            this.maxComponentPerType[type.id] = max;
+        for (const [id, max] of overrides) {
+            this.maxComponentPerType[id] = max;
         }
     }
 
@@ -52,25 +52,27 @@ export class PoolAllocator extends Allocator {
         }
     }
 
-    public override obtainComponent<T>(
-        type: ComponentType<string, T, unknown>,
-        factory: ComponentBuilder<T, unknown>
-    ): ComponentData<T> {
-        const pool = this.componentPools[type.id];
+    public override obtainComponent<T extends Component>(
+        Class: ComponentClass<any, T>,
+        builder: ComponentBuilder<T, unknown>
+    ): T {
+        const pool = this.componentPools[Class.id];
         if (pool) {
             const comp = pool.obtain();
-            if (comp) return comp as ComponentData<T>;
+            if (comp) return comp as T;
         }
-        return super.obtainComponent(type, factory);
+        return super.obtainComponent(Class, builder);
     }
 
-    public override freeComponent<T>(component: ComponentData<T>) {
-        let pool = this.componentPools[component.componentId];
+    public override freeComponent(component: Component) {
+        const { id } = component.constructor as ComponentClass;
+        let pool = this.componentPools[id];
         if (!pool) {
-            pool = new Pool(this.maxComponentPerType[component.componentId] ?? this.maxComponentsDefault);
-            this.componentPools[component.componentId] = pool;
+            pool = new Pool(this.maxComponentPerType[id] ?? this.maxComponentsDefault);
+            this.componentPools[id] = pool;
         }
         pool.free(component);
-        component.componentFactory.reset?.(component);
+        // eslint-disable-next-line dot-notation
+        (component["componentBuilder"] as ComponentBuilder<unknown, unknown>).reset?.(component);
     }
 }

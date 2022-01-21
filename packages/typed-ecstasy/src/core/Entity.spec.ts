@@ -1,10 +1,19 @@
-import { Engine, Entity } from "typed-ecstasy";
+import { Component, Engine, Entity, registerComponent } from "typed-ecstasy";
 
-import { declareMarkerComponent } from "./Component";
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
 
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
-const ComponentC = declareMarkerComponent("C");
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
+
+class ComponentC extends Component {
+    public static readonly key = "C";
+}
+registerComponent(ComponentC, {});
 
 describe("Entity", () => {
     test("uniqueIndex", () => {

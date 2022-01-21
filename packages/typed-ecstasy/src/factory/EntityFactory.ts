@@ -1,23 +1,20 @@
 /* eslint-disable dot-notation */
 import { Engine } from "../core/Engine";
-import type { ComponentType } from "../core/Component";
+import type { ComponentClassWithConfig, ComponentClass } from "../core/Component";
 import { addMetaData } from "../di";
 import { ComponentBlueprint } from "./ComponentBlueprint";
-
-/** Used for declaration merging. */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface EntityConfig {}
+import type { EntityConfig } from "..";
 
 export type EntityBlueprint = ComponentBlueprint[];
 
-export type PartialEntityConfig<T extends ComponentType<any, any, any>> = T extends ComponentType<
+export type PartialEntityConfig<T extends ComponentClass<any, any>> = T extends ComponentClassWithConfig<
     infer TName,
     any,
     infer TConfig
 >
-    ? [TConfig] extends [never]
-        ? Partial<Record<TName, true>>
-        : Partial<Record<TName, TConfig>>
+    ? Partial<Record<TName, TConfig>>
+    : T extends ComponentClass<infer TName, any>
+    ? Partial<Record<TName, true>>
     : never;
 
 /**
@@ -77,12 +74,15 @@ export abstract class AbstractEntityFactory<TName extends string> {
 
             for (const componentBlueprint of blueprint) {
                 // eslint-disable-next-line prefer-destructuring
-                const { type } = componentBlueprint;
+                const meta = componentBlueprint["meta"];
                 // Skip blueprints, where the component is not used in code
-                if (!type) continue;
+                if (!meta) continue;
 
-                componentBlueprint["setOverrides"](overrides?.[type.name as keyof EntityConfigOverrides]);
-                const component = this.engine.obtainComponent(type, componentBlueprint.get);
+                componentBlueprint["setOverrides"](overrides?.[meta.key as keyof EntityConfigOverrides]);
+                const component = this.engine.obtainComponent(
+                    meta.class as ComponentClassWithConfig<any, any, any>,
+                    componentBlueprint.get
+                );
                 if (component) entity.add(component);
                 componentBlueprint["setOverrides"]();
             }

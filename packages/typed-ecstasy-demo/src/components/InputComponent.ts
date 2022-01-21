@@ -1,6 +1,10 @@
-import { declareMarkerComponent, PartialEntityConfig } from "typed-ecstasy";
+import { Component, PartialEntityConfig, registerComponent } from "typed-ecstasy";
 
-export const InputComponent = declareMarkerComponent("Input");
+export class InputComponent extends Component {
+    public static readonly key = "Input";
+}
+
+registerComponent(InputComponent, {});
 
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof InputComponent> {}

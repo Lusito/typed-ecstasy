@@ -1,12 +1,22 @@
 /* eslint-disable dot-notation */
-import { Entity, Engine, Family, EntitySystem, service } from "typed-ecstasy";
-
-import { declareComponent, declareMarkerComponent } from "./Component";
+import { Entity, Engine, Family, EntitySystem, service, Component, registerComponent } from "typed-ecstasy";
 
 const deltaTime = 0.16;
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
-const ComponentC = declareMarkerComponent("C");
+
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
+
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
+
+class ComponentC extends Component {
+    public static readonly key = "C";
+}
+registerComponent(ComponentC, {});
 
 class EntityListenerMock {
     public addedCount = 0;
@@ -55,12 +65,13 @@ class UpdateSystem<T> extends EntitySystem {
     }
 }
 
-interface PositionData {
-    x: number;
-    y: number;
-}
+class PositionComponent extends Component {
+    public static readonly key = "Position";
 
-const PositionComponent = declareComponent("Position").withoutConfig<PositionData>({
+    public x!: number;
+    public y!: number;
+}
+registerComponent(PositionComponent, {
     reset(comp) {
         comp.x = 0;
         comp.y = 0;

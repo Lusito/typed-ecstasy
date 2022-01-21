@@ -1,11 +1,12 @@
-import { Entity, Engine, Family, IntervalIteratingSystem, service, declareComponent } from "typed-ecstasy";
+import { Entity, Engine, Family, IntervalIteratingSystem, service, Component, registerComponent } from "typed-ecstasy";
 
 const deltaTime = 0.1;
 
-interface IntervalData {
-    numUpdates: number;
+class IntervalComponentSpy extends Component {
+    public static readonly key = "Interval";
+    public numUpdates!: number;
 }
-const IntervalComponentSpy = declareComponent("IntervalComponentSpy").withoutConfig<IntervalData>({
+registerComponent(IntervalComponentSpy, {
     reset(comp) {
         comp.numUpdates = 0;
     },

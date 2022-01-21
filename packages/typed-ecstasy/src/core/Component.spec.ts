@@ -1,30 +1,24 @@
-import { declareMarkerComponent } from "typed-ecstasy";
+import { Engine, Component, registerComponent } from "typed-ecstasy";
 
-import { isComponent } from "./Component";
-import { Engine } from "./Engine";
+class ComponentA extends Component {
+    public static readonly key = "A";
+}
+registerComponent(ComponentA, {});
 
-const ComponentA = declareMarkerComponent("A");
-const ComponentB = declareMarkerComponent("B");
+class ComponentB extends Component {
+    public static readonly key = "B";
+}
+registerComponent(ComponentB, {});
 
 describe("Component", () => {
     const engine = new Engine();
     const a = engine.obtainComponent(ComponentA)!;
     const b = engine.obtainComponent(ComponentB)!;
 
-    test("#componentName should return the component name", () => {
-        expect(a.componentName).toBe("A");
-        expect(b.componentName).toBe("B");
-    });
-
-    test("#componentId should return the component id", () => {
-        expect(a.componentId).toBe(ComponentA.id);
-        expect(b.componentId).toBe(ComponentB.id);
-    });
-
     test("isComponent() should return true for matching component classes", () => {
-        expect(isComponent(a, ComponentA)).toBe(true);
-        expect(isComponent(a, ComponentB)).toBe(false);
-        expect(isComponent(b, ComponentB)).toBe(true);
-        expect(isComponent(b, ComponentA)).toBe(false);
+        expect(a.isInstanceOf(ComponentA)).toBe(true);
+        expect(a.isInstanceOf(ComponentB)).toBe(false);
+        expect(b.isInstanceOf(ComponentB)).toBe(true);
+        expect(b.isInstanceOf(ComponentA)).toBe(false);
     });
 });
