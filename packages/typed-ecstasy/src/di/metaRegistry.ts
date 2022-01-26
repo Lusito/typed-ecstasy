@@ -14,12 +14,26 @@ export type ServiceMeta<TType extends HotSwapType> = {
 
 const serviceMetaById = new Map<symbol, ServiceMeta<HotSwapType>>();
 
+function isZeroParamConstructor(constructor: Constructor<HotSwapType>) {
+    while (constructor) {
+        if (constructor.length !== 0) return false;
+        constructor = Object.getPrototypeOf(constructor)?.constructor;
+    }
+
+    return true;
+}
+
 /** @internal */
 export const metaRegistry = {
     registerService(constructor: Constructor<HotSwapType>, transient?: boolean, oldMeta?: ServiceMeta<HotSwapType>) {
         const id = oldMeta?.id ?? Symbol(constructor.name);
-        const params = metaData.paramTypes.get(constructor);
-        if (!params) throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
+        let params = metaData.paramTypes.get(constructor);
+        if (!params) {
+            // Could just be no-param constructor
+            if (!isZeroParamConstructor(constructor))
+                throw new Error(`Could not find metadata for constructor parameters of ${constructor}`);
+            params = [];
+        }
         params.forEach((param, index) => {
             if (param === Function) {
                 throw new Error(
