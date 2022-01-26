@@ -1,6 +1,6 @@
 {
   "name": "typed-ecstasy",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "description": "An entity component system for TypeScript (and JavaScript), based on ashley",
   "keywords": [
     "TypeScript",
