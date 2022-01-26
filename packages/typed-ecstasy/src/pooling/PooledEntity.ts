@@ -39,7 +39,9 @@ export class PooledEntity extends Entity {
         this.familyMeta.clear();
         this.manager = null;
         this.uuid = 0;
-        this.flags = 0;
+        for (const key of Object.keys(this.meta)) {
+            delete (this.meta as Record<string, unknown>)[key];
+        }
         this.scheduledForRemoval = false;
     }
 }

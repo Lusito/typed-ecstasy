@@ -1,4 +1,5 @@
 /* eslint-disable dot-notation */
+import type { EntityMetaData } from "..";
 import { Component, ComponentClass } from "./Component";
 import type { EntityManager, FamilyMeta } from "./EntityManager";
 
@@ -14,8 +15,9 @@ export interface EntityRef {
  * Simple containers of components, which give an entity data.
  */
 export class Entity {
-    /** A flag that can be used to bit mask this entity. Up to the user to manage. */
-    public flags = 0;
+    // fixme: add markdown documentation
+    /** An object to store metadata. Up to the user to manage. Use declaration merging on EntityMetaData. */
+    public readonly meta: EntityMetaData = {};
 
     protected uuid = 0;
 

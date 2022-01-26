@@ -32,14 +32,14 @@ describe("PooledEntity", () => {
         const entityId = entity.getId();
         expect(entityId).toBeGreaterThan(0);
 
-        entity.flags = 1;
+        Object.assign(entity.meta, { marked: true });
         expect(a.value).toBe("initialA");
         expect(b.value).toBe("initialB");
 
         entity.destroy();
         expect(a.value).toBe("resettedA");
         expect(b.value).toBe("resettedB");
-        expect(entity.flags).toBe(0);
+        expect(entity.meta).not.toHaveProperty("marked");
         expect(entity.getId()).toBe(0);
         expect(entity["manager"]).toBe(null);
         expect(entity.getAll()).toHaveLength(0);

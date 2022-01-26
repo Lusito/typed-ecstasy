@@ -27,3 +27,6 @@ export * from "./utils/DelayedOperations";
 // Must be here for easy declaration merging:
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface EntityConfig {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface EntityMetaData {}

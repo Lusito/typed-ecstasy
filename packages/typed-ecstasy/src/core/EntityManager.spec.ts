@@ -109,7 +109,6 @@ class RemoveEntityTwiceSystem extends EntitySystem {
         for (let i = 0; i < 10; i++) {
             const entity = new Entity();
             this.onEntityCreated(entity);
-            entity.flags = 1;
             entity.add(engine.obtainComponent(PositionComponent)!);
             engine.entities.add(entity);
         }
@@ -541,10 +540,11 @@ describe("EntityManager", () => {
 
     test("removeEntityTwice", () => {
         const engine = new Engine();
-        const system = engine.systems.add(RemoveEntityTwiceSystem);
-        system.onEntityCreated = (e) => expect(e.flags).toBe(0);
+        engine.systems.add(RemoveEntityTwiceSystem);
 
-        for (let j = 0; j < 2; j++) engine.update(0);
+        expect(() => {
+            for (let j = 0; j < 2; j++) engine.update(0);
+        }).not.toThrow();
     });
 
     test("destroyEntity", () => {

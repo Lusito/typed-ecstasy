@@ -71,12 +71,12 @@ describe("PoolAllocator", () => {
         expect(a.value).toBe("initialA");
         expect(b.value).toBe("initialB");
         expect(c.value).toBe("initialC");
-        expect(e.flags).toBe(0);
+        expect(e.meta).not.toHaveProperty("marked");
 
         a.value = "updatedA";
         b.value = "updatedB";
         c.value = "updatedC";
-        e.flags = 1;
+        Object.assign(e.meta, { marked: true });
 
         allocator.freeComponent(a);
         allocator.freeComponent(b);
@@ -91,7 +91,7 @@ describe("PoolAllocator", () => {
         expect(a.value).toBe("resettedA");
         expect(b.value).toBe("resettedB");
         expect(c.value).toBe("resettedC");
-        expect(e.flags).toBe(0);
+        expect(e.meta).not.toHaveProperty("marked");
     });
 
     it("should not free normal entities", () => {
