@@ -5,9 +5,9 @@
  * @author Nathan Sweet
  */
 export class Pool<T> {
-    private readonly max: number;
+    public readonly max: number;
 
-    private readonly freeObjects: T[] = [];
+    public readonly freeObjects: T[] = [];
 
     /**
      * Creates a pool with an initial capacity and a maximum.

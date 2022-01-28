@@ -33,3 +33,5 @@ registerComponent(TriggerComponent, {
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof TriggerComponent> {}
 }
+
+module.hot?.accept();

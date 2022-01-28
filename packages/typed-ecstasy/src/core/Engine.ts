@@ -55,10 +55,20 @@ export class Engine {
     /**
      * Called when a components metadata changes.
      *
-     * @param id The component class id.
+     * @param Class The component class that changed.
      */
-    protected onComponentMetaDataChange(id: number) {
-        delete this.builders[id];
+    protected onComponentMetaDataChange(Class: ComponentClass<any, any>) {
+        delete this.builders[Class.id];
+
+        // eslint-disable-next-line dot-notation
+        this.allocator["onComponentMetaDataChange"](Class);
+
+        // We need to change all components to use the new class.
+        // Using getAll to avoid creating unnecessary family metadata
+        for (const e of this.entities.getAll()) {
+            const comp = e.get(Class);
+            if (comp) Object.setPrototypeOf(comp, Class.prototype);
+        }
     }
 
     /**

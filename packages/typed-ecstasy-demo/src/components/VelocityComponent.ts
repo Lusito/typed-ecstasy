@@ -24,3 +24,5 @@ registerComponent(VelocityComponent, {
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof VelocityComponent> {}
 }
+
+module.hot?.accept();

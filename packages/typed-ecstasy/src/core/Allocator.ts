@@ -51,4 +51,14 @@ export class Allocator {
         // eslint-disable-next-line dot-notation
         (component["componentBuilder"] as ComponentBuilder<unknown, unknown>).reset?.(component);
     }
+
+    /**
+     * Called when a components metadata changes.
+     *
+     * @param Class The component class that changed.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected onComponentMetaDataChange(Class: ComponentClass<any, any>) {
+        // override this
+    }
 }

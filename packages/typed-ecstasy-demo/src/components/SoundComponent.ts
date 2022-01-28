@@ -61,3 +61,5 @@ registerComponent(SoundComponent, (container) => {
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof SoundComponent> {}
 }
+
+module.hot?.accept();

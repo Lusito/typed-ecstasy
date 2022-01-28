@@ -9,3 +9,5 @@ registerComponent(BallComponent, {});
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof BallComponent> {}
 }
+
+module.hot?.accept();

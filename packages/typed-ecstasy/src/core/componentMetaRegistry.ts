@@ -50,8 +50,7 @@ export function registerComponent<T extends ComponentClass<any, any>>(Class: T, 
     for (const ref of enginesForComponentMetaRegistry) {
         const engine = ref.deref();
         // eslint-disable-next-line dot-notation
-        if (engine) engine["onComponentMetaDataChange"](meta.id);
+        if (engine) engine["onComponentMetaDataChange"](Class);
         else enginesForComponentMetaRegistry.delete(ref);
     }
-
 }

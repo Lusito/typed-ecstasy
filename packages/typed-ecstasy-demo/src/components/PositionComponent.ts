@@ -24,3 +24,5 @@ registerComponent(PositionComponent, {
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof PositionComponent> {}
 }
+
+module.hot?.accept();

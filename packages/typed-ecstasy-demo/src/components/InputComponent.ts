@@ -9,3 +9,5 @@ registerComponent(InputComponent, {});
 declare module "typed-ecstasy" {
     interface EntityConfig extends PartialEntityConfig<typeof InputComponent> {}
 }
+
+module.hot?.accept();

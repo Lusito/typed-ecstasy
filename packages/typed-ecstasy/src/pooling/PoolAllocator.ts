@@ -75,4 +75,14 @@ export class PoolAllocator extends Allocator {
         // eslint-disable-next-line dot-notation
         (component["componentBuilder"] as ComponentBuilder<unknown, unknown>).reset?.(component);
     }
+
+    protected override onComponentMetaDataChange(Class: ComponentClass<any, any>) {
+        const pool = this.componentPools[Class.id];
+        if (pool) {
+            // We need to change all components to use the new class
+            for (const comp of pool.freeObjects) {
+                Object.setPrototypeOf(comp, Class.prototype);
+            }
+        }
+    }
 }
