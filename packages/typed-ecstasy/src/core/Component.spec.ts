@@ -15,10 +15,19 @@ describe("Component", () => {
     const a = engine.obtainComponent(ComponentA)!;
     const b = engine.obtainComponent(ComponentB)!;
 
-    test("isComponent() should return true for matching component classes", () => {
+    test("isInstanceOf() should return true for matching component classes", () => {
         expect(a.isInstanceOf(ComponentA)).toBe(true);
         expect(a.isInstanceOf(ComponentB)).toBe(false);
         expect(b.isInstanceOf(ComponentB)).toBe(true);
         expect(b.isInstanceOf(ComponentA)).toBe(false);
+    });
+
+    test("isInstance() should return true for matching component classes", () => {
+        expect(ComponentA.isInstance(a)).toBe(true);
+        expect(ComponentB.isInstance(a)).toBe(false);
+        expect(ComponentB.isInstance(b)).toBe(true);
+        expect(ComponentA.isInstance(b)).toBe(false);
+        expect(ComponentA.isInstance(undefined)).toBe(false);
+        expect(ComponentA.isInstance(null)).toBe(false);
     });
 });

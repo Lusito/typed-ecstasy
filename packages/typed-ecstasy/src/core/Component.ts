@@ -17,6 +17,20 @@ export class Component {
     public isInstanceOf<T extends Component>(Class: ComponentClass<any, T>): this is T {
         return Class.id === (this.constructor as ComponentClass).id;
     }
+
+    /**
+     * Checks if the passed class is an instance of this component class.
+     *
+     * @param this The component class.
+     * @param instance The component instance, undefined or null.
+     * @returns True if the component matches the class.
+     */
+    public static isInstance<T extends Component>(
+        this: ComponentClass<any, T>,
+        instance: Component | null | undefined
+    ): instance is T {
+        return instance instanceof Component && (instance.constructor as ComponentClass).id === this.id;
+    }
 }
 
 export type ComponentConfigGetter<T> = <TKey extends Extract<keyof T, string>>(
