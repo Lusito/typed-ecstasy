@@ -1,4 +1,5 @@
 import type { ComponentClass, ComponentClassWithConfig, ComponentFactory } from "./Component";
+import type { Engine } from "./Engine";
 
 export type ComponentMeta<TData = unknown, TConfig = unknown> = {
     id: number;
@@ -9,7 +10,6 @@ export type ComponentMeta<TData = unknown, TConfig = unknown> = {
 
 let nextId = 1;
 const componentMetaMap: Record<string, ComponentMeta> = {};
-const listeners = new Set<(id: number) => void>();
 
 /**
  * @param key The component key.
@@ -19,14 +19,7 @@ export function getComponentMeta(key: string): Readonly<ComponentMeta> | undefin
     return componentMetaMap[key];
 }
 
-/**
- * Get notified when component metadata changes.
- *
- * @param listener This listener will be called with the component id that was changed.
- */
-export function addComponentMetaListener(listener: (id: number) => void) {
-    listeners.add(listener);
-}
+export const enginesForComponentMetaRegistry = new Set<WeakRef<Engine>>();
 
 export type FactoryForClass<T> = T extends ComponentClassWithConfig<any, infer TType, infer TConfig>
     ? ComponentFactory<TType, TConfig>
@@ -53,5 +46,12 @@ export function registerComponent<T extends ComponentClass<any, any>>(Class: T, 
     (Class as { id: number }).id = meta.id;
     meta.class = Class;
     meta.factory = factory as ComponentFactory<unknown, unknown>;
-    listeners.forEach((listener) => listener(meta.id));
+
+    for (const ref of enginesForComponentMetaRegistry) {
+        const engine = ref.deref();
+        // eslint-disable-next-line dot-notation
+        if (engine) engine["onComponentMetaDataChange"](meta.id);
+        else enginesForComponentMetaRegistry.delete(ref);
+    }
+
 }

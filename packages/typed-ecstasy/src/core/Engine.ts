@@ -10,7 +10,7 @@ import {
     ComponentClassWithConfig,
     ComponentConfigGetter,
 } from "./Component";
-import { addComponentMetaListener, getComponentMeta } from "./componentMetaRegistry";
+import { enginesForComponentMetaRegistry, getComponentMeta } from "./componentMetaRegistry";
 
 const noopConfig: ComponentConfigGetter<unknown> = (_key, fallback) => fallback;
 
@@ -48,10 +48,17 @@ export class Engine {
         this.container.set(Engine, this);
         this.systems = this.container.get(EntitySystemManager);
 
-        // When the meta changes, just delete the factory and wait for it to be recreated on demand
-        addComponentMetaListener((id) => {
-            delete this.builders[id];
-        });
+        // Register engine reference, so we can get notified about changes
+        enginesForComponentMetaRegistry.add(new WeakRef(this));
+    }
+
+    /**
+     * Called when a components metadata changes.
+     *
+     * @param id The component class id.
+     */
+    protected onComponentMetaDataChange(id: number) {
+        delete this.builders[id];
     }
 
     /**
