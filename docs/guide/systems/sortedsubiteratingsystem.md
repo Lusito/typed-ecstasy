@@ -3,7 +3,7 @@
 Going one step further, what if you want to perform multiple render steps for an entity before rendering the next one?
 For example, render a sprite and above that some particle effects of a player. Both should be obscured by the tree that is in front of the player.
 
-[SortedSubIteratingSystem](../../api/classes/sortedsubiteratingsystem.md) allows to add multiple [SubSystem](../../api/classes/subsystem.md) instances to the system.
+[SortedSubIteratingSystem](../../api/classes/SortedSubIteratingSystem.md) allows to add multiple [SubSystem](../../api/classes/SubSystem.md) instances to the system.
 
 ```typescript
 @Service()

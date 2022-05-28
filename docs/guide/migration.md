@@ -28,7 +28,7 @@ Just follow the instructions in the [setup guide](./README.md)
 
 ### Entity/System Managers
 
-Most of the code in [Engine](./core/engine.md) has been moved into [EntityManager](../api/classes/entitymanager.md) and [EntitySystemManager](../api/classes/entitysystemmanager.md).
+Most of the code in [Engine](./core/engine.md) has been moved into [EntityManager](../api/classes/EntityManager.md) and [EntitySystemManager](../api/classes/EntitySystemManager.md).
 
 As such, you will have to change your calls from `engine.x` to `engine.entities.x` or `engine.systems.x`. Some properties and methods might have changed a bit in how they are accessed. It should be relatively obvious when you see the new properties/methods to see how you move to the new API.
 

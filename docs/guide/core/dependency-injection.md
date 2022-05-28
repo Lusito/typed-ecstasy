@@ -58,7 +58,7 @@ class RenderSystem extends EntitySystem {
 ```
 
 Keep in mind though, that you won't be able to access this property in the constructor, since it will be set after instantiation!
-If you need to use it after instantiation, you can do this by overriding the [onEnable](../../api/classes/abstractsystem.md#onenable) method:
+If you need to use it after instantiation, you can do this by overriding the [onEnable](../../api/classes/AbstractSystem.md#onEnable) method:
 
 ```typescript
 @Service()
@@ -76,7 +76,7 @@ class RenderSystem extends EntitySystem {
 
 ## Container Instance
 
-You can use [engine.getContainer()](../../api/classes/engine.md#getcontainer) to get the instance of the dependency injection container for an engine.
+You can use [engine.getContainer()](../../api/classes/Engine.md#getContainer) to get the instance of the dependency injection container for an engine.
 Alternatively, it's also possible to let it be injected in your service. Use `ContainerInstance` from typedi as type.
 
 Using the container is not needed for creating/adding systems, this is done automatically for you. Use the container instance if you need more control.
@@ -85,7 +85,7 @@ Using the container is not needed for creating/adding systems, this is done auto
 
 By default, you can inject everything that is marked with the `@Service` annotation. In addition, the Engine constructor adds a couple of extra classes, which can be injected:
 - [Engine](./engine.md) The engine instance
-- [Allocator](../../api/classes/allocator.md) (either a plain or a [pooled](./pooling.md) allocator)
+- [Allocator](../../api/classes/Allocator.md) (either a plain or a [pooled](./pooling.md) allocator)
 - The typedi `ContainerInstance` itself.
 
 If you want to inject something, that is not marked with `@Service`, you must set it on the container manually:

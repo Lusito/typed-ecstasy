@@ -1,11 +1,11 @@
 # Entity System
 
-[EntitySystem](../../api/classes/entitysystem.md) derived classes contain the logic that process our game entities.
+[EntitySystem](../../api/classes/EntitySystem.md) derived classes contain the logic that process our game entities.
 
 **Make sure** to check out the page about [Dependency Injection](../core/dependency-injection.md).
 
 ## Creating a Custom EntitySystem
-In addition to extending the [built-in entitysystems](../systems/README.md), you can extend [EntitySystem](../../api/classes/entitysystem.md) itself.
+In addition to extending the [built-in entitysystems](../systems/README.md), you can extend [EntitySystem](../../api/classes/EntitySystem.md) itself.
 
 These are some methods you might want to override.
 
@@ -80,7 +80,7 @@ Removing a system from the engine will also remove it from the dependency contai
 
 ## Updating All Systems
 
-A call to [engine.update(deltaTime)](../../api/classes/engine.md#update) will update all the registered entity systems according to their priority order. The lower the priority level, the sooner the system will be updated. You can change the priority of a system using its [setPriority()](../../api/classes/entitysystem.md#setpriority) method.
+A call to [engine.update(deltaTime)](../../api/classes/Engine.md#update) will update all the registered entity systems according to their priority order. The lower the priority level, the sooner the system will be updated. You can change the priority of a system using its [setPriority()](../../api/classes/EntitySystem.md#setPriority) method.
 
 ## Retrieving an EntitySystem From the Engine
 A system can be retrieved from an engine reference by its class.

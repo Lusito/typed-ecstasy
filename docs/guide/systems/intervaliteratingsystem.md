@@ -1,6 +1,6 @@
 # IntervalIteratingSystem
 
-It is also possible to combine the logic of [IteratingSystem](iteratingsystem.md) and [IntervalSystem](intervalsystem.md) thanks to [IntervalIteratingSystem](../../api/classes/intervaliteratingsystem.md). In this case, you will need to implement its [processEntity()](../../api/classes/intervaliteratingsystem.md#processentity) method.
+It is also possible to combine the logic of [IteratingSystem](iteratingsystem.md) and [IntervalSystem](intervalsystem.md) thanks to [IntervalIteratingSystem](../../api/classes/IntervalIteratingSystem.md). In this case, you will need to implement its [processEntity()](../../api/classes/IntervalIteratingSystem.md#processEntity) method.
 
 ```typescript
 @Service()

@@ -8,12 +8,12 @@ Instead of just removing all references to an object, it will be reset and put o
 
 ## Pool
 
-[Pool](../../api/classes/pool.md) is the base class for all pools. Unless you need to pool anything aside from entities and components, you don't need this class.
+[Pool](../../api/classes/Pool.md) is the base class for all pools. Unless you need to pool anything aside from entities and components, you don't need this class.
 
 ## Poolable
 
-[Poolable](../../api/interfaces/poolable.md) Is an interface, which can be implemented on objects to be able to reset them to their default state.
-Simply implement the [reset()](../../api/interfaces/poolable.md#reset) method and you're good to go:
+[Poolable](../../api/interfaces/Poolable.md) Is an interface, which can be implemented on objects to be able to reset them to their default state.
+Simply implement the [reset()](../../api/interfaces/Poolable.md#reset) method and you're good to go:
 
 ```typescript
 export class DataComponent extends Component implements Poolable {
@@ -32,7 +32,7 @@ It might be a valid use-case if the object keeps references that might prevent g
 
 ## PoolAllocator
 
-A [PoolAllocator](../../api/classes/poolallocator.md) is the class to use if you want to pool entities and components.
+A [PoolAllocator](../../api/classes/PoolAllocator.md) is the class to use if you want to pool entities and components.
 
 Simple usage might look like this:
 ```typescript
@@ -57,7 +57,7 @@ const factory = new EntityFactory<SampleEntityConfig, SampleContext>(componentFa
 
 ## Injecting the Allocator Into Your Systems or Other Services
 
-In some situations, you'll want to use the allocator in a system. The class to use here is [Allocator](../../api/classes/allocator.md) (and not PoolAllocator!):
+In some situations, you'll want to use the allocator in a system. The class to use here is [Allocator](../../api/classes/Allocator.md) (and not PoolAllocator!):
 
 ```typescript
 @Service()
@@ -83,6 +83,6 @@ There will always be an Allocator available for injection, even if you didn't co
 
 - Don't keep references to entities/components that have been removed.
   - Check out [Special Considerations](./special-considerations.md#keeping-references) for more information on references.
-- Object pooling comes at the cost of more memory usage. You might want to take a look at the [PoolAllocatorConfig](../../api/interfaces/poolallocatorconfig.md) to fine-tune the pools to your needs.
+- Object pooling comes at the cost of more memory usage. You might want to take a look at the [PoolAllocatorConfig](../../api/interfaces/PoolAllocatorConfig.md) to fine-tune the pools to your needs.
 - If you configure a PoolAllocator, do not create entities and components with `new` anymore, but use the allocator instead.
 - Only implement the reset method if you really need it to avoid setting values that will be overwritten anyway.

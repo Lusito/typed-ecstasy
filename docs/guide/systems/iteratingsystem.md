@@ -1,6 +1,6 @@
 # IteratingSystem
 
-Most of the time, you will only need to iterate over a family of entities. In that case you can just extend the [IteratingSystem](../../api/classes/iteratingsystem.md) class and override its [processEntity()](../../api/classes/iteratingsystem.md#processentity) method.
+Most of the time, you will only need to iterate over a family of entities. In that case you can just extend the [IteratingSystem](../../api/classes/IteratingSystem.md) class and override its [processEntity()](../../api/classes/IteratingSystem.md#processEntity) method.
 
 ```typescript
 @Service()

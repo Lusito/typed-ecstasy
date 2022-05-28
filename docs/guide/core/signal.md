@@ -8,10 +8,10 @@ typed-ecstasy uses [typed-signals](https://github.com/Lusito/typed-signals), a T
 
 ## Built-In Signals
 
-typed-ecstasy uses signals in the [EntityManager](../../api/classes/entitymanager.md), specifically:
-- [onAdd](../../api/classes/entitymanager.md#onadd)
-- [onRemove](../../api/classes/entitymanager.md#onremove)
-- [onAddForFamily](../../api/classes/entitymanager.md#onaddforfamily)
-- [onRemoveForFamily](../../api/classes/entitymanager.md#onremoveforfamily)
+typed-ecstasy uses signals in the [EntityManager](../../api/classes/EntityManager.md), specifically:
+- [onAdd](../../api/classes/EntityManager.md#onAdd)
+- [onRemove](../../api/classes/EntityManager.md#onRemove)
+- [onAddForFamily](../../api/classes/EntityManager.md#onAddForFamily)
+- [onRemoveForFamily](../../api/classes/EntityManager.md#onRemoveForFamily)
 
 These will be emitted when an entity gets added/removed to/from the engine or a specific family.

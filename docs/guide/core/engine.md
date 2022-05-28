@@ -1,6 +1,6 @@
 # Engine
 
-The [Engine](../../api/classes/engine.md) class is the center of the framework. Typically, you would have only one instance per application.
+The [Engine](../../api/classes/Engine.md) class is the center of the framework. Typically, you would have only one instance per application.
 
 The engine is responsible for setting up and handling entity & system managers, etc.
 
@@ -11,10 +11,10 @@ You can create an engine with the default constructor:
 const engine = new Engine();
 ```
 
-You will learn more about the operations you can do with [Engine](../../api/classes/engine.md) in the following tutorials.
+You will learn more about the operations you can do with [Engine](../../api/classes/Engine.md) in the following tutorials.
 
 ## Dependency Injection Container
 
-You can use [engine.getContainer()](../../api/classes/engine.md#getcontainer) to get the instance of the dependency injection container for this engine. Currently [typedi](https://docs.typestack.community/typedi/v/develop/01-getting-started) is being used.
+You can use [engine.getContainer()](../../api/classes/Engine.md#getContainer) to get the instance of the dependency injection container for this engine. Currently [typedi](https://docs.typestack.community/typedi/v/develop/01-getting-started) is being used.
 
 **Make sure** to check out the page about [Dependency Injection](../core/dependency-injection.md).

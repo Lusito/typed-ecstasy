@@ -1,9 +1,9 @@
 # Components
 
-[Components](../../api/classes/component.md) are meant to be data bags and nothing more. All logic should be placed in ([EntitySystems](entitysystem.md)). So it is recommended to declare components like plain c-structs. Adding getters and setters is acceptable though.
+[Components](../../api/classes/Component.md) are meant to be data bags and nothing more. All logic should be placed in ([EntitySystems](entitysystem.md)). So it is recommended to declare components like plain c-structs. Adding getters and setters is acceptable though.
 
 ### Creating component classes
-To define a new component, you only need to extend the [Component](../../api/classes/component.md) class.
+To define a new component, you only need to extend the [Component](../../api/classes/Component.md) class.
 
 In the following example we define two components: `PositionComponent` and `VelocityComponent`.
 
@@ -46,9 +46,9 @@ const position = entity.get(PositionComponent);
 const velocity = entity.get(VelocityComponent);
 ```
 
-[entity.get()](../../api/classes/entity.md#get) will return `null` if the component does not exist in the entity. You can use [entity.has()](../../api/classes/entity.md#has) to check if the entity has a component of the specified class.
+[entity.get()](../../api/classes/Entity.md#get) will return `null` if the component does not exist in the entity. You can use [entity.has()](../../api/classes/Entity.md#has) to check if the entity has a component of the specified class.
 
-You can also get an entity using [entity.require()](../../api/classes/entity.md#require). If the component does not exist, an exception will be thrown. You should use [entity.require()](../../api/classes/entity.md#require) only if you know that the component exist. For example if you are using an iterating EntitySystem, which already covers the existence with its Family.
+You can also get an entity using [entity.require()](../../api/classes/Entity.md#require). If the component does not exist, an exception will be thrown. You should use [entity.require()](../../api/classes/Entity.md#require) only if you know that the component exist. For example if you are using an iterating EntitySystem, which already covers the existence with its Family.
 ```typescript
 const position = entity.require(PositionComponent);
 ```
