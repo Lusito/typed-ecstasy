@@ -10,12 +10,12 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
-    "@abraham/reflection": "^0.8.0",
-    "@parcel/config-default": "^2.0.1",
-    "@parcel/transformer-typescript-tsc": "^2.0.1",
-    "parcel": "^2.0.1",
-    "sounts": "^0.8.0",
-    "typed-ecstasy": "^3.0.0-alpha.4",
-    "typed-signals": "^2.3.0"
+    "@abraham/reflection": "^0.10.0",
+    "@parcel/config-default": "^2.6.0",
+    "@parcel/transformer-typescript-tsc": "^2.6.0",
+    "parcel": "^2.6.0",
+    "sounts": "^0.8.1",
+    "typed-ecstasy": "3.0.0-alpha.4",
+    "typed-signals": "^2.5.0"
   }
 }

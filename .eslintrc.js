@@ -2,6 +2,7 @@ module.exports = {
     plugins: ["jsdoc"],
     extends: ["@lusito/eslint-config", "plugin:jest/recommended", "plugin:jsdoc/recommended"],
     rules: {
+        "import/no-import-module-exports": "off",
         "import/no-unresolved": ["error", { ignore: ["typed-ecstasy", "^url:.+"] }],
         "import/extensions": ["error", "never", { wav: "always" }],
         "no-bitwise": "off",

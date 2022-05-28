@@ -30,16 +30,16 @@
     "test:ci": "jest"
   },
   "devDependencies": {
-    "@abraham/reflection": "^0.8.0",
-    "@types/jest": "^27.0.3",
+    "@abraham/reflection": "^0.10.0",
+    "@types/jest": "^27.5.1",
     "coveralls": "^3.1.1",
-    "jest": "^27.3.1",
+    "jest": "^28.1.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.7",
-    "typed-signals": "^2.3.0",
-    "typescript": "4.4.3"
+    "ts-jest": "^28.0.3",
+    "typed-signals": "^2.5.0",
+    "typescript": "4.7.2"
   },
   "peerDependencies": {
-    "typed-signals": "^2.3.0"
+    "typed-signals": "^2.5.0"
   }
 }

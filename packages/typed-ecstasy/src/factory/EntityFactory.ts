@@ -78,7 +78,11 @@ export abstract class AbstractEntityFactory<TName extends string> {
                 // Skip blueprints, where the component is not used in code
                 if (!meta) continue;
 
-                componentBlueprint["setOverrides"](overrides?.[meta.key as keyof EntityConfigOverrides]);
+                const componentOverrides = overrides?.[meta.key as keyof EntityConfigOverrides];
+                if (componentOverrides !== true) {
+                    componentBlueprint["setOverrides"](componentOverrides);
+                }
+
                 const component = this.engine.obtainComponent(
                     meta.class as ComponentClassWithConfig<any, any, any>,
                     componentBlueprint.get

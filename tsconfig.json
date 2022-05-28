@@ -3,7 +3,7 @@
     "target": "es2015",
     "module": "CommonJS",
     "declaration": true,
-    "lib": ["esNext"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "strict": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,

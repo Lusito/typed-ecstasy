@@ -15,7 +15,8 @@ export type ServiceMeta<TType extends HotSwapType> = {
 const serviceMetaById = new Map<symbol, ServiceMeta<HotSwapType>>();
 
 function isZeroParamConstructor(constructor: Constructor<HotSwapType>) {
-    while (constructor !== Function) { // fixme: does this work on all browsers?
+    // fixme: does this work on all browsers?
+    while (constructor !== Function) {
         if (constructor.length !== 0) return false;
         constructor = Object.getPrototypeOf(constructor)?.constructor;
     }
